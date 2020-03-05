@@ -154,6 +154,84 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-kafka-windows demo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/05/kafka-windows%20demo/">kafka-windows demo</a>
+    </h1>
+  
+
+        
+        <a href="/2020/03/05/kafka-windows%20demo/" class="archive-article-date">
+  	<time datetime="2020-03-05T02:09:58.856Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-05</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="kafka下载"><a href="#kafka下载" class="headerlink" title="kafka下载"></a>kafka下载</h2><p><a href="https://mirrors.tuna.tsinghua.edu.cn/apache/kafka/2.4.0/kafka_2.12-2.4.0.tgz" target="_blank" rel="noopener">https://mirrors.tuna.tsinghua.edu.cn/apache/kafka/2.4.0/kafka_2.12-2.4.0.tgz</a></p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>将文件夹解压即可，注意不要解压到目录名有空格的文件夹中，会找不到运行的类。</p>
+<h2 id="kafka简单使用，"><a href="#kafka简单使用，" class="headerlink" title="kafka简单使用，"></a>kafka简单使用，</h2><p>在解压后的kakfa主目录中使用命令行运行以下命令行参数</p>
+<ol>
+<li>启动zookeeper<br><code>bin\windows\zookeeper-server-start.bat config\zookeeper.properties</code></li>
+<li>启动kafka<br><code>bin\windows\kafka-server-start.bat config\server.properties</code></li>
+<li>创建topic demo<br><code>bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic demo</code></li>
+<li>查看topic列表<br><code>bin\windows\kafka-topics.bat --list --bootstrap-server localhost:9092</code></li>
+<li>启动生产者 producer<br><code>bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic demo</code></li>
+<li>启动消费者 customer<br><code>bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic demo --from-beginning</code></li>
+</ol>
+<h2 id="kafka配置"><a href="#kafka配置" class="headerlink" title="kafka配置"></a>kafka配置</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#kafka相关配置</span></span><br><span class="line"><span class="meta">spring.kafka.bootstrap-servers</span>=<span class="string">&#123;kafka实例ip地址&#125;:9092</span></span><br><span class="line"><span class="comment">#设置一个默认组</span></span><br><span class="line"><span class="meta">spring.kafka.consumer.group-id</span>=<span class="string">defaultGroup</span></span><br><span class="line"><span class="comment">#key-value序列化反序列化</span></span><br><span class="line"><span class="meta">spring.kafka.consumer.key-deserializer</span>=<span class="string">org.apache.kafka.common.serialization.StringDeserializer</span></span><br><span class="line"><span class="meta">spring.kafka.consumer.value-deserializer</span>=<span class="string">org.apache.kafka.common.serialization.StringDeserializer</span></span><br><span class="line"><span class="meta">spring.kafka.producer.key-serializer</span>=<span class="string">org.apache.kafka.common.serialization.StringSerializer</span></span><br><span class="line"><span class="meta">spring.kafka.producer.value-serializer</span>=<span class="string">org.apache.kafka.common.serialization.StringSerializer</span></span><br><span class="line"><span class="meta">spring.kafka.producer.batch-size</span>=<span class="string">65536</span></span><br><span class="line"><span class="meta">spring.kafka.producer.buffer-memory</span>=<span class="string">524288</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>参考连接<br>kafka 在windows 平台的搭建和简单实用<br><a href="https://blog.csdn.net/woshixiazaizhe/article/details/80610432" target="_blank" rel="noopener">https://blog.csdn.net/woshixiazaizhe/article/details/80610432</a><br>spring boot + kafka 使用详细步骤<br><a href="https://blog.csdn.net/lcj_star/article/details/77337640?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">https://blog.csdn.net/lcj_star/article/details/77337640?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task</a><br>Spring Boot + Kafka的使用<br><a href="https://blog.csdn.net/Black1499/article/details/90474929" target="_blank" rel="noopener">https://blog.csdn.net/Black1499/article/details/90474929</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/03/05/kafka-windows%20demo/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-hexo-博客搭建" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
