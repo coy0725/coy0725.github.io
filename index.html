@@ -154,6 +154,113 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-spring-guide Redis 消息服务构建" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">spring-guide Redis 消息服务构建</a>
+    </h1>
+  
+
+        
+        <a href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/" class="archive-article-date">
+  	<time datetime="2020-03-09T13:52:53.476Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Redis 消息服务构建</p>
+<p>需要做哪些工作呢？</p>
+<ol>
+<li>需要启动一个redis服务实例</li>
+<li>redis和springboot的整合</li>
+</ol>
+<p>会涉及哪些概念？</p>
+<p>消息生产者，消息接收者，主题</p>
+<p>消息接收者怎么定义呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Receiver</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(Receiver<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> AtomicInteger counter = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receiveMessage</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        LOGGER.info(<span class="string">"Received &lt;"</span> + message + <span class="string">"&gt;"</span>);</span><br><span class="line">        counter.incrementAndGet();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> counter.get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接收方是一个POJO，它定义了接收消息的方法。当您将接收方注册为消息侦听器时，您可以随意命名消息处理方法</p>
+<p>注册监听者和发送消息</p>
+<ul>
+<li>监听者注册到哪？<ul>
+<li>message listener</li>
+</ul>
+</li>
+<li>使用谁发送消息<ul>
+<li>Redis template</li>
+</ul>
+</li>
+</ul>
+<p>Spring Data Redis提供了使用Redis发送和接收消息所需的所有组件。具体来说，您需要配置</p>
+<ul>
+<li>A connection factory</li>
+<li>A message listener container</li>
+<li>A Redis template</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessagingRedisApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(MessagingRedisApplication<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">RedisMessageListenerContainer <span class="title">container</span><span class="params">(RedisConnectionFactory connectionFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">			MessageListenerAdapter listenerAdapter)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		RedisMessageListenerContainer container = <span class="keyword">new</span> RedisMessageListenerContainer();</span><br><span class="line">        <span class="comment">//设置消息监听连接工厂</span></span><br><span class="line">		container.setConnectionFactory(connectionFactory);</span><br><span class="line">        <span class="comment">//设置消息监听者 监控哪个主题</span></span><br><span class="line">		container.addMessageListener(listenerAdapter, <span class="keyword">new</span> PatternTopic(<span class="string">"chat"</span>));</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> container;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//redis的消息接收者需要接收消息，也需要监听主题，使用对象适配器完成此项工作，适配器模式，需要指定接收消息之后调用哪个方法</span></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">MessageListenerAdapter <span class="title">listenerAdapter</span><span class="params">(Receiver receiver)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> MessageListenerAdapter(receiver, <span class="string">"receiveMessage"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">Receiver <span class="title">receiver</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> Receiver();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">StringRedisTemplate <span class="title">template</span><span class="params">(RedisConnectionFactory connectionFactory)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> StringRedisTemplate(connectionFactory);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">		ApplicationContext ctx = SpringApplication.run(MessagingRedisApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line"></span><br><span class="line">		StringRedisTemplate template = ctx.getBean(StringRedisTemplate<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">		Receiver receiver = ctx.getBean(Receiver<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span> (receiver.getCount() == <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">			LOGGER.info(<span class="string">"Sending message..."</span>);</span><br><span class="line">			template.convertAndSend(<span class="string">"chat"</span>, <span class="string">"Hello from Redis!"</span>);</span><br><span class="line">			Thread.sleep(<span class="number">500L</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		System.exit(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public MessageListenerAdapter(Object delegate, String defaultListenerMethod) &#123;    this(delegate);    this.setDefaultListenerMethod(defaultListenerMethod);&#125;</span><br></pre></td></tr></table></figure>
+
+<p>redis containner监听方法代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">private void lazyListen() &#123;</span><br><span class="line">        boolean debug &#x3D; this.logger.isDebugEnabled();</span><br><span class="line">        boolean started &#x3D; false;</span><br><span class="line">        if (this.isRunning() &amp;&amp; !this.listening) &#123;</span><br><span class="line">            synchronized(this.monitor) &#123;</span><br><span class="line">                if (!this.listening &amp;&amp; (this.channelMapping.size() &gt; 0 || this.patternMapping.size() &gt; 0)) &#123;</span><br><span class="line">                &#x2F;&#x2F;执行器 执行任务</span><br><span class="line">                    this.subscriptionExecutor.execute(this.subscriptionTask);</span><br><span class="line">                    this.listening &#x3D; true;</span><br><span class="line">                    started &#x3D; true;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (debug) &#123;</span><br><span class="line">                if (started) &#123;</span><br><span class="line">                    this.logger.debug(&quot;Started listening for Redis messages&quot;);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    this.logger.debug(&quot;Postpone listening for Redis messages until actual listeners are added&quot;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用到了哪些技术？</p>
+<ul>
+<li>redis</li>
+<li>对象适配器模式</li>
+<li>观察者模式</li>
+<li>代理模式</li>
+<li>消息</li>
+</ul>
+<p><img src="C:%5CUsers%5Ccoy%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200309204028440.png" alt="image-20200309204028440"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-spring guide之文件上传下载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
