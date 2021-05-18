@@ -8,19 +8,28 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>mybatis-缓存 | Hexo</title>
+  <title>notebook/深入理解ElasticSearch | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="mybatis缓存 装饰器模式 引用强引用 JVM中最普遍的引用，我们常用的赋值操作就是强引用  软引用 当JVM内存不足时，GCオ会回收那些只被软引用指向的对象 特别适合做缓存，因为缓存中的数据可以从数据库中恢复0所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象 当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉">
+  <meta name="description" content="Apache LuceneLucene的总体架构尽管我们可以直接探讨 Apache Lucene架构的细节,但有些概念还是需要提前了解,以便更好地理解 Lucene的架构,它们包括:  口文档( document):索引与搜索的主要数据载体,它包含一个或多个字段,存放将要写入索引或将从索引搜索出来的数据。 口字段( field):文档的一个片段,它包括两个部分:字段的名称和内容。 口词项(term">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mybatis-缓存">
-<meta property="og:url" content="http://yoursite.com/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/index.html">
+<meta property="og:title" content="notebook&#x2F;深入理解ElasticSearch">
+<meta property="og:url" content="http://yoursite.com/2021/05/17/notebook/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ElasticSearch/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="mybatis缓存 装饰器模式 引用强引用 JVM中最普遍的引用，我们常用的赋值操作就是强引用  软引用 当JVM内存不足时，GCオ会回收那些只被软引用指向的对象 特别适合做缓存，因为缓存中的数据可以从数据库中恢复0所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象 当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉">
+<meta property="og:description" content="Apache LuceneLucene的总体架构尽管我们可以直接探讨 Apache Lucene架构的细节,但有些概念还是需要提前了解,以便更好地理解 Lucene的架构,它们包括:  口文档( document):索引与搜索的主要数据载体,它包含一个或多个字段,存放将要写入索引或将从索引搜索出来的数据。 口字段( field):文档的一个片段,它包括两个部分:字段的名称和内容。 口词项(term">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-05-16T03:44:04.627Z">
-<meta property="article:modified_time" content="2021-02-23T02:57:11.813Z">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564729430492.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564729532412.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564730064616.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564730394342.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564731988837.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564732052623.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564732448355.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564732479182.png">
+<meta property="article:published_time" content="2021-05-17T09:01:54.950Z">
+<meta property="article:modified_time" content="2021-05-17T09:01:54.950Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564729430492.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -168,39 +177,197 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-mybatis-缓存" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-notebook/深入理解ElasticSearch" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      mybatis-缓存
+      notebook/深入理解ElasticSearch
     </h1>
   
 
         
-        <a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2021-05-16T03:44:04.627Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-16</time>
+        <a href="/2021/05/17/notebook/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ElasticSearch/" class="archive-article-date">
+  	<time datetime="2021-05-17T09:01:54.950Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>mybatis缓存</p>
-<p>装饰器模式</p>
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><h3 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h3><ul>
-<li>JVM中最普遍的引用，我们常用的赋值操作就是强引用</li>
+        <h2 id="Apache-Lucene"><a href="#Apache-Lucene" class="headerlink" title="Apache Lucene"></a>Apache Lucene</h2><h3 id="Lucene的总体架构"><a href="#Lucene的总体架构" class="headerlink" title="Lucene的总体架构"></a>Lucene的总体架构</h3><p>尽管我们可以直接探讨 Apache Lucene架构的细节,但有些概念还是需要提前了解,以便更好地理解 Lucene的架构,它们包括:</p>
+<ul>
+<li>口文档( document):索引与搜索的主要数据载体,它包含一个或多个字段,存放将要写入索引或将从索引搜索出来的数据。</li>
+<li>口字段( field):文档的一个片段,它包括两个部分:字段的名称和内容。</li>
+<li>口词项(term):搜索时的一个单位,代表文本中的某个词。</li>
+<li>口词条( token):词项在字段中的一次出现,包括词项的文本、开始和结束的位移以及类型。</li>
 </ul>
-<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><ul>
-<li>当JVM内存不足时，GCオ会回收那些只被软引用指向的对象</li>
-<li>特别适合做缓存，因为缓存中的数据可以从数据库中恢复0<br>所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象</li>
-<li>当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉。</li>
+<p>Apache Lucene将写入索引的所有信息组织成一种名为倒排索引( inverted index)的结</p>
+<p>构。该结构是一种将词项映射到文档的数据结构,其工作方式与传统的关系数据库不同</p>
+<p>你大可以认为倒排索引是面向词项而不是面向文档的。接下来我们看看简单的倒排索引是</p>
+<p>什么样的。例如,我们有一些只包含 title字段的文档,如下所示</p>
+<h3 id="分析你的数据"><a href="#分析你的数据" class="headerlink" title="分析你的数据"></a>分析你的数据</h3><p><strong>分析</strong></p>
+<p>数据—》倒排索引</p>
+<p>查询串–》可以搜索的词项</p>
+<p><strong>分析器</strong></p>
+<ol>
+<li>字符映射器  文本–》预处理 如html文本去标签</li>
+<li>分词器  预处理文本–》词条–》词条流</li>
+<li>过滤器 词条流–》处修创造–》新的词条<ol>
+<li>小写过滤器</li>
+<li>ascll过滤器</li>
+<li>同义词过滤器</li>
+</ol>
+</li>
+</ol>
+<p>索引于查询</p>
+<p>检索：查询串—》查询分析器</p>
+<p><strong>索引器与检索期的文本分析要采用同样的分析器，只有查询分析出来的词项与索引中词项能匹配上时，才会返回预期的文档集。</strong></p>
+<h3 id="Lucene查询语言"><a href="#Lucene查询语言" class="headerlink" title="Lucene查询语言"></a>Lucene查询语言</h3><p>es提供一些查询类型（query type）来支持lucene的查询解析语法</p>
+<p><strong>基本概念</strong></p>
+<p>查询：词项+操作符</p>
+<p><strong>布尔操作符</strong></p>
+<p>与、或、非连接词项构成从句。</p>
+<p><strong>其他操作符</strong></p>
+<p>+:它的含义是,只有包含+操作符后面词项的文档才会被认为是与从句匹配。例如,查找那些必须包含 lucene,但是 apache可出现可不出现的文档,可执行查询:<code>+lucene apache</code></p>
+<p>-:它的含义是,与从句匹配的文档不能出现-操作符后的词项。例如,查找那些包含 lucene但不包含 elasticsearch的文档,可以执行查询:<code>+lucene- elasticsearch</code>如果查询中没有出现前面提到过的任意操作符,那么默认使用OR操作符。</p>
+<p>另外,你还可以使用圆括号对从句进行分组,以构造更复杂的从句,例如:</p>
+<p><code>elasticsearch AND (mastering OR book）</code></p>
+<p><strong>在字段中查询</strong></p>
+<p>lucene所有数据都存储在字段中，实现针对字段的查询，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">字段：查询从句&#123;词项，短语&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>词项修饰符</strong></p>
+<ul>
+<li>？匹配任意一个字符</li>
+<li>*匹配多个字符</li>
 </ul>
-<p>实现类</p>
-<p><code>SoftReference</code></p>
-<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3>
+<p>通配符不能作为词项的第一个字符出现（性能考虑）</p>
+<p><strong>模糊查询</strong></p>
+<p>词项~数值：近似词项与原始词项最大编辑距离</p>
+<p>例如：<code>ab-2：ab abcd</code>，包含ab和abcd的文档都能匹配</p>
+<p><strong>词项^float</strong>：对词项进行加权（boosting）</p>
+<p><strong>范围查询</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">feild：[from TO end]</span><br></pre></td></tr></table></figure>
+
+<p>方括号花括号</p>
+<p>例如：peice：[10.00 TO 15.00]   name:[adam TO boy]</p>
+<p><strong>特殊字符</strong></p>
+<p>反斜杠转义\</p>
+<h2 id="ElasticSearch"><a href="#ElasticSearch" class="headerlink" title="ElasticSearch"></a>ElasticSearch</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><strong>基本概念</strong></h3><ul>
+<li>索引</li>
+</ul>
+<p>ES将数据存储在一个或多个索引Index中。</p>
+<ul>
+<li>文档</li>
+</ul>
+<p>文档是ES世界的主要实体，由字段构成，字段有他的字段名以及一个或多个字段值，es文档–》Lucene文档，客户端角度：文档是一个Json对象。</p>
+<ul>
+<li>映射</li>
+</ul>
+<p>文档写入索引前需要进行分析，映射定义分析的规则</p>
+<ul>
+<li>类型</li>
+</ul>
+<p>文档有与之对应的类型，特性相同的文档定义成同一类型</p>
+<ul>
+<li>节点</li>
+</ul>
+<p>单个提供ES服务的实例称为节点</p>
+<ul>
+<li>集群</li>
+</ul>
+<p>组成节点的系统称为集群（cluster），来提供协同处理服务</p>
+<ul>
+<li>分片</li>
+</ul>
+<p>集群运行系统存储数据总量超过的那几容量—》数据分布到多个物理Lucene索引上—》这些lucene索引称为分片（shard），分片创建在创建时确定，后期无法改变</p>
+<ul>
+<li>副本</li>
+</ul>
+<p>解决访问压力过大时单机无法处理所有请求的问题。为每个分片创建冗余副本</p>
+<ul>
+<li>网关</li>
+</ul>
+<p>持久化集群状态，索引设置等各种信息</p>
+<h3 id="ES工作流程"><a href="#ES工作流程" class="headerlink" title="ES工作流程"></a>ES工作流程</h3><p><strong>节点启动</strong></p>
+<p>发现集群中其他节点并与他们连接（广播技术）</p>
+<p>选出管理节点（master node）管理集群状态以及在集群拓扑变化时分发索引分片到相应节点（用户无需在意哪个节点时管理节点，对等架构）</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564729430492.png" alt="1564729430492"></p>
+<p><strong>故障检测</strong></p>
+<p>管理节点发送ping请求到其他节点，等待响应，没有响应则将该节点移出集群。</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564729532412.png" alt="1564729532412"></p>
+<p><strong>与ElasticSearch通信</strong></p>
+<p>向ES推送数据并构建查询</p>
+<p>基于REST的API，只要系统支持HTTP协议通信</p>
+<p>JAVA API</p>
+<p><strong>索引数据</strong></p>
+<ul>
+<li>索引API</li>
+</ul>
+<p>发送一个文档给特定的索引，最简单的方式</p>
+<ul>
+<li><p>bulk API </p>
+<p>http协议 可靠 一次多个文档</p>
+</li>
+<li><p>UDP bulk API</p>
+</li>
+</ul>
+<p>udp协议 速度快 不可靠，一次多个文档</p>
+<ul>
+<li>插件 river，river运行在其他es节点上，能够从外部获取数据</li>
+</ul>
+<blockquote>
+<p>建立索引的操作只会发生在主分片上</p>
+</blockquote>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564730064616.png" alt="1564730064616"></p>
+<p><strong>查询数据</strong></p>
+<p>DSL</p>
+<p><strong>过程</strong></p>
+<ol>
+<li><p>分散阶段</p>
+<p>query分发—》包含相关文档的多个分片中–》执行查询</p>
+</li>
+<li><p>合并阶段</p>
+<p>各个分片的结果–》合并、排序、处理–》返回给客户端</p>
+</li>
+</ol>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564730394342.png" alt="1564730394342"></p>
+<p><strong>索引配置</strong></p>
+<ul>
+<li>自定义文档结构（mapping）</li>
+<li>索引分片、副本数</li>
+<li>定制文本分析过程</li>
+</ul>
+<h2 id="ElasticSearch-Java-api"><a href="#ElasticSearch-Java-api" class="headerlink" title="ElasticSearch Java api"></a>ElasticSearch Java api</h2><h3 id="连接到集群"><a href="#连接到集群" class="headerlink" title="连接到集群"></a>连接到集群</h3><h4 id="成为es节点"><a href="#成为es节点" class="headerlink" title="成为es节点"></a>成为es节点</h4><p>思路，把应用程序作为es集群中的一个节点，并和其他节点相同对待。</p>
+<p><strong>优劣</strong></p>
+<p>需要更多的时间，操作更快</p>
+<p>重要声明</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564731988837.png" alt="1564731988837"></p>
+<p>创建客户端实例</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564732052623.png" alt="1564732052623"></p>
+<p>注意</p>
+<p>.client(true),将创建的节点指定为客户端节点，客户端节点不会持有数据。</p>
+<p>创建过程需要读取classpath中的elasticsearch.yml配置文件来定义节点配置。</p>
+<h4 id="使用传输机连接"><a href="#使用传输机连接" class="headerlink" title="使用传输机连接"></a>使用传输机连接</h4><p><strong>优劣</strong></p>
+<p>启动速度快，需要资源少，更少的socket连接，但是发送查询和数据需要消耗更多的资源</p>
+<p>本方法允许只连接到集群而不会加入集群。你会发现,客户端可以同时连接到多个节点,并通过轮询调度( round- robin)的方式使用它们。这意味着每个请求将被发送到不同的节点上,并由收到请求的节点负责把请求转发到合适的节点(这是对 ElasticSearch自身节点转发功能的补充)</p>
+<p>声明</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564732448355.png" alt="1564732448355"></p>
+<p>创建连接</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564732479182.png" alt="1564732479182"></p>
+<p>这个方法很简单。首先我们使用 Immutable Settings类的静态方法 settings Builder来建立合适的配置对象,如本例中只需设置好集群名称(本例之后我们会展开更多传输机客户端的配置和功能)。接着我们使用这个配置对象来建立一个 TransportClient的客户端对象,然后把待连接节点的网络地址添加给它。这可以通过调用 TransportClient类的 addTransportAddress方法并传递 InetSocket TransportAddress对象来实现。为创建InetSocketTransportAddress对象我们需要提供 ElasticSearch节点所在机器的P和节点传输层监听的端口号。注意这里的端口号不是9200,而是9300。9200端口用来让 Http reStAPI访问 ElasticSearch,而9300端口是传输层监听的默认端口。</p>
+<p>我们再回过头来看 TransportClient类的可用配置</p>
+<ul>
+<li>口 client. transport. sniff(默认值: false):如果设为true, Elastic Search会读取集群中的节点信息。因此你不需要在建立 TransportClient对象时提供所有节点的网络地址。ElasticSearch很智能,它会自动检测到活跃节点并把它们加入到列表中。</li>
+<li>口 client. transport. ignore cluster name(默认值: false):如果设为true,则 ElasticSearch会忽视配置中的集群名称并尝试连接到某个可连接集群上,而不管集群名称是否匹配。这一点很危险,你可能会首先连接到你不想要的集群上。</li>
+<li>口 client. transport. ping timeout(默认值:5s):该参数指定了ping命令响应的超时时间。如果客户端和集群间的网络延迟较大或连接不稳定,可能需要调大这个取值。</li>
+<li>口 client. transport nodes sampler interval(默认值:5s):该参数指定了检查节点可用性的时间间隔。与前一个参数类似,如果网络延迟较大或者网络不稳定,可能需要调大这个值。</li>
+</ul>
+<p><strong>在选择合适的连接方式时请记住,第一种方式并不总是可行的。例如,当要连接的Elastic Search集群处于另一个局域网中,唯一可选的方式就是使用 TransportClient对象。</strong></p>
+
       
 
       
@@ -279,7 +446,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/17/notebook/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ElasticSearch/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -293,18 +460,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/05/17/notebook/Platform/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/05/17/notebook/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81%EF%BC%9F/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          notebook/Platform
+          notebook/线程的几种状态？
         
       </div>
     </a>
   
   
-    <a href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">spring-guide Redis 消息服务构建</div>
+    <a href="/2021/05/17/notebook/%E6%96%87%E6%A1%A3%E7%9A%84%E8%AF%BB%E5%86%99/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">notebook/文档的读写</div>
       <i class="icon-circle-right"></i>
     </a>
   

@@ -8,19 +8,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>mybatis-缓存 | Hexo</title>
+  <title>notebook/tcp | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="mybatis缓存 装饰器模式 引用强引用 JVM中最普遍的引用，我们常用的赋值操作就是强引用  软引用 当JVM内存不足时，GCオ会回收那些只被软引用指向的对象 特别适合做缓存，因为缓存中的数据可以从数据库中恢复0所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象 当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉">
+  <meta name="description" content="连接请求报文段 1SYN&#x3D;1 ，ACK&#x3D;0. seq&#x3D;x  连接确认报文段 1SYN&#x3D;1 ，ACK&#x3D;1. seq&#x3D;y  ack&#x3D;x+1  确认报文段 1SYN&#x3D;0 ，ACK&#x3D;1. seq&#x3D;x+1  ack&#x3D;y+1  意义 1234现假定出现一种异常情况,即A发出的第一个连接请求报文段并没有">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mybatis-缓存">
-<meta property="og:url" content="http://yoursite.com/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/index.html">
+<meta property="og:title" content="notebook&#x2F;tcp">
+<meta property="og:url" content="http://yoursite.com/2021/05/17/notebook/tcp/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="mybatis缓存 装饰器模式 引用强引用 JVM中最普遍的引用，我们常用的赋值操作就是强引用  软引用 当JVM内存不足时，GCオ会回收那些只被软引用指向的对象 特别适合做缓存，因为缓存中的数据可以从数据库中恢复0所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象 当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉">
+<meta property="og:description" content="连接请求报文段 1SYN&#x3D;1 ，ACK&#x3D;0. seq&#x3D;x  连接确认报文段 1SYN&#x3D;1 ，ACK&#x3D;1. seq&#x3D;y  ack&#x3D;x+1  确认报文段 1SYN&#x3D;0 ，ACK&#x3D;1. seq&#x3D;x+1  ack&#x3D;y+1  意义 1234现假定出现一种异常情况,即A发出的第一个连接请求报文段并没有">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-05-16T03:44:04.627Z">
-<meta property="article:modified_time" content="2021-02-23T02:57:11.813Z">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1565056373676.png">
+<meta property="article:published_time" content="2021-05-17T09:01:54.948Z">
+<meta property="article:modified_time" content="2021-05-17T09:01:54.948Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1565056373676.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -168,39 +170,43 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-mybatis-缓存" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-notebook/tcp" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      mybatis-缓存
+      notebook/tcp
     </h1>
   
 
         
-        <a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2021-05-16T03:44:04.627Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-16</time>
+        <a href="/2021/05/17/notebook/tcp/" class="archive-article-date">
+  	<time datetime="2021-05-17T09:01:54.948Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>mybatis缓存</p>
-<p>装饰器模式</p>
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><h3 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h3><ul>
-<li>JVM中最普遍的引用，我们常用的赋值操作就是强引用</li>
-</ul>
-<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><ul>
-<li>当JVM内存不足时，GCオ会回收那些只被软引用指向的对象</li>
-<li>特别适合做缓存，因为缓存中的数据可以从数据库中恢复0<br>所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象</li>
-<li>当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉。</li>
-</ul>
-<p>实现类</p>
-<p><code>SoftReference</code></p>
-<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3>
+        <p>连接请求报文段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SYN&#x3D;1 ，ACK&#x3D;0. seq&#x3D;x</span><br></pre></td></tr></table></figure>
+
+<p>连接确认报文段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SYN&#x3D;1 ，ACK&#x3D;1. seq&#x3D;y  ack&#x3D;x+1</span><br></pre></td></tr></table></figure>
+
+<p>确认报文段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SYN&#x3D;0 ，ACK&#x3D;1. seq&#x3D;x+1  ack&#x3D;y+1</span><br></pre></td></tr></table></figure>
+
+<p>意义</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">现假定出现一种异常情况,即A发出的第一个连接请求报文段并没有丢失,而是在某</span><br><span class="line">些网络结点长时间滞留了,以致延误到连接释放以后的某个时间才到达B。本来这是一个早已失效的报文段。但B收到此失效的连接请求报文段后,就误认为是A又发出一次新的连接请求。于是就向A发出确认报文段,同意建立连接。假定不采用报文握手,那么只要B发出确认,新的连接就建立了。</span><br><span class="line">由于现在A并没有发出建立连接的请求,因此不会理睬B的确认,也不会向B发送数</span><br><span class="line">据。但B却以为新的运输连接已经建立了,并一直等待A发来数据。B的许多资源就这样白白浪费了</span><br></pre></td></tr></table></figure>
+
+<p>seq：序号</p>
+<p>ack：确认号<img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1565056373676.png" alt="1565056373676"></p>
+<p>ACK：仅当ACK=1时，确认号字段才有效。规定：连接建立后的所有报文段ACK都必须置为1</p>
+<p>SYN：连接建立时用来同步序号。SYN=1，表示这是一个连接请求或者连接接收报文。</p>
+
       
 
       
@@ -279,7 +285,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/17/notebook/tcp/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -293,18 +299,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/05/17/notebook/Platform/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/05/17/notebook/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%A6%20Elasticsearch/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          notebook/Platform
+          notebook/为什么要学 Elasticsearch
         
       </div>
     </a>
   
   
-    <a href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">spring-guide Redis 消息服务构建</div>
+    <a href="/2021/05/17/notebook/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">notebook/一个简单的web服务器</div>
       <i class="icon-circle-right"></i>
     </a>
   

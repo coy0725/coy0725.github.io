@@ -8,19 +8,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>mybatis-缓存 | Hexo</title>
+  <title>notebook/一个简单的web服务器 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="mybatis缓存 装饰器模式 引用强引用 JVM中最普遍的引用，我们常用的赋值操作就是强引用  软引用 当JVM内存不足时，GCオ会回收那些只被软引用指向的对象 特别适合做缓存，因为缓存中的数据可以从数据库中恢复0所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象 当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉">
+  <meta name="description" content="第一章 一个简单的web服务器Socket和ServerSocket类基于Java的web服务器使用java.net.Socket 和 java.net.ServerSocket两个重要的类,并通过http进行通信 12Socketnew Socket(&quot;yahoo.com&quot;,80);   主机:远程机器名或IP地址 端口:远程应用的端口号  该类实现客户端套接字(也称为“套接">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mybatis-缓存">
-<meta property="og:url" content="http://yoursite.com/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/index.html">
+<meta property="og:title" content="notebook&#x2F;一个简单的web服务器">
+<meta property="og:url" content="http://yoursite.com/2021/05/17/notebook/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="mybatis缓存 装饰器模式 引用强引用 JVM中最普遍的引用，我们常用的赋值操作就是强引用  软引用 当JVM内存不足时，GCオ会回收那些只被软引用指向的对象 特别适合做缓存，因为缓存中的数据可以从数据库中恢复0所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象 当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉">
+<meta property="og:description" content="第一章 一个简单的web服务器Socket和ServerSocket类基于Java的web服务器使用java.net.Socket 和 java.net.ServerSocket两个重要的类,并通过http进行通信 12Socketnew Socket(&quot;yahoo.com&quot;,80);   主机:远程机器名或IP地址 端口:远程应用的端口号  该类实现客户端套接字(也称为“套接">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-05-16T03:44:04.627Z">
-<meta property="article:modified_time" content="2021-02-23T02:57:11.813Z">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564455967560.png">
+<meta property="article:published_time" content="2021-05-17T09:01:54.948Z">
+<meta property="article:modified_time" content="2021-05-17T09:01:54.948Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564455967560.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -168,39 +170,303 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-mybatis-缓存" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-notebook/一个简单的web服务器" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      mybatis-缓存
+      notebook/一个简单的web服务器
     </h1>
   
 
         
-        <a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2021-05-16T03:44:04.627Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-16</time>
+        <a href="/2021/05/17/notebook/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="archive-article-date">
+  	<time datetime="2021-05-17T09:01:54.948Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>mybatis缓存</p>
-<p>装饰器模式</p>
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><h3 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h3><ul>
-<li>JVM中最普遍的引用，我们常用的赋值操作就是强引用</li>
+        <h2 id="第一章-一个简单的web服务器"><a href="#第一章-一个简单的web服务器" class="headerlink" title="第一章 一个简单的web服务器"></a>第一章 一个简单的web服务器</h2><h3 id="Socket和ServerSocket类"><a href="#Socket和ServerSocket类" class="headerlink" title="Socket和ServerSocket类"></a>Socket和ServerSocket类</h3><p>基于Java的web服务器使用java.net.Socket 和 java.net.ServerSocket两个重要的类,并通过http进行通信</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Socket</span><br><span class="line">new Socket(&quot;yahoo.com&quot;,80);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>主机:远程机器名或IP地址</li>
+<li>端口:远程应用的端口号</li>
 </ul>
-<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><ul>
-<li>当JVM内存不足时，GCオ会回收那些只被软引用指向的对象</li>
-<li>特别适合做缓存，因为缓存中的数据可以从数据库中恢复0<br>所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象</li>
-<li>当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉。</li>
+<p>该类实现客户端套接字(也称为“套接字”)。套接字是两台机器之间通信的端点。</p>
+<p>套接字的实际工作由SocketImpl类的一个实例执行。通过更改创建套接字实现的套接字工厂，应用程序为自己配置去创建适合本地防火墙的套接字。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ServerSocket</span><br></pre></td></tr></table></figure>
+
+<p>服务器套接字:等待来自客户端的连接请求.一旦服务器套接字获得一个连接请求,它将创建一个ServerSocket实例来与客户端进行通信.</p>
+<p>创建服务器套接字,需要指定IP地址和需要进行监听的端口.</p>
+<p>该类实现服务器套接字。服务器套接字等待通过网络传入的请求。它根据请求执行一些操作，然后可能返回一个结果给请求者。</p>
+<p>服务器套接字的实际工作由SocketImpl类的一个实例执行。应用程序可以更改创建套接字实现的套接字工厂，将自己配置为创建适合本地防火墙的套接字。</p>
+<h3 id="HTTP-请求"><a href="#HTTP-请求" class="headerlink" title="HTTP 请求"></a>HTTP 请求</h3><p>基于传输层的TCP协议,提供可靠的服务.</p>
+<p>请求由哪几部分组成</p>
+<ol>
+<li>方法 +统一资源标识符URI+ 协议/版本</li>
+<li>请求的头部 Headers</li>
+<li>主体 Body</li>
+</ol>
+<p>URI完全指明一个互联网资源,URI通常是相对服务器的根目录解释的.</p>
+<p>头部和主体内容使用回车换行符(CRLF)来分割,告诉http服务器主体内容在什么地方开始.</p>
+<h3 id="HTTP响应"><a href="#HTTP响应" class="headerlink" title="HTTP响应"></a>HTTP响应</h3><ol>
+<li>方法 +统一资源标识符URI+ 协议/版本</li>
+<li>响应的头部 Headers</li>
+<li>请求体 Body</li>
+</ol>
+<h3 id="HttpServer类"><a href="#HttpServer类" class="headerlink" title="HttpServer类"></a><strong>HttpServer类</strong></h3><p>await方法</p>
+<p>首先创建一个SocketServer实例,(地址+最大队列长度+端口),然后等待请求(进入while循环)</p>
+<p>socket = serverSocket.accept(),获得客户端套接字后,从socket 实例中获得java.io.InputStream input 和java.io.OutputStream output对象.</p>
+<ul>
+<li>input构造Request请求对象</li>
+<li>output构造Response响应对象</li>
 </ul>
-<p>实现类</p>
-<p><code>SoftReference</code></p>
-<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564455967560.png" alt="1564455967560"></p>
+<h3 id="Request-类"><a href="#Request-类" class="headerlink" title="Request 类"></a><strong>Request 类</strong></h3><p>代表一个HTTP请求.从负责与客户端通信的Socket中获取InputStream对象来构造这个类的实例.调用InputStream对象的read方法来获得HTTP请求的原始数据.</p>
+<p>parse parseUri如何工作?</p>
+<p>请求行从从方法标记开始 请求行里的元素使用空格来分隔,使用回车换行结束.</p>
+<p>GET  <strong>/index.html</strong> HTTP/1.1</p>
+<p>parseUri搜索请求里边第一个和第二个空格来从中获取URI</p>
+<h3 id="Response-类"><a href="#Response-类" class="headerlink" title="Response 类"></a><strong>Response</strong> 类</h3><p>代表一个HTTP响应</p>
+<p>setRequest 方法用来传递一个Request对象给Response对象</p>
+<p>sendStaticResource 方法用来发送一个静态资源.</p>
+<h2 id="第二章-一个简单的Servlet容器"><a href="#第二章-一个简单的Servlet容器" class="headerlink" title="第二章 一个简单的Servlet容器"></a>第二章 一个简单的Servlet容器</h2><p>现在,让我们从一个 servlet容器的角度来研究一下 servlet编程。总的来说,一个全功能的servlet容器会为 servlet的每个HTP请求做下面一些工作：</p>
+<ul>
+<li>当第一次调用 servlet的时候,加载该 servlet类并调用 servlet的init方法(仅仅一次）</li>
+<li>对每次请求,构造一个 Javax. servlet. ServletRequest实例和一个Javax. servlet. Servletresponse实例。</li>
+<li>调用 servlet的 service方法,同时传递 ServletRequest和 ServletResponse对象</li>
+<li>当 servlet类被关闭的时候,调用 servlet的 destroy方法并卸载 servlet类。</li>
+</ul>
+<p>本章的第一个 servlet容器不是全功能的，因此,她只能运行非常简单的 servlet,而且也不调用 servlet的init方法和 destroy方法。相反它做了下面的事情</p>
+<ul>
+<li>等待HITP请求</li>
+<li>构造一个 ServletRequest对象和一个 ServletResponse对象</li>
+<li>假如该请求需要一个静态资源的话,调用 StaticResourceProcessor实例的 process方法,同时传递 ServletRequest和 ServletResponse对象。</li>
+<li>假如该请求需要一个 servlet的话,加载 servlet类并调用 servlet的 service方法,同时传递 ServletRequest和 ServletResponse对象</li>
+</ul>
+<p>注意:在这个 servlet容器中,每一次 servlet被请求的时候, servlet类都会被加载</p>
+<p>第一个应用程序由6个类组成</p>
+<ol>
+<li>Httpserverlet</li>
+<li>Request</li>
+<li>StaticRes</li>
+<li>processor</li>
+<li>Servletprocessor1</li>
+<li>Constants</li>
+</ol>
+<p>servlet的service方法从servlet容器中接收一个请求和响应实例，所以对于每个http请求，servlet容器都要构造一个请求和响应对象并传递给servlet的service方法。</p>
+<h2 id="第三章-连接器"><a href="#第三章-连接器" class="headerlink" title="第三章 连接器"></a>第三章 连接器</h2><p><strong>Catalina的俩个主要模块</strong></p>
+<blockquote>
+<p>connector和container</p>
+</blockquote>
+<p>StringManager类错误信息国际化</p>
+<h3 id="模块划分"><a href="#模块划分" class="headerlink" title="模块划分"></a><strong>模块划分</strong></h3><ul>
+<li>connector<ul>
+<li>连接器和他的支撑类（HttpConnector和HttpProcessor）</li>
+<li>Http请求类（HttpRequest）和他的辅助类</li>
+<li>Http响应类（HttpResponse）和他的辅助类</li>
+<li>Facade类（HttpRequestFacade、HttpResponseFacade）</li>
+<li>Constant类</li>
+</ul>
+</li>
+<li>starup<ul>
+<li>Bootstrap</li>
+</ul>
+</li>
+<li>core<ul>
+<li>ServletProcessor</li>
+<li>StaticResourceProcessor</li>
+</ul>
+</li>
+</ul>
+<p><strong>职责划分</strong></p>
+<p>等待Http请求：HttpConnector</p>
+<p>创建请求和响应对象：HttpProcessor</p>
+<p>HttpRequest—》HttpServletRequest—-》servlet.service</p>
+<p>HttpRequest增加字段以便servlet可以使用他们</p>
+<p>URI、查询字符串、参数、cookies、和其他头部</p>
+<p>连接器使用SocketInputStream类来从套接字的InputStream中获得字节流。</p>
+<p>两个重要方法：readRequestLine 返回HTTP请求的第一行，该行包括了URI、方法、HTTP版本。返回一个HttpRequestLine实例</p>
+<p>因为套接字流只能被读取一次，readRequestLine 必须在readHeader之前调用一次</p>
+<p>返回HttpHeader实例。</p>
+<h3 id="启动应用程序"><a href="#启动应用程序" class="headerlink" title="启动应用程序"></a>启动应用程序</h3><ol>
+<li>Bootstrap.main<ol>
+<li>创建HttpConnector实例并调用HttpConnector.start方法</li>
+</ol>
+</li>
+<li>HttpConnector.start<ol>
+<li>创建ServerSocket 服务套接字127.0..0.1 1 8080 等待Http请求</li>
+<li>socket=severSocket.accept（）</li>
+<li>侦听要连接到此套接字的连接，并接受它。<strong>方法阻塞，直到建立连接为止</strong>。</li>
+<li>为请求创建HttpProcessor实例</li>
+<li>调用HttpProcessor的process方法。processor.process(socket)</li>
+</ol>
+</li>
+<li>HttpProcessor.process<ol>
+<li>创建HttpRequest、HttpResponse对象</li>
+<li>解析HTTP请求的第一行和头部,并放到Httprequest对象</li>
+<li>解析 Httprequest和 Httpresponse对象到一个 Servletprocessor或者StaticResourceprocessor。像第2章里边说的, Servletprocessor调用被请求的 servlet的service方法,而 StaticResourceProcessor发送一个静态资源的内容</li>
+</ol>
+</li>
+</ol>
+<h4 id="Http请求解析"><a href="#Http请求解析" class="headerlink" title="Http请求解析"></a>Http请求解析</h4><ul>
+<li><p>读取套接字输入流</p>
+<ul>
+<li>input = new SocketInputStream(socket.getInputStream(), 2048)</li>
+</ul>
+</li>
+<li><p>解析请求行</p>
+<ul>
+<li>HttpProcessor.parseRequest</li>
+<li>uri</li>
+<li>请求参数</li>
+<li>session id</li>
+</ul>
+</li>
+<li><p>解析头部</p>
+<ul>
+<li>cookie</li>
+<li>content-length</li>
+<li>content-type</li>
+</ul>
+</li>
+<li><p>解析cookies</p>
+<ul>
+<li><p>Cookies是作为一个Http请求头部通过浏览器来发送的。这样一个头部名为” cookie”并且它的值是一些 cookie名/值对。这里是一个包括两个 cookie: username和 password的 cookie头部的例子</p>
+<p>Cookie: user Name=budi: password=pwd</p>
+<p>Cookie的解析是通过类org. apache. catalina.uti1. RequestUtil的 parse CookieHeader方去来处理的。这个方法接受 cookie头部并返回一个 Javax. servlet.htp. Cookie数组。数组内的元素数量和头部里边的 cookie名/值对个数是一样的 parseCookiesheader方法在 Listing3.5</p>
+</li>
+</ul>
+</li>
+<li><p>获取参数</p>
+<ul>
+<li>因为参数可以存在于查询字符串或者HTP请求内容中,所以 parseParameters方法会检查查询字符串和请求内容。一旦解析过后,参数将会在对象变量 parameters中找到,所以方法的开头会检査 parsed布尔变量,假如已经解析过的话, parsed将会返回true</li>
+</ul>
+</li>
+</ul>
+<h2 id="第四章-tomcat默认连接器"><a href="#第四章-tomcat默认连接器" class="headerlink" title="第四章 tomcat默认连接器"></a>第四章 tomcat默认连接器</h2><p>对象池：避免昂贵对象的创建</p>
+<h3 id="HTTP-1-1新特性"><a href="#HTTP-1-1新特性" class="headerlink" title="HTTP 1.1新特性"></a>HTTP 1.1新特性</h3><h4 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h4><ul>
+<li>1.1之前，服务器发送完请求的资源后就断开连接了，而建立连接需要消耗大量的资源。</li>
+<li>引入持久连接之后使用一个连接，客户端可以向服务器发送多个请求。</li>
+</ul>
+<h4 id="块编码"><a href="#块编码" class="headerlink" title="块编码"></a>块编码</h4><ul>
+<li>客户端可以发送多个请求给服务器，客户端如何去解释服务器发过来的字节流呢？</li>
+</ul>
+<p>HTTP1.1使用一个特别的头部transfer-encoding来表示有多少以块形式的字节流将会被发送。对每块来说，在数据之前，长度(十六进制)后面接着CR/LF将被发送。整个事务通过一个零长度的块来标识。假设你想用2个块发送以下38个字节，第一个长度是29，第二个长度是9。</p>
+<p>I’m as helpless as a kitten up a tree.</p>
+<p>你将这样发送：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1D\r\n </span><br><span class="line">I&#39;m as helpless as a kitten u </span><br><span class="line">9\r\n </span><br><span class="line">p a tree.</span><br><span class="line">0\r\n</span><br></pre></td></tr></table></figure>
+
+<p>1D,是29的十六进制，指示第一块由29个字节组成。0\r\n标识这个事务的结束。</p>
+<h3 id="Connector接口"><a href="#Connector接口" class="headerlink" title="Connector接口"></a>Connector接口</h3><p>setContainer是用来关联连接器和容器用的。getContainer返回关联的容器。</p>
+<p>createRequest为前来的HTTP请求构造一个请求对象，而createResponse创建一个响应对象。</p>
+<h2 id="第八章：加载器"><a href="#第八章：加载器" class="headerlink" title="第八章：加载器"></a>第八章：加载器</h2><blockquote>
+<p>使用系统的加载器来加载servlet和其他需要的类，这样servlet就可以进入Java虚拟机CLASSPATH环境下面的任何类和类库，这 会带来安全隐患。Servlet只允许访问WEB-INF/目录及其子目录下面的类以及部 署在WEB-INF/lib目录下的类库。所以一个servlet容器需要一个自己的加载器，该加载器遵守一些特定的规则来加载类。在Catalina中，加载器使用org.apache.catalina.Loader接口表示。Tomcat需要一个自己的加载器的另一个原因是它需要支持在WEB-INF/classes 或者是WEB-INF/lib目录被改变的时候会重新加载。Tomcat的加载器实现中使用一个单独的线程来检查servlet和支持类文件的时间戳。要支持类的自动加载功能，一个加载器类必须实现org.apache.catalina.loader.Reloader接口。</p>
+</blockquote>
+<p>库（repository）和源（resources）。</p>
+<p>库表示加载器查找的地方，源表示加载器中的DirContext对象，它的文档基（document base）指向了上下文的文档基。</p>
+<h3 id="Loader接口"><a href="#Loader接口" class="headerlink" title="Loader接口"></a>Loader接口</h3><p>一个Tomcat类加载器表示一个Web应用程序加载器，而不是一个类加载器。一个加载器必须实现org.apache.catalina.Loader接口。加载器的实现使用定制的类加载器org.apache.catalina.loader.WebappClassLoader。<strong>值得一提的是Loader接口定义了一系列方法跟库协作。Web应用程序的WEB-INF/classes 和WEB-INF/lib目录作为库添加上。Loader接口的addReposity方法用于添加一个库，findRepositories方法用于返回一个所有库的队列。</strong></p>
+<h3 id="Relaoder"><a href="#Relaoder" class="headerlink" title="Relaoder"></a>Relaoder</h3><p>支持自动重新加载。</p>
+<p>modified方法：</p>
+<p>如果在web应用程序中的servlet任何支持类被修改的时候该方法返回true。addRepository方法用于添加一个库而findRepositories方法用于返回实现了Reloader接口的加载器的所有的库。</p>
+<h3 id="WebappLoader"><a href="#WebappLoader" class="headerlink" title="WebappLoader"></a>WebappLoader</h3><p>负责给web应用程序加载类。</p>
+<p>WebappLoader类的start方法被调用的时候，将会完成下面几项重要任务：</p>
+<blockquote>
+<ul>
+<li><p>Creating a class loader 创建一个类加载器 </p>
+</li>
+<li><p>Setting repositories  设置库</p>
+<ul>
+<li>webappLoader的start方法会调用setRepositories方法来给类加载器添加一</li>
+</ul>
+<p>个库。WEB-INF/classes目录传递给加载器addRepository方法，而WEB-INF/lib </p>
+<p>传递给加载器的setJarPath方法。这样，类加载器能能从WEB-INF/classes 目</p>
+<p>录下面和WEB-INF/lib目录下面部署的类库里加载类。</p>
+</li>
+<li><p>Setting the class path 设置类路径</p>
+</li>
+<li><ol>
+<li>该任务由start方法调用setClassPath方法完成，setClassPath方法会给servlet上下文分配一个String类型属性保存Jasper JSP编译的类路径，该内容先不予讨论。</li>
+</ol>
+</li>
+<li><p>Setting permissions 设置访问权限</p>
+</li>
+<li><p>Starting a new thread for auto-reload. 开启一个新线程用来进行自动重载</p>
+</li>
+</ul>
+</blockquote>
+<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a><strong>缓存</strong></h3><p>每一个可以被加载的类(放在WEB-INF/classes目录下的类文件或者JAR 文件)都被当做一个源。一个源被org.apache.catalina.loader.ResourceEntry类表 示。一个ResourceEntry实例保存一个byte类型的数组表示该类、最后修改的数据或者副?等等。</p>
+<p>所有缓存的源被存放在一个叫做resourceEntries的HashMap中，键值为源名，所有找不到的源都被放在一个名为notFoundResources的HashMap中。</p>
+<h3 id="加载类"><a href="#加载类" class="headerlink" title="加载类"></a>加载类</h3><p>当加载一个类的时候, WebappClassLoader类遵循以下规则:</p>
+<blockquote>
+<ul>
+<li>所有加载过的类都要进行缓存,所以首先需要检查本地缓存</li>
+<li>如果无法再本地缓存找到类,使用java. lang ClassLoader类的 findLoaderclass方法在缓存查找类</li>
+<li>如果在两个缓存中都无法找到该类,使用系统的类加载器避免从J2EE类中覆盖来的web应用程序。</li>
+<li>如果使用了安全管理器,检查该类是否允许加载,如果该类不允许加载,则抛出 ClassNot FoundException异常</li>
+<li>如果要加载的类使用了委派标志或者该类属于 trigger包中,使用父加载器来加载类,如果父加载器为null,使用系统加载器加载。</li>
+<li>从当前的源中加载类</li>
+<li>如果在当前的源中找不到该类并且没有使用委派标志,使用父类加载器。如果父类加载器为nu1l,使用系统加载器</li>
+<li>如果该类仍然找不到,抛出 ClassNotFoundException异常</li>
+</ul>
+</blockquote>
+<h3 id="应用程序"><a href="#应用程序" class="headerlink" title="应用程序"></a>应用程序</h3><p>设置系统属性 catalina.base 的值为 user.dir，这样可以告诉 StandardContext 实例查找应用程序目录。 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.setProperty(&quot;catalina.base&quot;, System.getProperty(&quot;user.dir&quot;));</span><br><span class="line">实际上，它是 Bootstrap 类的第一行</span><br></pre></td></tr></table></figure>
+
+<p>主方法初始化连接器： Connector connector = new HttpConnector();</p>
+<p>初始化两个 servlet 的两个包装器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Wrapper wrapper1 = <span class="keyword">new</span> SimpleWrapper();</span><br><span class="line">wrapper1.setName(<span class="string">"Primitive"</span>);</span><br><span class="line">wrapper1.setServletClass(<span class="string">"PrimitiveServlet"</span>);</span><br><span class="line">Wrapper wrapper2 = <span class="keyword">new</span> SimpleWrapper();</span><br><span class="line">wrapper2.setName(<span class="string">"Modern"</span>);</span><br><span class="line">wrapper2.setServletClass(<span class="string">"ModernServlet"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>创建一个 StandardContext 的实例并设置该上下文的文档基（document  base）.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Context context = <span class="keyword">new</span> StandardContext();</span><br><span class="line">context.setPath(<span class="string">"/myApp"</span>);</span><br><span class="line">context.setDocBase(<span class="string">"myApp"</span>);</span><br><span class="line"></span><br><span class="line">设置server.xml效果相同：&lt;Context path=<span class="string">"/myApp"</span> docBase=<span class="string">"myApp"</span>/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>将两个包装器被添加到上下文中，并且添加映射关系，这样上下文就可以找到包装器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">context.addChild(wrapper1);</span><br><span class="line">context.addChild(wrapper2);</span><br><span class="line">context.addServletMapping(<span class="string">"/Primitive"</span>,<span class="string">"Primitive"</span>);</span><br><span class="line">context.addServletMapping(<span class="string">"/Modern"</span>, <span class="string">"Modern"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>初始化一个监听器并且在上下文中注册</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LifecycleListener listener = <span class="keyword">new</span> SimpleContextConfig();((Lifecycle) context).addLifecycleListener(listener);</span><br></pre></td></tr></table></figure>
+
+<p>初始化该上下文相关联的WebappLoader</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Loader loader = <span class="keyword">new</span> WebappLoader();</span><br><span class="line">context.setLoader(loader);</span><br></pre></td></tr></table></figure>
+
+<p>建立连接器跟上下文的关联</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">connector.setContainer(context);</span><br></pre></td></tr></table></figure>
+
+<p>调用连接器初始化和 start 方法，接下来是上 下文的 start 方法，这样 servlet 容器就可以工作了。 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">connector.setContainer(context); </span><br><span class="line"><span class="keyword">try</span> &#123; </span><br><span class="line"></span><br><span class="line">connector.initialize(); </span><br><span class="line"></span><br><span class="line">((Lifecycle) connector).start(); </span><br><span class="line"></span><br><span class="line">((Lifecycle) context).start();</span><br></pre></td></tr></table></figure>
+
+<h2 id="第九章：session-管理"><a href="#第九章：session-管理" class="headerlink" title="第九章：session 管理"></a>第九章：session 管理</h2><h2 id="第-14-章：服务器和服务"><a href="#第-14-章：服务器和服务" class="headerlink" title="第 14 章：服务器和服务"></a><strong>第 14 章：服务器和服务</strong></h2><blockquote>
+<p>org.apache.catalina.Server 接口表示整个 Catalina Servlet 容器以及其它组 件。一个服务器相当有用，因为它提供了一种优雅的机制来启动和停止整个系统。 不必再单独的启动连接器和容器了。</p>
+</blockquote>
+<h3 id="服务器-server"><a href="#服务器-server" class="headerlink" title="服务器 server"></a>服务器 server</h3><h4 id="start-方法"><a href="#start-方法" class="headerlink" title="start 方法"></a><strong>start 方法</strong></h4><p>可以使用 start 方法来启动一个服务器，StandardServer 的 start 方法的实现 将会启动所有服务及其相关组件，例如连接器和容器。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> <span class="keyword">throws</span> LifecycleException </span>&#123;</span><br><span class="line"><span class="comment">// Validate and update our current component state</span></span><br><span class="line"><span class="keyword">if</span> (started)</span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> LifecycleException</span><br><span class="line">(sm.getString(<span class="string">"standardServer.start.started"</span>));</span><br><span class="line"><span class="comment">// Notify our interested LifecycleListeners</span></span><br><span class="line">lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, <span class="keyword">null</span>);</span><br><span class="line">lifecycle.fireLifecycleEvent(START_EVENT, <span class="keyword">null</span>);</span><br><span class="line">started = <span class="keyword">true</span>;</span><br><span class="line"><span class="comment">// Start our defined Services</span></span><br><span class="line"><span class="keyword">synchronized</span> (services) &#123;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; services.length; i++) &#123;</span><br><span class="line"><span class="keyword">if</span> (services[i] <span class="keyword">instanceof</span> Lifecycle)</span><br><span class="line">((Lifecycle) services[i]).start();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Notify our interested LifecycleListeners</span></span><br><span class="line">lifecycle.fireLifecycleEvent(AFTER_START_EVENT, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line">该方法使用了一个 started 布尔变量来避免一个服务器被启动两次。Stop 方法</span><br><span class="line">会重置该变量的值。</span><br></pre></td></tr></table></figure>
+
+<h4 id="stop-方法"><a href="#stop-方法" class="headerlink" title="stop 方法"></a><strong>stop 方法</strong></h4><p>Stop 方法用于停止一个服务器</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> <span class="keyword">throws</span> LifecycleException </span>&#123;</span><br><span class="line"><span class="comment">// Validate and update our current component state</span></span><br><span class="line"><span class="keyword">if</span> (!started)</span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> LifecycleException</span><br><span class="line">(sm.getString(<span class="string">"standardServer.stop.notStarted"</span>));</span><br><span class="line"><span class="comment">// Notify our interested LifecycleListeners</span></span><br><span class="line">lifecycle.fireLifecycleEvent(BEFORE_STOP_EVENT, <span class="keyword">null</span>);</span><br><span class="line">lifecycle.fireLifecycleEvent(STOP_EVENT, <span class="keyword">null</span>);</span><br><span class="line">started = <span class="keyword">false</span>;</span><br><span class="line"><span class="comment">// Stop our defined Services</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; services.length; i++) &#123;</span><br><span class="line"><span class="keyword">if</span> (services[i] <span class="keyword">instanceof</span> Lifecycle)</span><br><span class="line">((Lifecycle) services[i]).stop();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Notify our interested LifecycleListeners</span></span><br><span class="line">lifecycle.fireLifecycleEvent(AFTER_STOP_EVENT, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line">调用 stop 方法可以停止所有的服务并重置 started 变量的值，这样就可以再次</span><br><span class="line">启动服务器了。</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="await-方法"><a href="#await-方法" class="headerlink" title="await 方法"></a>await 方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Await 负责整个 Tomcat 部署的停止机制，</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Wait until a proper shutdown command is received, then return.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="comment">// Set up a server socket to wait on</span></span><br><span class="line">ServerSocket serverSocket = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">serverSocket = <span class="keyword">new</span> ServerSocket(port, <span class="number">1</span>,</span><br><span class="line">InetAddress.getByName(<span class="string">"127.0.0.1"</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">System.err.println(<span class="string">"StandardServer.await: create["</span> +</span><br><span class="line">port + <span class="string">"]: "</span> + e);</span><br><span class="line">e.printStackTrace();</span><br><span class="line">System.exit(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Loop waiting for a connection and a valid command</span></span><br><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line"><span class="comment">// Wait for the next connection</span></span><br><span class="line">Socket socket = <span class="keyword">null</span>;</span><br><span class="line">InputStream stream = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">socket = serverSocket.accept();</span><br><span class="line">socket.setSoTimeout(<span class="number">10</span> * <span class="number">1000</span>); <span class="comment">// Ten seconds</span></span><br><span class="line">stream = socket.getInputStream();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (AccessControlException ace) &#123;</span><br><span class="line">System.err.println(<span class="string">"StandardServer.accept security exception: "</span></span><br><span class="line">+ ace.getMessage());</span><br><span class="line"><span class="keyword">continue</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">System.err.println(<span class="string">"StandardServer.await: accept: "</span> + e);</span><br><span class="line">e.printStackTrace();</span><br><span class="line">System.exit(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Read a set of characters from the socket</span></span><br><span class="line">StringBuffer command = <span class="keyword">new</span> StringBuffer();</span><br><span class="line"><span class="keyword">int</span> expected = <span class="number">1024</span>; <span class="comment">// Cut off to avoid DoS attack</span></span><br><span class="line"><span class="keyword">while</span> (expected &lt; shutdown.length()) &#123;</span><br><span class="line"><span class="keyword">if</span> (random == <span class="keyword">null</span>)</span><br><span class="line">random = <span class="keyword">new</span> Random(System.currentTimeMillis());</span><br><span class="line">expected += (random.nextInt() % <span class="number">1024</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">while</span> (expected &gt; <span class="number">0</span>) &#123;</span><br><span class="line"><span class="keyword">int</span> ch = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">ch = stream, read();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">System.err.println(<span class="string">"StandardServer.await: read: "</span> + e);</span><br><span class="line">e.printStackTrace();</span><br><span class="line">ch = -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (ch &lt; <span class="number">32</span>) <span class="comment">// Control character or EOF terminates loop</span></span><br><span class="line"><span class="keyword">break</span>;</span><br><span class="line">command.append((<span class="keyword">char</span>) ch);</span><br><span class="line">expected--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Close the socket now that we are done with it</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">socket.close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Match against our command string</span></span><br><span class="line"><span class="keyword">boolean</span> match = command.toString().equals(shutdown);</span><br><span class="line"><span class="keyword">if</span> (match) &#123;</span><br><span class="line"><span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">System.err.println(<span class="string">"StandardServer.await: Invalid command '"</span> +</span><br><span class="line">command.toString() + <span class="string">"' received"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Close the server socket and return</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">serverSocket.close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>方法 await 在 8085 端口创建一个 ServerSocket 对象，在 while 循环调用它的 accept 方法。Accept 方法仅仅接受 8085 端口的信息。它将接受到的信息跟 shutdown 命令进行匹配，如果匹配的话跳出循环关闭 SocketServer，如果不匹 配继续 while 循环等待另一个命令</p>
+</blockquote>
+<h3 id="服务service"><a href="#服务service" class="headerlink" title="服务service"></a>服务service</h3><blockquote>
+<p>org.apache.catalina.Service 接口用于表示服务。一个服务可以可以有一个容 器和多个连接器。你可以添加多个连接器 ，并将它们跟容器相关联。</p>
+</blockquote>
+<h3 id="容器和连接器"><a href="#容器和连接器" class="headerlink" title="容器和连接器"></a><strong>容器和连接器</strong></h3><p>一个 StandardService 实例包括两种组件：一个容器和多个连接器。多个连接器 </p>
+<p>可以使得 Tomcat 能服务于多个协议。一个协议用处处理 HTTP 请求，另一个用于 处理 HTTPS 请求。 </p>
+<p>StandardService 类用 container 变量来持有容器实例，用 connectors 数组来 持有所有的连接器 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Container container = <span class="keyword">null</span>; </span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> Connector connectors[] = <span class="keyword">new</span> Connector[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p>容器和服务相关联：调用服务的setContainer方法。</p>
+<p>给服务添加连接器：addConnector</p>
+
       
 
       
@@ -279,7 +545,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/17/notebook/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -293,18 +559,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/05/17/notebook/Platform/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/05/17/notebook/tcp/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          notebook/Platform
+          notebook/tcp
         
       </div>
     </a>
   
   
-    <a href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">spring-guide Redis 消息服务构建</div>
+    <a href="/2021/05/17/notebook/elasticsearch/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">notebook/elasticsearch</div>
       <i class="icon-circle-right"></i>
     </a>
   

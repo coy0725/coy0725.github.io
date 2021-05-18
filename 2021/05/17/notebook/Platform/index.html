@@ -8,19 +8,37 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>mybatis-缓存 | Hexo</title>
+  <title>notebook/Platform | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="mybatis缓存 装饰器模式 引用强引用 JVM中最普遍的引用，我们常用的赋值操作就是强引用  软引用 当JVM内存不足时，GCオ会回收那些只被软引用指向的对象 特别适合做缓存，因为缓存中的数据可以从数据库中恢复0所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象 当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉">
+  <meta name="description" content="Platform元数据元数据设计metas  id 可重复，并没有实际用处  package package&#x3D;”com.shareworx.teacher.model”，对应于生成代码的包名  version 可重复，并没有实际用处  release 可重复，并没有实际用处   entity  id id&#x3D;”pmv_teacher”  public final static String META">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mybatis-缓存">
-<meta property="og:url" content="http://yoursite.com/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/index.html">
+<meta property="og:title" content="notebook&#x2F;Platform">
+<meta property="og:url" content="http://yoursite.com/2021/05/17/notebook/Platform/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="mybatis缓存 装饰器模式 引用强引用 JVM中最普遍的引用，我们常用的赋值操作就是强引用  软引用 当JVM内存不足时，GCオ会回收那些只被软引用指向的对象 特别适合做缓存，因为缓存中的数据可以从数据库中恢复0所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象 当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉">
+<meta property="og:description" content="Platform元数据元数据设计metas  id 可重复，并没有实际用处  package package&#x3D;”com.shareworx.teacher.model”，对应于生成代码的包名  version 可重复，并没有实际用处  release 可重复，并没有实际用处   entity  id id&#x3D;”pmv_teacher”  public final static String META">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-05-16T03:44:04.627Z">
-<meta property="article:modified_time" content="2021-02-23T02:57:11.813Z">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563952477886.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563951451885.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563951566142.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563954135675.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563951632816.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564107890481.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563788826183.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563853136407.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563853136407.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563867477404.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563875945294.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563876093100.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563768658686.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563768777979.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564392874997.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564389944215.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564393164769.png">
+<meta property="article:published_time" content="2021-05-17T09:01:54.945Z">
+<meta property="article:modified_time" content="2021-05-17T09:01:54.945Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563952477886.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -168,39 +186,372 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-mybatis-缓存" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-notebook/Platform" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      mybatis-缓存
+      notebook/Platform
     </h1>
   
 
         
-        <a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2021-05-16T03:44:04.627Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-16</time>
+        <a href="/2021/05/17/notebook/Platform/" class="archive-article-date">
+  	<time datetime="2021-05-17T09:01:54.945Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>mybatis缓存</p>
-<p>装饰器模式</p>
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><h3 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h3><ul>
-<li>JVM中最普遍的引用，我们常用的赋值操作就是强引用</li>
+        <h1 id="Platform"><a href="#Platform" class="headerlink" title="Platform"></a>Platform</h1><h2 id="元数据"><a href="#元数据" class="headerlink" title="元数据"></a>元数据</h2><h3 id="元数据设计"><a href="#元数据设计" class="headerlink" title="元数据设计"></a>元数据设计</h3><p><strong>metas</strong></p>
+<ol>
+<li><p>id</p>
+<p>可重复，并没有实际用处</p>
+</li>
+<li><p>package</p>
+<p>package=”com.shareworx.teacher.model”，对应于生成代码的包名</p>
+</li>
+<li><p>version</p>
+<p>可重复，并没有实际用处</p>
+</li>
+<li><p>release</p>
+<p>可重复，并没有实际用处</p>
+</li>
+</ol>
+<p><strong>entity</strong></p>
+<ol>
+<li><p>id</p>
+<p>id=”pmv_teacher”  public final static String META_ID = “pmv_teacher”（PMVTeacherModel）</p>
+<p>id对应实体类的META_ID属性，为字符串类型</p>
+</li>
+<li><p>name</p>
+<p>name=”系统用户”，估计就是描述id的</p>
+</li>
+<li><p>table</p>
+<p>table=”pmv_teacher” 对应于数据库中的表名</p>
+</li>
+<li><p>class</p>
+<p>class=”PMVTeacherModel”，对应于生成的Java类名</p>
+</li>
+<li><p>init</p>
+<p>未知，没什么用，不做了解</p>
+</li>
+<li><p>dynamic</p>
+<p>未知，没什么用，不做了解</p>
+</li>
+<li><p>location</p>
+<p>定位作用？没什么用，不做了解</p>
+</li>
+</ol>
+<p><strong>property</strong></p>
+<ol>
+<li><p>id</p>
+<p>id=”id”  public final static String ID = “id”;</p>
+<p>Java类中的常量</p>
+</li>
+<li><p>name</p>
+<p>对id的描述，用来生成注释</p>
+</li>
+<li><p>type</p>
+<p>type=”0”  Java变量的数据类型</p>
+</li>
+<li><p>persist</p>
+<p>是否持久化，即是否在数据库中建立该表，将数据存储到数据库中，设置为true</p>
+</li>
+<li><p>column</p>
+<p>数据库中的列名</p>
+</li>
+<li><p>define</p>
+<p>该列的数据类型</p>
+</li>
+<li><p>length</p>
+<p>长度</p>
+</li>
+<li><p>code</p>
+<p>编码规则，使用uuid时就填uuid，不用就为空</p>
+</li>
+<li><p>mode</p>
+<ol>
+<li>-1 不使用自动生成uuid</li>
+<li>0 没有制定值时使用uuid生成的值进行填充</li>
+<li>1 强制使用uuid生成的值填充该列</li>
+</ol>
+</li>
+<li><p>value</p>
+<p>估计时默认值</p>
+</li>
+<li><p>uinique</p>
+<p>是否唯一约束</p>
+</li>
+<li><p>precision</p>
+<p>精度</p>
+</li>
+<li><p>dynamic</p>
+<p>不用管</p>
+</li>
+</ol>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563952477886.png" alt="1563952477886"></p>
+<p>structrue![1563949758334](C:\Users\yuhui.deng\AppData\Roaming\Typora\typora-user-images\1563949758334.png</p>
+<h3 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;artifactId&gt;Platform-api&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line">&lt;artifactId&gt;druid&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line">&lt;artifactId&gt;spring-boot-starter-jdbc&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line">&lt;artifactId&gt;mysql-connector-java&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line">&lt;artifactId&gt;ojdbc7&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line">&lt;artifactId&gt;spring-boot-configuration-processor&lt;&#x2F;artifactId&gt;</span><br><span class="line"></span><br><span class="line">&lt;artifactId&gt;gs-collections&lt;&#x2F;artifactId&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>jdbc.properties</strong></p>
+<p>对jdbc属性进行初始化</p>
+<p><strong>applicationContext-metadata.xml</strong></p>
+<p>元数据配置</p>
+<h3 id="元数据持久化服务"><a href="#元数据持久化服务" class="headerlink" title="元数据持久化服务"></a>元数据持久化服务</h3><p><code>metadataPersistService</code></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563951451885.png" alt="1563951451885"></p>
+<p><strong>实体</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String sql = <span class="string">"insert into meta_class (id_, name_, table_, pkg_, icon_, ormclass_, type_, init_, domain_, version_) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"</span>;</span><br></pre></td></tr></table></figure>
+
+<entity id="pmv_teacher" name="系统用户" table="pmv_teacher" class="PMVTeacherModel" init="true" dynamic="false" location="256,36,120,120">
+
+<p><strong>属性</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String sql = <span class="string">"insert into meta_field (id_, name_, meta_, column_, type_, define_, length_, precision_, scale_, empty_, persist_, unique_, dynamic_, serialcode_, serialmode_, sort_) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"</span>;</span><br></pre></td></tr></table></figure>
+
+<p><property id="id" name="主键" column="id" type="0" define="char" length="50" 
+        precision="0" scale="0" empty="false" persist="true" unique="false" dynamic="false" value="" code="UUID" mode="1"/></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CHAR(<span class="number">0</span>),STRING(<span class="number">1</span>),INTEGER(<span class="number">2</span>),DECIMAL(<span class="number">3</span>),BOOLEAN(<span class="number">4</span>),</span><br><span class="line">DATE(<span class="number">5</span>),DATETIME(<span class="number">6</span>),CLOB(<span class="number">7</span>),BLOB(<span class="number">8</span>),ENUM(<span class="number">9</span>),</span><br><span class="line">REFERENCE(<span class="number">10</span>),COMPOSITE(<span class="number">11</span>),AGGREGAE(<span class="number">12</span>),CSTRING(<span class="number">13</span>),</span><br><span class="line">TINY(<span class="number">14</span>),SHORT(<span class="number">15</span>),LONG(<span class="number">16</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="元数据定义服务"><a href="#元数据定义服务" class="headerlink" title="元数据定义服务"></a>元数据定义服务</h3><p><code>metadataDefineService</code></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563951566142.png" alt="1563951566142"></p>
+<h3 id="数据访问对象持久化"><a href="#数据访问对象持久化" class="headerlink" title="数据访问对象持久化"></a>数据访问对象持久化</h3><p><code>objectPersistDao</code></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563954135675.png" alt="1563954135675"></p>
+<h3 id="元数据编码服务"><a href="#元数据编码服务" class="headerlink" title="元数据编码服务"></a>元数据编码服务</h3><p><code>metaCodeService</code></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563951632816.png" alt="1563951632816"></p>
+<h3 id="基本域服务"><a href="#基本域服务" class="headerlink" title="基本域服务"></a>基本域服务</h3><p><code>baseDomainService</code></p>
+<p>元数据定义</p>
+<p>黄：实体</p>
+<p>红：枚举</p>
+<p>蓝：接口</p>
+<blockquote>
+<p>entity id 元数据id 平台唯一</p>
+<p>property 属性</p>
+<p>code=uuid mode=1 采用uuid自动生成主键</p>
+<p>mode 编码规则 1始终使用  当前字段为空时使用编码规则</p>
+<p>package:生成的类代码位置</p>
+<p>index：表明实体主键</p>
+</blockquote>
+<blockquote>
+<p>实体定义</p>
+<p>property-type:{0:定长字符串|1:字符符|2:参数|3:小数|4:布尔值|5:日期|6：日期时问|7:大文本|8:二进制文件|9:参照|10枚举|11:综合</p>
+</blockquote>
+<h2 id="demo-开发日志"><a href="#demo-开发日志" class="headerlink" title="demo 开发日志"></a>demo 开发日志</h2><h3 id="业务功能"><a href="#业务功能" class="headerlink" title="业务功能"></a>业务功能</h3><p>使用Platform平台实现对实体Teacher的增删查改基本操作</p>
+<h3 id="Theacher表结构"><a href="#Theacher表结构" class="headerlink" title="Theacher表结构"></a><strong>Theacher表结构</strong></h3><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564107890481.png" alt="1564107890481"></p>
+<h3 id="业务代码"><a href="#业务代码" class="headerlink" title="业务代码"></a>业务代码</h3><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563788826183.png" alt="1563788826183"></p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>存在的问题</p>
+<p>数据库改用自己的，其他服务将不能使用</p>
+<p>前端组件还没编写</p>
+<blockquote>
+<p>组件： npm link 将组件链接到全局</p>
+</blockquote>
+<blockquote>
+<p>主工程:npm link 组件名</p>
+</blockquote>
+<p>其中前后端如何衔接的细节还不是很清楚</p>
+<p>操作日志</p>
+<p>checkout trunk from svn</p>
+<p>D:\platform\trunk\platform-demo-vue2&gt;npm i</p>
+<h3 id="开发流程"><a href="#开发流程" class="headerlink" title="开发流程"></a>开发流程</h3><p><strong>新建元数据</strong></p>
+<blockquote>
+<p>元数据就一个实体：老师 两个字段 <code>id</code> 和<code>name</code></p>
+</blockquote>
+<p>使用元数据生成代码</p>
+<p>将代码copy到<code>workspace\trunk\platform_demo\src\main\resources\java\com\shareworx&gt;</code></p>
+<p>emm 这个我之前一直都是放在src\main\java里面</p>
+<p>你这个都放在resources目录里，我就照着放了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@ComponentScan(basePackages &#x3D; &#123; &quot;com.shareworx&quot;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>代码在<code>basePackages</code>子目录下肯定也是能扫描到的</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563853136407.png" alt="1563853136407"></p>
+<p><strong>前端组件工程编写、链接主工程</strong></p>
+<p>前端组件工程 <code>npm link</code></p>
+<p>前端主工程 <code>npm link xxx</code></p>
+<p><strong>服务启动</strong></p>
+<p>后台服务启动 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(Application.class);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>前端主工程 <code>npm run serve</code></p>
+<p><strong>新建元数据</strong></p>
+<blockquote>
+<p>元数据就一个实体：老师 两个字段 <code>id</code> 和<code>name</code></p>
+</blockquote>
+<p>使用元数据生成代码</p>
+<p>将代码copy到<code>workspace\trunk\platform_demo\src\main\resources\java\com\shareworx&gt;</code></p>
+<p>emm 这个我之前一直都是放在src\main\java里面</p>
+<p>这个工程Java代码都放在resources目录里，我就照着放了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@ComponentScan(basePackages &#x3D; &#123; &quot;com.shareworx&quot;&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>代码在<code>basePackages</code>子目录下肯定也是能扫描到的</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563853136407.png" alt="1563853136407"></p>
+<p><strong>前端组件工程编写、链接主工程</strong></p>
+<p>前端组件工程 <code>npm link</code></p>
+<p>前端主工程 <code>npm link xxx</code></p>
+<p><strong>服务启动</strong></p>
+<p>后台服务启动 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(Application.class);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>前端主工程 <code>npm run serve</code></p>
+<h3 id="Question"><a href="#Question" class="headerlink" title="Question"></a>Question</h3><h4 id="前端后端的服务是需要分别进行启动吗？"><a href="#前端后端的服务是需要分别进行启动吗？" class="headerlink" title="前端后端的服务是需要分别进行启动吗？"></a>前端后端的服务是需要分别进行启动吗？</h4><blockquote>
+<p>前端端口 8081</p>
+<p>后端端口8010 <strong>使用main方法启动</strong></p>
+</blockquote>
+<p>现在是前端组件工程还没弄好，元数据，增删查改业务代码都弄好了，</p>
+<h4 id="application-properties文件有哪些需要修改的地方吗"><a href="#application-properties文件有哪些需要修改的地方吗" class="headerlink" title="application.properties文件有哪些需要修改的地方吗"></a><code>application.properties</code>文件有哪些需要修改的地方吗</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">system.metadata.autoPersist&#x3D;update</span><br><span class="line"></span><br><span class="line">system.metadata.rePublish&#x3D;true</span><br></pre></td></tr></table></figure>
+
+<p>例如：数据库，我是这样想的，应该连接自己本地的数据库，建一个teacher表，在本地测试，远程数据库应该没得权限吧</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563867477404.png" alt="1563867477404"></p>
+<h4 id="数据库符号错误异常，创建bean失败"><a href="#数据库符号错误异常，创建bean失败" class="headerlink" title="数据库符号错误异常，创建bean失败"></a>数据库符号错误异常，创建bean失败</h4><p>com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException</p>
+<p>org.springframework.jdbc.BadSqlGrammarException</p>
+<p> org.springframework.beans.factory.BeanCreationException</p>
+<blockquote>
+<p>nested exception is java.lang.NoClassDefFoundError: org/apache/log4j/Priority</p>
+</blockquote>
+<p>解决方案</p>
+<p><a href="https://www.cnblogs.com/EasonJim/p/7050312.html" target="_blank" rel="noopener">https://www.cnblogs.com/EasonJim/p/7050312.html</a></p>
+<p>未解决</p>
+<blockquote>
+<p>Error creating bean with name ‘freeMarkerConfigurer’ defined in class path resource ：xxxx,Initialization of bean failed; nested exception is java.lang.NoClassDefFoundError: org/apache/log4j/Priority</p>
+</blockquote>
+<p>未解决</p>
+<p>解决方案有两个：</p>
+<p>1：在配置文件中，设置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">spring.freemarker.check-template-location&#x3D;false</span><br></pre></td></tr></table></figure>
+
+<p>可是我并不是使用freemaker做页面处理的。所以这种解决方案pass掉。</p>
+<p>2：在自动注解中过滤到freemakerConfiguration这个类就可以。</p>
+<p>具体解决：在你的spring boot启动类中添加：@EnableAutoConfiguration(exclude = { FreeMarkerAutoConfiguration.class })</p>
+<p>即可。这样就过滤掉了。</p>
+<p>重启启动项目，正常访问了。</p>
+<p>总结：</p>
+<p>这个问题主要是因为spring boot的@EnableAutoConfiguration注解引起</p>
+<p>版本问题？</p>
+<blockquote>
+<p>启动报了一大堆sql语法和错误，还有一些无法创建bean的错误，按道理如果元数据对了，这些语句肯定也会没问题，可能是我的元数据的问题，因为是对着视屏敲得，<br>com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException</p>
+<p>org.springframework.jdbc.BadSqlGrammarException</p>
+<p>org.springframework.beans.factory.BeanCreationException</p>
+</blockquote>
+<p>找不到文件</p>
+<p>invalidate cache and restart 试下</p>
+<h4 id="import-org-apache-log4j-Logger-报错"><a href="#import-org-apache-log4j-Logger-报错" class="headerlink" title="import org.apache.log4j.Logger;报错"></a>import org.apache.log4j.Logger;报错</h4><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563875945294.png" alt="1563875945294"></p>
+<p>导入依赖</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">          &lt;groupId&gt;org.slf4j&lt;/groupId&gt;</span><br><span class="line">          &lt;artifactId&gt;log4j-over-slf4j&lt;/artifactId&gt;</span><br><span class="line">          &lt;version&gt;1.7.25&lt;/version&gt;</span><br><span class="line">      &lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563876093100.png" alt="1563876093100"></p>
+<p>导入那个类呢?</p>
+<p>下载jar包放在class path下</p>
+<p>log4j:WARN No appenders could be found for logger (com.alibaba.druid.pool.DruidDataSource).<br>log4j:WARN Please initialize the log4j system properly</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">StatementCallback; bad SQL grammar [create table pmv-teacher (</span><br><span class="line">  primary key (id)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>前端后端的服务是需要分别进行启动吗？</p>
+<p>现在是前端组件工程还没弄好，元数据，增删查改业务代码都弄好了，</p>
+<p>application.properties文件有哪些需要修改的地方吗</p>
+<p>例如：数据库，我是这样想的，应该连接自己本地的数据库，建一个teacher表，在本地测试，远程数据库应该没得权限吧</p>
+<p>persist=”true”  是否持久化 我选择了false</p>
+<p>导致表中一列数据都没有，创建列失败。。</p>
+<h2 id="npm"><a href="#npm" class="headerlink" title="npm"></a>npm</h2><h3 id="npm配置"><a href="#npm配置" class="headerlink" title="npm配置"></a>npm配置</h3><p>.npmrc</p>
+<blockquote>
+<p>prefix=D:\devTool\nodejs\node_global<br>cache=D:\devTool\nodejs\node_cache<br>registry=<a href="http://192.168.10.156:8082/repository/w-npm-group/" target="_blank" rel="noopener">http://192.168.10.156:8082/repository/w-npm-group/</a></p>
+</blockquote>
+<h3 id="npm错误集锦"><a href="#npm错误集锦" class="headerlink" title="npm错误集锦"></a>npm错误集锦</h3><p>操作系统拒绝执行操作</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563768658686.png" alt="1563768658686"></p>
+<p>管理员权限运行</p>
+<blockquote>
+<ul>
+<li>cmd</li>
+<li>Node.js command prompt</li>
 </ul>
-<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><ul>
-<li>当JVM内存不足时，GCオ会回收那些只被软引用指向的对象</li>
-<li>特别适合做缓存，因为缓存中的数据可以从数据库中恢复0<br>所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象</li>
-<li>当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉。</li>
-</ul>
-<p>实现类</p>
-<p><code>SoftReference</code></p>
-<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3>
+</blockquote>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1563768777979.png" alt=""></p>
+<h2 id="maven"><a href="#maven" class="headerlink" title="maven"></a>maven</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;mirror&gt;</span><br><span class="line">	&lt;id&gt;cs&lt;&#x2F;id&gt;</span><br><span class="line">	&lt;name&gt;csmaven&lt;&#x2F;name&gt;</span><br><span class="line">	&lt;url&gt;http:&#x2F;&#x2F;192.168.10.156:8081&#x2F;nexus&#x2F;content&#x2F;groups&#x2F;public&#x2F;&lt;&#x2F;url&gt; </span><br><span class="line">	&lt;mirrorOf&gt;*&lt;&#x2F;mirrorOf&gt;</span><br><span class="line">&lt;&#x2F;mirror&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="maven错误集锦"><a href="#maven错误集锦" class="headerlink" title="maven错误集锦"></a>maven错误集锦</h3><blockquote>
+<ol>
+<li>@Override is not allowed when implementing interface method</li>
+</ol>
+</blockquote>
+<p> 解决：pom文件中配置maven-compiler-plugin</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;  </span><br><span class="line">	&lt;groupId&gt;org.apache.maven.plugins&lt;&#x2F;groupId&gt;  </span><br><span class="line">	&lt;artifactId&gt;maven-compiler-plugin&lt;&#x2F;artifactId&gt;  </span><br><span class="line">	&lt;version&gt;3.2&lt;&#x2F;version&gt;  </span><br><span class="line">	&lt;configuration&gt;  </span><br><span class="line">		&lt;source&gt;1.6&lt;&#x2F;source&gt;  </span><br><span class="line">		&lt;target&gt;1.6&lt;&#x2F;target&gt;  </span><br><span class="line">	&lt;&#x2F;configuration&gt;  </span><br><span class="line">&lt;&#x2F;plugin&gt;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="全文检索"><a href="#全文检索" class="headerlink" title="全文检索"></a>全文检索</h2><p>问题</p>
+<p>Library Maven: <code>com.shareworx:Platform-elasticsearch-embed:4.0.6.2131</code></p>
+<p><strong>has broken classes path</strong>:   <code>D:\devTool\apache-maven-3.6.1\repository\com\shareworx\Platform-elasticsearch-embed\4.0.6.2131\Platform-elasticsearch-embed-4.0.6.2131.jar</code> [Fix]</p>
+<p>尝试解决:</p>
+<ol>
+<li>pom文件删除依赖再导入依赖失败.</li>
+<li>删除本地仓库关于该文件的依赖再导入,依旧失败.</li>
+</ol>
+<p>添加对应版本号,添加了依旧失败</p>
+<p>maven命令行:mvn -U idea:idea</p>
+<p>命令行输出:解决项目依赖时出现一个错误,原因是缺少com.shareworx:Platform-elasticsearch-embed:4.0.6.2131</p>
+<p>依赖,</p>
+<p>尝试使用命令行命令下载</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn install:install-file -DgroupId=com.shareworx -DartifactId=Platform-elasticsearch-embed -Dversion=<span class="number">4.0</span><span class="number">.6</span><span class="number">.2131</span> -Dpackaging=jar -Dfile=/path/to/file</span><br></pre></td></tr></table></figure>
+
+<p>或者.如果你的主机拥有自己的存储库,你可以发布文件到这里:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn deploy:deploy-file -DgroupId=com.shareworx -DartifactId=Platform-elasticsearch-embed -Dversion=<span class="number">4.0</span><span class="number">.6</span><span class="number">.2131</span> -Dpackaging=jar -Dfile=/path/to/file -Durl=[url] -DrepositoryId=[id]</span><br></pre></td></tr></table></figure>
+
+<p>最后版本放弃,${shareworx.version} 换成了<version>4.0.6.1004</version></p>
+<p><strong>添加elasticsearch依赖</strong></p>
+<p><strong>在application.properties中配置elasticsearch</strong></p>
+<p><strong>添加全文检索实体</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Document</span>(indexName = <span class="string">"platform_test"</span>,type=<span class="string">"pmv_teacher"</span>)<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TeacherDocument</span> <span class="keyword">extends</span> <span class="title">DocumentDomain</span></span></span><br></pre></td></tr></table></figure>
+
+<p>indexName:数据库名 pmv_teacher:数据库表名</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="keyword">private</span> String id;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Field</span>(type = FieldType.String, indexAnalyzer = <span class="string">"ik"</span>, searchAnalyzer = <span class="string">"ik"</span>)<span class="keyword">private</span> String title;</span><br></pre></td></tr></table></figure>
+
+<p>所有的全文检索实体必须继承DocumentDomain，</p>
+<p>这里title和content字段我们都使用<strong>ik</strong>分词器。</p>
+<p><strong>添加Repository</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TeacherSearchRepsitory</span> <span class="keyword">extends</span> <span class="title">BaseSearchRepository</span>&lt;<span class="title">TeacherDocument</span>, <span class="title">String</span>&gt; </span>&#123;    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>添加Service接口和实现</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TeacherSearchService</span> <span class="keyword">extends</span> <span class="title">BaseSearchService</span>&lt;<span class="title">TeacherDocument</span>,<span class="title">String</span>&gt; </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>添加Service实现</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TeacherSearchServiceImpl</span> <span class="keyword">extends</span> <span class="title">BaseSearchServiceImpl</span>&lt;<span class="title">TeacherDocument</span>,<span class="title">String</span>&gt; <span class="keyword">implements</span> <span class="title">TeacherSearchService</span> </span>&#123;   <span class="meta">@Autowired</span>    </span><br><span class="line"><span class="keyword">private</span> TeacherSearchRepsitory teacherSearchRepsitory;    </span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)    </span><br><span class="line"><span class="meta">@Override</span>    </span><br><span class="line"><span class="keyword">public</span> &lt;B extends BaseSearchRepository&lt;TeacherDocument, String&gt;&gt; <span class="function">B <span class="title">getSearchRepository</span><span class="params">()</span> </span>&#123;        <span class="keyword">return</span> (B) teacherSearchRepsitory;    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>调用例子</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/teacherSearch"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TeacherSearchController</span> </span>&#123;    </span><br><span class="line"><span class="meta">@Autowired</span>    </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> TeacherSearchService teacherSearchService;    </span><br><span class="line">String keyword=<span class="string">"is"</span>;    </span><br><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/test"</span>)    </span><br><span class="line"><span class="keyword">public</span> FacetedPage&lt;Map&lt;String, Object&gt;&gt; serachTest() &#123;        </span><br><span class="line">FacetedPage&lt;Map&lt;String, Object&gt;&gt; page = teacherSearchService.multiSearchHighlight(                <span class="keyword">new</span> String[]&#123;<span class="string">"platform_test"</span>&#125;,</span><br><span class="line">		 <span class="keyword">new</span> String[]&#123;<span class="string">"pmv_teacher"</span>,<span class="string">"user"</span>&#125;,                </span><br><span class="line">		 <span class="keyword">new</span> String[]&#123;<span class="string">"name"</span>,<span class="string">"title"</span>,<span class="string">"content"</span>&#125;,                </span><br><span class="line">		 keyword,         </span><br><span class="line">         <span class="string">"&lt;a&gt;"</span>,<span class="string">"&lt;/a&gt;"</span>,         </span><br><span class="line">         <span class="keyword">new</span> PageRequest(<span class="number">0</span>,<span class="number">10</span>));</span><br><span class="line">         <span class="keyword">return</span>  page;    &#125;</span><br><span class="line">         &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>报错</strong></p>
+<p><strong>Exception in thread “main” java.lang.AbstractMethodError: org.springframework.boot.context.config.ConfigFileApplicationListener.supportsSourceType(Ljava/lang/Class;)Z</strong></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564392874997.png" alt="1564392874997"></p>
+<ol>
+<li>SpringApplication.run–&gt;</li>
+<li>SpringApplication.prepareEnvironment–&gt;spring应用 准备环境</li>
+<li>EventPublishingRunListener.environmentPrepared–&gt;事件发布运行侦听器 环境准备</li>
+<li>SimpleApplicationEventMulticaster.multicastEvent–&gt;简单应用事件组播 组播事件</li>
+<li>AbstractApplicationEventMulticaster.getApplicationListeners–&gt;抽象应用事件组播器:获得应用程序监听器</li>
+<li>AbstractApplicationEventMulticaster.retrieveApplicationListeners–&gt;抽象应用事件组播器:检索应用程序监听器</li>
+<li>AbstractApplicationEventMulticaster.supportsEvent–&gt; 应用事件组播 支持事件</li>
+<li>.GenericApplicationListenerAdapter.supportsSourceType–&gt;</li>
+<li>GenericApplicationListenerAdapter.supportsSourceType 通用应用程序监听器适配器 支持资源类型</li>
+</ol>
+<p>解决方案1</p>
+<p>jar包冲突</p>
+<p>添加依赖</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">&lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">&lt;artifactId&gt;spring-boot-starter-parent&lt;&#x2F;artifactId&gt;</span><br><span class="line">&lt;version&gt;2.1.3.RELEASE&lt;&#x2F;version&gt;</span><br><span class="line">&lt;relativePath&#x2F;&gt; &lt;!-- lookup parent from repository --&gt;</span><br><span class="line">&lt;&#x2F;parent&gt;</span><br></pre></td></tr></table></figure>
+
+<p>报错</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564389944215.png" alt="1564389944215"></p>
+<p>重启试试</p>
+<p>还是找不到</p>
+<p>然后修改了@Filed注释</p>
+<p>再次启动</p>
+<p>报错</p>
+<p>Caused by: java.lang.IllegalStateException: StandardEngine[Tomcat].StandardHost[localhost].TomcatEmbeddedContext[] failed to start</p>
+<p>Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564393164769.png" alt="1564393164769"></p>
+<p>网上搜索的,但是我这也没配置web.xml </p>
+
       
 
       
@@ -279,7 +630,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/17/notebook/Platform/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -293,18 +644,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/05/17/notebook/Platform/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/05/17/notebook/Mysql%E9%97%AE%E9%A2%98%E6%8C%87%E5%8D%97/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          notebook/Platform
+          notebook/Mysql问题指南
         
       </div>
     </a>
   
   
-    <a href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">spring-guide Redis 消息服务构建</div>
+    <a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">mybatis-缓存</div>
       <i class="icon-circle-right"></i>
     </a>
   

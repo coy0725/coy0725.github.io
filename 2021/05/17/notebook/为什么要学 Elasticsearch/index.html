@@ -8,19 +8,57 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>mybatis-缓存 | Hexo</title>
+  <title>notebook/为什么要学 Elasticsearch | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="mybatis缓存 装饰器模式 引用强引用 JVM中最普遍的引用，我们常用的赋值操作就是强引用  软引用 当JVM内存不足时，GCオ会回收那些只被软引用指向的对象 特别适合做缓存，因为缓存中的数据可以从数据库中恢复0所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象 当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉">
+  <meta name="description" content="为什么要学 Elasticsearch Kiana 实现数据可视化,在 Elastic stack中进行导航 Kiana能够以图表的形式现数据,并且具有可扩展的用户界面,供您全方位配置和管理 ELastic Stack Elasticsearch 对您的数据进行分析,搜素和存储 Elasticsearch是基于josn的分布式搜索和分析引擎,专为实现水平可扩展性,高可靠性和管理使捷性而设计 采集任">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mybatis-缓存">
-<meta property="og:url" content="http://yoursite.com/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/index.html">
+<meta property="og:title" content="notebook&#x2F;为什么要学 Elasticsearch">
+<meta property="og:url" content="http://yoursite.com/2021/05/17/notebook/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%A6%20Elasticsearch/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="mybatis缓存 装饰器模式 引用强引用 JVM中最普遍的引用，我们常用的赋值操作就是强引用  软引用 当JVM内存不足时，GCオ会回收那些只被软引用指向的对象 特别适合做缓存，因为缓存中的数据可以从数据库中恢复0所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象 当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉">
+<meta property="og:description" content="为什么要学 Elasticsearch Kiana 实现数据可视化,在 Elastic stack中进行导航 Kiana能够以图表的形式现数据,并且具有可扩展的用户界面,供您全方位配置和管理 ELastic Stack Elasticsearch 对您的数据进行分析,搜素和存储 Elasticsearch是基于josn的分布式搜索和分析引擎,专为实现水平可扩展性,高可靠性和管理使捷性而设计 采集任">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-05-16T03:44:04.627Z">
-<meta property="article:modified_time" content="2021-02-23T02:57:11.813Z">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564465962462.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466069329.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466345541.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466449868.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466634445.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564471529564.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467097852.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467141719.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467318299.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467765374.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467951855.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564468199045.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564468846882.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564468804501.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564477646892.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564477989966.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564535860148.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564536154851.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564536614080.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564473114232.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564476706322.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564540729648.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564540915519.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564540991616.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564541034803.png">
+<meta property="og:image" content="http://5b0988e595225.cdn.sohucs.com/images/20181026/1da3f2bda2e64741a5b9e8098aa583d7.png">
+<meta property="og:image" content="http://5b0988e595225.cdn.sohucs.com/images/20181026/2609086b42114436bac2bc7b59a95bcf.png">
+<meta property="og:image" content="http://5b0988e595225.cdn.sohucs.com/images/20181026/577b0f4bd43b48d1a6e975c2d8c9e6c5.png">
+<meta property="og:image" content="http://5b0988e595225.cdn.sohucs.com/images/20181026/c0f141f53f9d4a2586ebda13c6bed862.png">
+<meta property="og:image" content="http://5b0988e595225.cdn.sohucs.com/images/20181026/96aa8dc611ff4dceaf32b9ef857b5f8f.png">
+<meta property="og:image" content="http://5b0988e595225.cdn.sohucs.com/images/20181026/a61ab3018f0a411a81201c25f9774a12.png">
+<meta property="og:image" content="http://5b0988e595225.cdn.sohucs.com/images/20181026/ce789c570a824076b94bf25903979f33.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564629339020.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640213421.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640765687.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640897350.png">
+<meta property="og:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640997965.png">
+<meta property="article:published_time" content="2021-05-17T09:01:54.949Z">
+<meta property="article:modified_time" content="2021-05-17T09:01:54.949Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564465962462.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -168,39 +206,674 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-mybatis-缓存" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-notebook/为什么要学 Elasticsearch" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      mybatis-缓存
+      notebook/为什么要学 Elasticsearch
     </h1>
   
 
         
-        <a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2021-05-16T03:44:04.627Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-16</time>
+        <a href="/2021/05/17/notebook/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%A6%20Elasticsearch/" class="archive-article-date">
+  	<time datetime="2021-05-17T09:01:54.949Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>mybatis缓存</p>
-<p>装饰器模式</p>
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><h3 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h3><ul>
-<li>JVM中最普遍的引用，我们常用的赋值操作就是强引用</li>
+        <p><strong>为什么要学 Elasticsearch</strong></p>
+<p>Kiana</p>
+<p>实现数据可视化,在 Elastic stack中进行导航</p>
+<p>Kiana能够以图表的形式现数据,并且具有可扩展的用户界面,供您全方位配置和管理 ELastic Stack</p>
+<p>Elasticsearch</p>
+<p>对您的数据进行分析,搜素和存储</p>
+<p>Elasticsearch是基于josn的分布式搜索和分析引擎,专为实现水平可扩展性,高可靠性和管理使捷性而设计</p>
+<p>采集任何来源、任何格式的数据</p>
+<p>Beats</p>
+<p>Beats是一个面向轻量型来集器的平台, Logstash是动态数据,拥有可</p>
+<p>这些采集器可从边缘机器向Logstash和Elasticsearch发送数据,蓝够与</p>
+<p>Logstash</p>
+<p>Logstash是动态数据收集管道,拥有可扩展的插件生态系统,能够与Elasticsearch产生强大的协同作用,</p>
+<p><strong>主要功能</strong></p>
+<ul>
+<li>分布式搜索引擎</li>
+<li>大数据近实时分析引擎</li>
 </ul>
-<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><ul>
-<li>当JVM内存不足时，GCオ会回收那些只被软引用指向的对象</li>
-<li>特别适合做缓存，因为缓存中的数据可以从数据库中恢复0<br>所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象</li>
-<li>当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉。</li>
+<p><strong>产品特性</strong></p>
+<ul>
+<li>容易使用/容易扩展</li>
+<li>高性能,和T+1说不</li>
 </ul>
-<p>实现类</p>
-<p><code>SoftReference</code></p>
-<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3>
+<p>起源- Lucene</p>
+<ul>
+<li>基于Java语言开发的搜索引擎库类</li>
+<li>创建于1999年,2005年成为 Apache顶级开源项目</li>
+<li>Lucene具有高性能、易扩展的优点</li>
+</ul>
+<p>Lucene的局限性</p>
+<ul>
+<li>只能基于Java语言开发</li>
+<li>类库的接口学习曲线陡峭</li>
+<li>原生并不支持水平扩展</li>
+</ul>
+<p>solr和 elasticsearch都是基于 Lucene实现的</p>
+<p>solr利用 zookeeper进行分布式管理,而 elasticsearch自身带有分布式协调管理功能</p>
+<p>solr比 elasticsearch实现更加全面,solr官方提供的工能能够更多,</p>
+<p>而 elasticsearch本身更注重于核心功能,高级功能多由第三方插件提</p>
+<p>供;</p>
+<p>solr在传统的搜索应用中表现好于 elasticsearch,而 elasticsearch在<strong>实时搜索</strong>应用方面比solr表现好</p>
+<p>·当单纯的对已有数据进行搜索时,solr更快。</p>
+<p>·当实时建立索引时,solr会产生io阻塞,查询性能較差,Elasticsearch具有明显的优势。</p>
+<p>·随着数据量的増加,solr的搜索效率会变得更低,而Elasticsearch却没有明显的变化。</p>
+<p>新特性7.</p>
+<p>Lucene 8.0</p>
+<p>重大改进一正式废除单个索引下多Type的支持</p>
+<p>7.1开始, Security功能免费使用</p>
+<p>ECK-Elasticseach Operator on Kubernetes</p>
+<p>新功能</p>
+<ul>
+<li>New Cluster coordination</li>
+<li>Feature-Complete High Level REST Client</li>
+<li>Script Score Query</li>
+</ul>
+<p>性能优化</p>
+<ul>
+<li>默认的 Primary Shard数从5改为1,避免 Over Sharding</li>
+<li>性能优化,更快的Top K</li>
+</ul>
+<h3 id="Elasticsearch的分布式架构"><a href="#Elasticsearch的分布式架构" class="headerlink" title="Elasticsearch的分布式架构"></a><strong>Elasticsearch的分布式架构</strong></h3><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564465962462.png" alt="1564465962462"></p>
+<ul>
+<li><p>集群规模可以从单个扩展至数百个节点</p>
+</li>
+<li><p>高可用&amp;水平扩展</p>
+<p>服务和数据两个纬度</p>
+</li>
+<li><p>支持不同的节点类型</p>
+<p>支持Hot&amp;Warm架构</p>
+</li>
+</ul>
+<p><strong>支持多种方式接入</strong></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466069329.png" alt="1564466069329"></p>
+<p><strong>主要功能</strong></p>
+<ul>
+<li><p>海量数据的分户式存储以及集群管理</p>
+<p>​    服务与数据的高可用,水平扩展</p>
+</li>
+<li><p>近实时搜索,性能卓越</p>
+<p>​    结构化/全文/地理位置/自动完成</p>
+</li>
+<li><p>海量数据的近实时分析</p>
+<p>​    聚合功能</p>
+</li>
+</ul>
+<p><strong>Elastic Stack生态圈</strong></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466345541.png" alt="1564466345541"></p>
+<h3 id="LogStash-数据处理管道"><a href="#LogStash-数据处理管道" class="headerlink" title="LogStash:数据处理管道"></a>LogStash:数据处理管道</h3><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466449868.png" alt="1564466449868"></p>
+<p>LogStash 特性</p>
+<ul>
+<li><p>实时解析和转换数据</p>
+<ul>
+<li>从IP地址破译出地理坐标</li>
+<li>将IP数据匿名化,完全排除敏感字段</li>
+</ul>
+</li>
+<li><p>可扩展</p>
+<ul>
+<li>200多个插件(日志/数据库/ Arcsigh/ Netflow)</li>
+</ul>
+</li>
+<li><p>可靠性安全性</p>
+<ul>
+<li>Logstash会通过持久化队列来保证至少将运行中的事件送达一次</li>
+<li>数据传输加密</li>
+</ul>
+</li>
+<li><p>监控</p>
+</li>
+</ul>
+<p><strong>Kibana:可视化分析利器</strong></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466634445.png" alt="1564466634445"></p>
+<p><strong>Beats</strong></p>
+<p>轻量的数据采集器</p>
+<p>全品类采集器,搞定所有数据类型</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564471529564.png" alt="1564471529564"></p>
+<p><strong>用户场景</strong></p>
+<ul>
+<li><p>网站搜索/垂直搜索/代码搜索</p>
+</li>
+<li><p>日志管理与分析/安全指标监控/应用性能监控/WEB抓取舆情分析</p>
+</li>
+</ul>
+<p><strong>日志的重要性</strong></p>
+<ul>
+<li><p>为什么重要</p>
+<ul>
+<li>运维:医生给病人看病。日志就是病人对自己的陈述</li>
+<li>恶意攻击,恶意注册,刷单,恶意密码猜测</li>
+</ul>
+</li>
+<li><p>挑战</p>
+<ul>
+<li>关注点很多,任何一个点都有可能引起问题</li>
+<li>日志分散在很多机器,出了问题时,才发现日志被删了</li>
+<li>很多运维人员是消防员,哪里有问题去哪里</li>
+</ul>
+</li>
+</ul>
+<p><strong>日志管理</strong></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467097852.png" alt="1564467097852"></p>
+<h3 id="ElasticSearch与数据库的集成"><a href="#ElasticSearch与数据库的集成" class="headerlink" title="ElasticSearch与数据库的集成"></a><strong>ElasticSearch与数据库的集成</strong></h3><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467141719.png" alt="1564467141719"></p>
+<ul>
+<li>单独使用 Elasticsearch存储</li>
+<li>以下情况可考虑与数据库集成<ul>
+<li>与现有系统的集成</li>
+<li>需考虑事务性</li>
+<li>数据更新频繁</li>
+</ul>
+</li>
+</ul>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467318299.png" alt="1564467318299"></p>
+<p>最终同步</p>
+<p>第一种:同步双写 </p>
+<p>维护方便,思路清晰</p>
+<p>写mysql的时候,同步将数据更新到我们的es.业务强耦合.</p>
+<p>第二种:异步双写</p>
+<p>MQ.通过MQ消费来触发更新.缺点:网络延迟导致数据不一致</p>
+<p>第三种:异步双写</p>
+<p>数据库,表time,crud.更新time字段</p>
+<p>worker. 定时器</p>
+<p>第四种:binlog,将信息转为mq,mq的消费程序. 千万用户</p>
+<p>程序员水平高,binlog,mq网络延迟,丢包.</p>
+<p><strong>指标分析/日志分析</strong></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467765374.png" alt="1564467765374"></p>
+<p><strong>安全分析:集成ArcSight</strong></p>
+<p><strong>ElasticSearch的文件目录结构</strong></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467951855.png" alt="1564467951855"></p>
+<p><strong>jvm配置</strong></p>
+<p>修改jvm -config/jvm.options      </p>
+<ul>
+<li>7.1下载的默认设置是1g  </li>
+</ul>
+<p>配置的建议</p>
+<ul>
+<li>xmx和xms设置成一样   </li>
+<li>xmx不要超过机器内存的50%    </li>
+<li>不要超过 o xti 30GB-https: //<a href="http://www.elastic" target="_blank" rel="noopener">www.elastic</a>. co/blog/a-heap-of-troubl</li>
+</ul>
+<h3 id="ElasticSearch基本概念"><a href="#ElasticSearch基本概念" class="headerlink" title="ElasticSearch基本概念"></a><strong>ElasticSearch基本概念</strong></h3><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564468199045.png" alt="1564468199045"></p>
+<p>index索引    </p>
+<ul>
+<li>Type类型     </li>
+<li>Document文档          </li>
+</ul>
+<p>Node节点</p>
+<ul>
+<li>Shard分片</li>
+</ul>
+<p><strong>Lucene的总体架构</strong></p>
+<p>尽管我们可以直接探讨 Apache Lucene架构的细节,但有些概念还是需要提前了解,以</p>
+<p>哽更好地理解 Lucene的架构,它们包括:</p>
+<ul>
+<li>文档( document):索引与搜索的主要数据载体,它包含一个或多个字段,存放将要写入索引或将从索引搜索出来的数据。</li>
+<li>字段( field):文档的一个片段,它包括两个部分:字段的名称和内容。</li>
+<li>词项(term):搜索时的一个单位,代表文本中的某个词。</li>
+<li>词条( token):词项在字段中的一次出现,包括词项的文本、开始和结束的位移以及类型。</li>
+</ul>
+<p>Apache Lucene将写入索引的所有信息组织成一种名为倒排索引( inverted index)的结构。该结构是一种将<strong>词项映射到文档的数据结构</strong>,其工作方式与传统的关系数据库不同,</p>
+<p>你大可以认为倒排索引是面向词项而不是面向文档的。接下来我们看看简单的倒排索引是</p>
+<p><strong>词向量</strong></p>
+<p>为单个字段创建的小索引，存储该字段的所有词条</p>
+<p><strong>抽象与类比</strong></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564468846882.png" alt="1564468846882"></p>
+<p>（1）关系型数据库中的数据库（DataBase），等价于ES中的索引（Index）<br>（2）一个数据库下面有N张表（Table），等价于1个索引Index下面有N多类型（Type），<br>（3）一个数据库表（Table）下的数据由多行（ROW）多列（column，属性）组成，等价于1个Type由多个文档（Document）和多Field组成。<br>（4）在一个关系型数据库里面，schema定义了表、每个表的字段，还有表和字段之间的关系。<br>与之对应的，在ES中：Mapping定义索引下的Type的字段处理规则，即索引如何建立、索引类型、是否保存原始索引JSON文档、是否压缩原始JSON文档、是否需要分词处理、如何进行分词处理等。<br>（5）在数据库中的增insert、删delete、改update、查search操作等价于ES中的增PUT/POST、删Delete、改_update、查GET.</p>
+<h4 id="document-文档"><a href="#document-文档" class="headerlink" title="document(文档)"></a><strong>document(文档)</strong></h4><ul>
+<li><p>Elasticsearch是面向文档的，文档可被索引的基础信息单元,文档必须被索引/赋予一个索引的type</p>
+<ul>
+<li>日志文件中的日志项</li>
+<li>一部电影的具体信息/一张唱片的详细信息</li>
+<li>MP3播放器里的一首歌/一篇PDF文档中的具体内容</li>
+</ul>
+</li>
+<li><p>文档会被序列化成JSON格式，保存在Elasticsearch中</p>
+<ul>
+<li>JSON对象由字段组成，</li>
+<li>每个字段都有对应的字段类型（字符串/数值/布尔/日期/二进制/范围类型)</li>
+</ul>
+</li>
+<li><p>每个文档都有一个Unique ID</p>
+<ul>
+<li><p>你可以自己指定ID</p>
+</li>
+<li><p>或者通过Elasticsearch自动生成</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>文档的元数据</strong></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564468804501.png" alt="1564468804501"></p>
+<h4 id="index-索引"><a href="#index-索引" class="headerlink" title="index(索引)"></a><strong>index</strong>(索引)</h4><ul>
+<li><p>index-索引是文档的容器,是含有某些相似特性的文档的集合  </p>
+<ul>
+<li>Index体现了逻辑空间的概念:每个索引都有自己的 Mapping定义,用于定义包含的文档的字段名和字段类型</li>
+<li>Shard体现了物理空间的概念,索引中的数据分散在Shard上</li>
+</ul>
+</li>
+<li><p>索引的 Mapping与 Settings</p>
+<ul>
+<li>Mapping定义文档字段的类型  </li>
+<li>Setting定义不同的数据分布</li>
+</ul>
+</li>
+</ul>
+<p><strong>索引的不同语意</strong></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564477646892.png" alt="1564477646892"></p>
+<ul>
+<li>名词:一个 Elasticsearch集群中,可以创建很多个不同的索引        </li>
+<li><h2 id="动词-保存一个文档到-Elastlcsearch的过程也叫索引-dexing"><a href="#动词-保存一个文档到-Elastlcsearch的过程也叫索引-dexing" class="headerlink" title="动词:保存一个文档到 Elastlcsearch的过程也叫索引( dexing)"></a>动词:保存一个文档到 Elastlcsearch的过程也叫索引( dexing)</h2>  ES中,创建一个倒排索引的过程</li>
+<li>名词:一个B树索引,一个<strong>倒排索引</strong></li>
+</ul>
+<h4 id="Type-类型"><a href="#Type-类型" class="headerlink" title="Type(类型):"></a><strong>Type(类型):</strong></h4><p>在一个索引中，你可以定义一种或多种类型。一个类型是你的索引的一个逻辑上的分类/分区，其语义完全由你来定。</p>
+<p>通常，会为具有一组共同字段的文档定义一个类型。比如说，我们假设你运营一个博客平台并且将你所有的数据存储到一个索引中。在这个索引中，你可以为用户数据定义一个类型，为博客数据定义另一个类型，当然，也可以为评论数据定义另一个类型。</p>
+<p><strong>REST API 容易被各种语言调用</strong></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564477989966.png" alt="1564477989966"></p>
+<p>分布式系统的可用性与扩展性</p>
+<ul>
+<li>高可用性<ul>
+<li>服务可用性-允许所有节点停止服务</li>
+<li>数据可用性-部分节点丢失,不会丢失数据</li>
+</ul>
+</li>
+<li>可扩展性<ul>
+<li>请求量提升/数据的不断增长(将数据分布到所有节点上)</li>
+</ul>
+</li>
+</ul>
+<p><strong>分布式特性</strong></p>
+<ul>
+<li>Elasticsearch的分布式架构的好处<ul>
+<li>存储的水平扩容</li>
+<li>提高系统的可用性，部分节点停止服务，整个集群的服务不受影响</li>
+</ul>
+</li>
+<li>Elasticsearch的分布式架构<ul>
+<li>不同的集群通过不同的名字来区分，默认名字“elasticsearch”</li>
+<li>通过配置文件修改，或者在命令行中-E cluster.name=”xxx” 进行设定</li>
+<li>一个集群可以有一个或者多个节点</li>
+</ul>
+</li>
+</ul>
+<h4 id="Node-节点"><a href="#Node-节点" class="headerlink" title="Node(节点)"></a><strong>Node(节点)</strong></h4><ul>
+<li>节点是一个 Elasticsearch的实例     <ul>
+<li>本质上就是一个JAVA进程     </li>
+<li>一台机器上可以运行多个 Elasticsearch进程,但是生产环境一般建议一台机器上只运行一个 Elasticsearch实例</li>
+</ul>
+</li>
+<li>每一个节点都有名字,通过配置文件配置,或者启动时候 -E node name=node1指定  </li>
+<li>每一个节点在启动之后,会分配一个UID,保存在data目录下</li>
+</ul>
+<p><strong>Master-eligible nodes和 Master Node</strong>    </p>
+<ul>
+<li>每个节点启动后,默认就是一个 Master eligible节点    <ul>
+<li>可以设置 node.master false禁止   </li>
+</ul>
+</li>
+<li>Master-eligible节点可以参加选主流程,成为 Master节点    </li>
+<li>当第一个节点启动时候,它会将自己选举成 Master节点</li>
+<li>每个节点上都保存了集群的状态,只有 Master节点才能修改集群的状态信息                   <ul>
+<li>集群状态(Cluster State),维护了一个集群中,必要的信息                                   <ul>
+<li>所有的节点信息  </li>
+<li>所有的索引和其相关的Mapping 与Setting信息  </li>
+<li>分片的路由信息</li>
+</ul>
+</li>
+<li>任意节点都能修改信息会导致数据的不一致性 </li>
+</ul>
+</li>
+</ul>
+<p><strong>Data Node &amp; Coordinating Node</strong></p>
+<ul>
+<li>Data Node<ul>
+<li>可以保存数据的节点，叫做Data Node。负责保存分片数据。在数据扩展上起到了至关重要的作用</li>
+</ul>
+</li>
+<li>Coordinating Node<ul>
+<li>负责接受Client的请求，将请求分发到合适的节点，最终把结果汇集到一起</li>
+<li>每个节点默认都起到了Coordinating Node的职责</li>
+</ul>
+</li>
+</ul>
+<p><strong>其他节点类型</strong></p>
+<ul>
+<li>Hot &amp;Warm Node<ul>
+<li>不同硬件配置的Data Node，用来实现Hot &amp;Warm架构，降低集群部署的成本</li>
+</ul>
+</li>
+<li>Machine Learning Node<ul>
+<li>负责跑机器学习的Job，用来做异常检测</li>
+</ul>
+</li>
+<li>Tribe Node<ul>
+<li>（5.3开始使用Cross Cluster Serarch)Tribe Node 连接到不同的Elasticsearch 集群,并且支持将这些集群当成一个单独的集群处理</li>
+</ul>
+</li>
+</ul>
+<p><strong>配置节点类型</strong></p>
+<ul>
+<li>开发环境中一个节点可以承担多种角色</li>
+<li>生产环境中,应该设置单一的角色的节点( dedicated node)</li>
+</ul>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564535860148.png" alt="1564535860148"></p>
+<p><strong>分片(primary Shard &amp;Replica Shard)</strong></p>
+<ul>
+<li>主分片,用以解决数据水平扩展的问题。通过主分片,可以将数据分布到集群內的所有节点之上<ul>
+<li>一个分片是一个运行的 Lucene的实例</li>
+<li>主分片数在索引创建时指定,后续不允许修改,除非 Reindex</li>
+</ul>
+</li>
+<li>副本,用以解决数据高可用的问题。分片是主分片的拷贝<ul>
+<li>副本分片数,可以动态的调整</li>
+<li>增加副本数,还可以在一定程度上提高服务的可用性(读取的吞吐)</li>
+</ul>
+</li>
+</ul>
+<p>每个分片都是一个运行的lucene实例</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564536154851.png" alt="1564536154851"></p>
+<h4 id="shards-amp-replicas"><a href="#shards-amp-replicas" class="headerlink" title="shards &amp; replicas:"></a><strong>shards &amp; replicas:</strong></h4><p>一个索引可以存储超出单个结点硬件限制的大量数据。比如，一个具有10亿文档的索引占据1TB的磁盘空间，而任一节点都没有这样大的磁盘空间；或者单个节点处理搜索请求，响应太慢。</p>
+<p>为了解决这个问题，Elasticsearch提供了将索引划分成多份的能力，这些份就叫做分片。</p>
+<p>当你创建一个索引的时候，你可以指定你想要的分片的数量。每个分片本身也是一个功能完善并且独立的“索引”，这个“索引”可以被放置到集群中的任何节点上。</p>
+<p><strong>分片之所以重要，主要有两方面的原因</strong>：</p>
+<blockquote>
+<ul>
+<li>允许你水平分割/扩展你的内容容量</li>
+<li>允许你在分片（潜在地，位于多个节点上）之上进行分布式的、并行的操作，进而提高性能/吞吐量</li>
+</ul>
+</blockquote>
+<p>至于一个分片怎样分布，它的文档怎样聚合回搜索请求，是完全由Elasticsearch管理的，对于作为用户的你来说，这些都是透明的。<br>在一个网络/云的环境里，失败随时都可能发生，在某个分片/节点不知怎么的就处于离线状态，或者由于任何原因消失了，这种情况下，有一个故障转移机制是非常有用并且是强烈推荐的。为此目的，Elasticsearch允许你创建分片的一份或多份拷贝，这些拷贝叫做复制分片，或者直接叫复制。</p>
+<p><strong>复制之所以重要，有两个主要原因</strong>：</p>
+<blockquote>
+<ul>
+<li>在分片/节点失败的情况下，提供了高可用性。因为这个原因，注意到复制分片从不与原/主要（original/primary）分片置于同一节点上是非常重要的。</li>
+<li>扩展你的搜索量/吞吐量，因为搜索可以在所有的复制上并行运行</li>
+</ul>
+</blockquote>
+<p>​           </p>
+<p>总之，每个索引可以被分成多个分片。一个索引也可以被复制0次（意思是没有复制）或多次。一旦复制了，每个索引就有了主分片（作为复制源的原来的分片）和复制分片（主分片的拷贝）之别。分片和复制的数量可以在索引创建的时候指定。在索引创建之后，你可以在任何时候动态地改变复制的数量，但是你事后不能改变分片的数量。</p>
+<p>默认情况下，Elasticsearch中的每个索引被分片5个主分片和1个复制，这意味着，如果你的集群中至少有两个节点，你的索引将会有5个主分片和另外5个复制分片（1个完全拷贝），这样的话每个索引总共就有10个分片。</p>
+<h4 id="分片的设定"><a href="#分片的设定" class="headerlink" title="分片的设定"></a>分片的设定</h4><p>对于生产环境中分片的设定,需要提前做好容量规划</p>
+<ul>
+<li>分片数设置过小<ul>
+<li>导致后续无法增加节点实现水品扩展</li>
+<li>单个分片的数据量太大,导致数据重新分配耗时</li>
+</ul>
+</li>
+<li>分片数设置过大,7.0开始,默认主分片设置成1,解决了over- sharding的问题<ul>
+<li>影响搜索结果的相关性打分,影响统计结果的准确性</li>
+<li>单个节点上过多的分片,会导致资源浪费,同时也会影响性能</li>
+</ul>
+</li>
+</ul>
+<p>查看集群的健康情况</p>
+<blockquote>
+<p>GET _cluster/healthy</p>
+</blockquote>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564536614080.png" alt="1564536614080"></p>
+<blockquote>
+<p>Cerebro</p>
+</blockquote>
+<ul>
+<li>Green-主分片与副本都正常分配</li>
+<li>Yellow-主分片全部正常分配,有副本分片未能正常分配</li>
+<li>Red-有主分片未能分配</li>
+</ul>
+<p>例如,当服务器的磁盘容量超过85%时,去创建了一个新的索引</p>
+<h4 id="文档的CRUD"><a href="#文档的CRUD" class="headerlink" title="文档的CRUD"></a><strong>文档的CRUD</strong></h4><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564473114232.png" alt="1564473114232"></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564476706322.png" alt="1564476706322"></p>
+<p>日志分析,搜索 使用es</p>
+<p>删除索引</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE [index]</span><br></pre></td></tr></table></figure>
+
+<p>创建文档</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">POST users&#x2F;_doc</span><br><span class="line">&#123;</span><br><span class="line">&quot;user&quot;:&quot;mike&quot;,</span><br><span class="line">&quot;message&quot;:&quot;trying es&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT users&#x2F;_doc&#x2F;1?op_type&#x3D;create&#123;</span><br><span class="line">&quot;user&quot;:&quot;jack&quot;,</span><br><span class="line">&quot;meassage&quot;:&quot;try es&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查看索引结构</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET [index_name]/_mapping</span><br><span class="line">GET users/_mapping</span><br></pre></td></tr></table></figure>
+
+<p>搜索</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET users/_search</span><br><span class="line">&#123;</span><br><span class="line"><span class="string">"query"</span>:&#123;</span><br><span class="line">	<span class="string">"march_all"</span>:&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>更新文档</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST users&#x2F;_update&#x2F;1</span><br><span class="line">&#123;</span><br><span class="line">&quot;doc&quot;:&#123;</span><br><span class="line">	&quot;meassage&quot;:&quot;trying es 2&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>删除文档</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE uses&#x2F;_doc&#x2F;1</span><br></pre></td></tr></table></figure>
+
+<p>批量操作</p>
+<p>GET /_mget</p>
+<p>节省线程资源</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">POST _bluk</span><br><span class="line">&#123;<span class="string">"index"</span>:&#123;<span class="string">"_index"</span>:<span class="string">"test"</span>,<span class="string">"_id"</span>:<span class="string">"1"</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"filed1"</span>:<span class="string">"value1"</span>&#125;</span><br><span class="line">&#123;<span class="string">"delete"</span>:&#123;<span class="string">"_index"</span>:<span class="string">"test"</span>,<span class="string">"id"</span>:<span class="string">"2"</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"create"</span>:&#123;<span class="string">"_index"</span>:<span class="string">"test2"</span>,<span class="string">"_id"</span>:<span class="string">"3"</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"filed1"</span>:<span class="string">"value3"</span>&#125;</span><br><span class="line">&#123;<span class="string">"update"</span>:&#123;<span class="string">"_id"</span>:<span class="string">"1"</span>,<span class="string">"_index"</span>:<span class="string">"test"</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"doc"</span>:&#123;<span class="string">"filed2"</span>:<span class="string">"value2"</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;index&quot;:&#123;&quot;_index&quot;:&quot;test&quot;,&quot;_id&quot;:&quot;1&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564540729648.png" alt="1564540729648"></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;delete&quot;:&#123;&quot;_index&quot;:&quot;test&quot;,&quot;id&quot;:&quot;2&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564540915519.png" alt="1564540915519"></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;create&quot;:&#123;&quot;_index&quot;:&quot;test2&quot;,&quot;_id&quot;:&quot;3&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564540991616.png" alt="1564540991616"></p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;update&quot;:&#123;&quot;_id&quot;:&quot;1&quot;,&quot;_index&quot;:&quot;test&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564541034803.png" alt="1564541034803"></p>
+<p>ES如何实现近实时搜索的?</p>
+<p>Apache官方定义：Lucene是一个高效的，基于Java的全文检索库;开源免费</p>
+<p>先来谈什么叫全文检索?</p>
+<p>全文检索主要针对非结构化数据，主要有两种方法：</p>
+<p>(1)、顺序扫描法</p>
+<p>比如我们想要在成千上万的文档中，查找包含某一字符串的所有文档，顺序扫描法就必须逐个的扫描每个文档，并且每个文档都要从头看到尾，如果找到，就继续找下一个，直至遍历所有的文档;这种方法通常应用于数据量较小的场景，比如经常使用的grep命令就是这种查找方式</p>
+<p>(2)、全文检索</p>
+<p>试想一下结构化数据的查询方式，例如数据库的查找方式，我们知道在数据库中构建索引可以极大程度的提高查询速度，这是因为结构化数据有一定程度固定的结构使得我们可以采取某些搜索算法加速查询速度，那既然如此，为什么我们不可以尝试在非结构化数据中，将一部分结构化信息抽取出来，重新组织，然后针对这部分有结构的数据进行索引建立，从而达到加速查询的目的;</p>
+<p>上述想法很天然，但却构成了全文检索的基本思路</p>
+<p><strong>在非结构化数据中，将一部分结构化信息抽取出来，重新组织，然后针对这部分有结构的数据进行索引建立，从而达到加速查询的目的</strong></p>
+<p>从非结构化数据中抽取部分结构化数据，并建立索引，再对索引进行搜索的过程，我们成为全文索引</p>
+<p>从上面我们可以看出，全文检索分为两步：</p>
+<p>第一步：索引创建</p>
+<p>第二步：搜索索引</p>
+<p>从上述思路中，可以引出来三个问题：</p>
+<p><strong>1、索引里究竟存了些什么?</strong></p>
+<p><strong>2、如何创建索引</strong>?</p>
+<p><strong>3、如何对索引进行搜索?</strong></p>
+<p>针对上述问题，我们逐个探讨：</p>
+<h4 id="问题1：索引里究竟存了些什么"><a href="#问题1：索引里究竟存了些什么" class="headerlink" title="问题1：索引里究竟存了些什么?"></a>问题1：索引里究竟存了些什么?</h4><p>想要知道索引里究竟存了些什么?我们必须先来了解一下正向索引和反向索引</p>
+<p>正向索引：从文档中查找字符串 关系型数据库使用的是正向索引</p>
+<p>反向索引：从字符串查找文档 搜索引擎lucene使用的是反向索引</p>
+<p>反向索引的解释如下：</p>
+<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/1da3f2bda2e64741a5b9e8098aa583d7.png" alt="img"></p>
+<p>如上图所示，假如我有100个文档，对他们从1-100进行编号;</p>
+<p>左边保存的是一系列的字符串，也可以理解为词，我们称这些字符串集合为词典;</p>
+<p>右边保存的是包含左边字符串的文档链表，此文档链表成为倒排表</p>
+<p>在上面中，我们对词典中包含的字符串创建索引，而这些字符串也正是我们搜索的信息，因此可以大大加快查询速度</p>
+<p>比如说我们要查找同时包含lucene和hadoop的文档，我们只需以下几步：</p>
+<p>第一步：取出包含lucene的文档链表</p>
+<p>第二步：取出包含hadoop的文档链表</p>
+<p>第三步：合并链表，取出交集</p>
+<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/2609086b42114436bac2bc7b59a95bcf.png" alt="img"></p>
+<blockquote>
+<p>疑问：全文检索的确加快了搜索的速度，但是多了索引的过程，两者加起来不一定有顺序扫描快。这种说法的确有一定道理，在数据量小的情况下，顺序扫描未必比全文检索慢，但全文检索设计的初衷就是用于大数据量的业务环境中。</p>
+<p>解答：全文检索和顺序扫描的区别在于：顺序扫描每次都必须从头至尾扫描全部数据，但全文检索的索引创建过程只需一次，以后查询无需再次创建，但却可以一直为搜索所用。</p>
+<p>总结：<strong>全文检索相对于顺序扫描的优势在于一次索引创建，多次使用</strong></p>
+</blockquote>
+<h4 id="问题2：如何创建索引"><a href="#问题2：如何创建索引" class="headerlink" title="问题2：如何创建索引?"></a>问题2：如何创建索引?</h4><p>索引的创建一般分为以下几步：</p>
+<p>第一步：将文档交给切词组件(Tokenizer)进行切词处理</p>
+<p>第二步：将得到的词元(Token)交给语言处理组件</p>
+<p>第三步：将得到的词(Term)交给索引组件</p>
+<p>第四步：由索引组件针对词建立索引</p>
+<p>针对上述步骤，我们给出2个示例文档，加以详细说明</p>
+<p>Document 1：Students should be allowed to go out with their friends, but not allowed to drink beer.</p>
+<p>Document 2：My friend Jerry went to school to see his students but found them drunk which is not allowed.</p>
+<h5 id="第一步：切词组件处理"><a href="#第一步：切词组件处理" class="headerlink" title="第一步：切词组件处理"></a>第一步：切词组件处理</h5><p>上述2个文档会被交给切词组件，切词组件主要针对文档进行切割，将文档中的单词一个一个切割出来，同时消除一些无意义的词，比如标点符号、英文中的the和is、中文中的的等。因为标点符号和一些形容词，在实际的搜索中是很少会被搜索的，所以在该步骤会剃掉这些词语，减少索引的大小</p>
+<p>经过切割以后，可能会被切分成以下词元：</p>
+<p>“Students”，“allowed”，“go”，“their”，“friends”，“allowed”，“drink”，“beer”，“My”，“friend”，“Jerry”，“went”，“school”，“see”，“his”，“students”，“found”，“them”，“drunk”，“allowed”</p>
+<h5 id="第二步：语言处理组件处理"><a href="#第二步：语言处理组件处理" class="headerlink" title="第二步：语言处理组件处理"></a>第二步：语言处理组件处理</h5><p>该步骤主要针对第一步生成的词元进行自然语言同化处理，比如针对cars词元，同时生成新的词car;Student词元中的大写字母小写化，这样能够实现一个student搜索，可以同时搜索处理像Student、STUDENT、stuDENT等多种情况，经过该步骤处理后，可能会被切分成以下词：</p>
+<p>“student”，“allow”，“go”，“their”，“friend”，“allow”，“drink”，“beer”，“my”，“friend”，“jerry”，“go”，“school”，“see”，“his”，“student”，“find”，“them”，“drink”，“allow”</p>
+<p>正因为有了自然语言处理组件，才能使得搜索drove，drive也能被搜出来</p>
+<h5 id="第三步：将得到的词交给索引组件建立索引"><a href="#第三步：将得到的词交给索引组件建立索引" class="headerlink" title="第三步：将得到的词交给索引组件建立索引"></a>第三步：将得到的词交给索引组件建立索引</h5><p>索引组件主要做以下几件事情：</p>
+<p>(1)、利用得到的词创建一个词典</p>
+<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/577b0f4bd43b48d1a6e975c2d8c9e6c5.png" alt="img"></p>
+<p>(2)、对字典按字母顺序进行排序</p>
+<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/c0f141f53f9d4a2586ebda13c6bed862.png" alt="img"></p>
+<p>(3) 、合并相同的词并建立倒排链表</p>
+<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/96aa8dc611ff4dceaf32b9ef857b5f8f.png" alt="img"></p>
+<p>在上述表中，有几个定义：</p>
+<p>Document Frequency：表示该词出现在所有文档的总数</p>
+<p>Frequency：表示在某一个文档中该词出现的次数</p>
+<h5 id="第四步：建立索引"><a href="#第四步：建立索引" class="headerlink" title="第四步：建立索引"></a>第四步：建立索引</h5><p>针对最后生成的词典，进行索引的建立，至此我们发现根据搜索词，我们可以立即找到对应的文档;而且诸如drink、drunk等都可以找到同一个文档</p>
+<h4 id="问题3：如何对索引进行搜索"><a href="#问题3：如何对索引进行搜索" class="headerlink" title="问题3：如何对索引进行搜索?"></a>问题3：如何对索引进行搜索?</h4><p>搜索可以分为以下几步：</p>
+<p>第一步：用户输入查询语句</p>
+<p>第二步：对查询语句进行词法分析、语法分析、语言处理</p>
+<p>第三步：搜索索引，得到符合语法树的文档</p>
+<p>第四步：根据得到的文档和查询语句相关性，对结果进行排序予以展示</p>
+<p>第一步：用户输入语句</p>
+<p>查询语句的语法根据全文检索系统的实现而不同。</p>
+<p>比如用户输入：lucene AND learned NOT hadoop ——— 用户想要查找包含lucene和learned，但是不包含hadoop的文档</p>
+<p>第二步：对查询语句进行词法分析、语法分析、语言处理</p>
+<p>(1)、词法分析主要用来识别单词和关键字</p>
+<p>比如针对上述用户的输入，经过词法分析，得到单词为lucene、learned、hadoop，关键词为AND、NOT</p>
+<p>(2)、语言分析主要根据查询语句来生成一颗语法树</p>
+<p>受限进行语法判断，如果不满足语法要求，则直接报错;若满足语法要求，则可以生成下面的语法树：</p>
+<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/a61ab3018f0a411a81201c25f9774a12.png" alt="img"></p>
+<p>(3)、语言处理和索引建立过程中得语言处理几乎一样</p>
+<p>例如将learned变成learn，经过处理后得到以下结果：</p>
+<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/ce789c570a824076b94bf25903979f33.png" alt="img"></p>
+<p>第三步：搜索索引，得到符合语法树得文档</p>
+<p>首先，在反向索引链表里，找到包含lucene、learn和hadoop得文档</p>
+<p>其次，对包含lucene和learn得文档进行求合集操作，得到同时包含两者得文档链条</p>
+<p>然后，将得到合集后得链表与hadoop得文档链表进行差集操作，去除包含hadoop得文档</p>
+<p>最后，此文档链表就是我们要找得文档</p>
+<p>第四步：根据得到的文档和查询语句的相关性，对结果进行排序</p>
+<p>此过程也是极其复杂的，比如谷歌搜索，查询出来的结果有几十万上百万，如何排序显示，这个过程涉及到一些自然语言的理解，过程非常复杂，在此不再赘述</p>
+<p>总结：Lucene是一个开源的分部署搜索引擎的实现，ElasticSearch底层就是基于Lucene实现的，之所以能够实现分布式搜索，原因就在于每一个文档在出库入库之前，就已经被进行切词分析处理，针对每个词建立索引，是一种空间换时间的做法</p>
+<h3 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h3><p>ES服务端口</p>
+<ol>
+<li>9200（restful的对外端口)供其他编程语言调用，以及等一些插件的访问也会使用此端口</li>
+<li>9300（java api的对外端口）给java程序使用的端口</li>
+</ol>
+<p>必备插件</p>
+<ol>
+<li>head插件：可以查看索引情况，搜索索引，查看集群状态和分片分布等 </li>
+<li>bigdesk插件：可以查看集群的jvm信息，磁盘IO，索引创建删除信息等，适合查找系统瓶颈，监控集群状态等 </li>
+</ol>
+<p>分词器组件配置详解</p>
+<p>在es中，一个analysis集合<br>可以包含多个analyzer，而一个analyzer则由一个单个的tokenizer，零个或多个的tokenfilter组成，而一个tokenizer又可以包含零个或多个</p>
+<p>模板配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">index :  </span><br><span class="line">  analysis :<span class="comment">//一个analysis可以包含多个analyzer，tokenizer，filter，char_filter配置  </span></span><br><span class="line">      analyzer :<span class="comment">// 一个analyzer下面可以包含一个tokenizer，多个filter和char_filter， position_increment_gap是距离查询时，最大允许查询的距离，默认是100  </span></span><br><span class="line">        myAnalyzer1 :  </span><br><span class="line">              type : custom  </span><br><span class="line">              tokenizer : myTokenizer1  </span><br><span class="line">              filter : [myTokenFilter1, myTokenFilter2]  </span><br><span class="line">              char_filter : [my_html]  </span><br><span class="line">              position_increment_gap: <span class="number">256</span>  </span><br><span class="line">         myAnalyzer2 :  </span><br><span class="line">              type : custom  </span><br><span class="line">              tokenizer : myTokenizer1  </span><br><span class="line">              filter : [myTokenFilter1, myTokenFilter2]  </span><br><span class="line">              char_filter : [my_html]  </span><br><span class="line">              position_increment_gap: <span class="number">256</span>  </span><br><span class="line"></span><br><span class="line">      tokenizer :  </span><br><span class="line">          myTokenizer1 :  </span><br><span class="line">              type : standard  </span><br><span class="line">              max_token_length : <span class="number">900</span>  </span><br><span class="line">          myTokenizer2 :  </span><br><span class="line">              type : keyword  </span><br><span class="line">              max_token_length : <span class="number">900</span>  </span><br><span class="line">      filter :  </span><br><span class="line">          myTokenFilter1 :  </span><br><span class="line">              type : stop  </span><br><span class="line">              stopwords : [stop1, stop2, stop3, stop4]  </span><br><span class="line">          myTokenFilter2 :  </span><br><span class="line">              type : length  </span><br><span class="line">              min : <span class="number">0</span>  </span><br><span class="line">              max : <span class="number">2000</span>  </span><br><span class="line">      char_filter :  </span><br><span class="line">            my_html :  </span><br><span class="line">              type : html_strip  </span><br><span class="line">              escaped_tags : [xxx, yyy]  </span><br><span class="line">              read_ahead : <span class="number">1024</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>Elasticsearch还具有无模式的能力，这意味着可以索引文档而无需显式指定如何处理文档中可能出现的每个不同字段。启用动态映射后，Elasticsearch会自动检测并向索引添加新字段</p>
+<p>这种默认行为使您可以轻松索引和浏览数据 - 只需开始索引文档，Elasticsearch将检测并将布尔值，浮点和整数值，日期和字符串映射到相应的Elasticsearch数据类型。</p>
+<p>但是，最终，您比Elasticsearch更了解您的数据以及您希望如何使用它。 您可以定义规则来控制动态映射并显式定义映射，以完全控制字段的存储和索引方式。</p>
+<p>默认一份备份 五个分片 分片只能在索引创建时指定数量</p>
+<p>restful api</p>
+<p>◆API基本格式</p>
+<blockquote>
+<p>http://<ip>:<port>/&lt;索引&gt;/&lt;类型&gt;/&lt;文档id&gt;</p>
+</blockquote>
+<p>◆常用HTTP动词GET/PUT/POST/DELET</p>
+<p>结构化索引</p>
+<p>mapping </p>
+<p>非结构化索引</p>
+<p><strong>分布式安装</strong></p>
+<ul>
+<li>主节点配置 elasticsearch.yml</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http.cors.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.cors.allow-origin:</span> <span class="string">"*"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">"wali"</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">"master"</span></span><br><span class="line"><span class="attr">node.master:</span> <span class="string">"true"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br></pre></td></tr></table></figure>
+
+<p> ps -ef |grep ‘pwd’</p>
+<p>查询原来的服务进程</p>
+<p>kill pid</p>
+<ul>
+<li>slave配置</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cluster.name:</span> <span class="string">wali</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">slave1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line"><span class="string">http.port:8200</span></span><br><span class="line"></span><br><span class="line"><span class="attr">discovery.zen.ping.unicast.hosts:</span> <span class="string">["127.0.0.1"]</span></span><br></pre></td></tr></table></figure>
+
+<p>服务启动 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bin.elasticsearch -d</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>查询</strong></p>
+<ul>
+<li>条件查询</li>
+</ul>
+<blockquote>
+<p>POST ip：port/index/_search</p>
+</blockquote>
+<p>body(json)</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span>:&#123;</span><br><span class="line">        <span class="attr">"match"</span>:&#123;</span><br><span class="line">            <span class="attr">"title"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="string">"from"</span>:,<span class="comment">//从哪里开始返回</span></span><br><span class="line">    <span class="attr">"size"</span>:<span class="comment">//返回多少条数据，默认返回十条</span></span><br><span class="line">    <span class="string">"sort"</span>:[</span><br><span class="line">    &#123;<span class="attr">"feild"</span>:&#123;<span class="attr">"order"</span>:<span class="string">"desc"</span>&#125;&#125;<span class="comment">//排序规则 </span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>聚合查询</li>
+</ul>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span>:&#123;</span><br><span class="line">        <span class="attr">"group_by_word_count"</span>:&#123;</span><br><span class="line">            <span class="attr">"terms"</span>:&#123;</span><br><span class="line">                <span class="attr">"feild"</span>:<span class="string">""</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span>:&#123;</span><br><span class="line">        <span class="attr">"grades_word_count"</span>:&#123;</span><br><span class="line">            <span class="attr">"stats"</span>:&#123;<span class="comment">//对字段进行计算</span></span><br><span class="line">                <span class="attr">"feild"</span>:<span class="string">"word_count"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>高级查询</strong></p>
+<p>子条件査询   </p>
+<p> 特定字段查询所指特定值</p>
+<p><strong>Query  context</strong></p>
+<p>在查询过程中,除了判断文档是否满足查询条件外,ES还会计算一个 score来标识匹配的程度,旨在判断目标文档和查询条件匹配的有多好。</p>
+<p>◆全文本查询针对文本类型数据</p>
+<p>模糊匹配 会将字段拆分匹配</p>
+<p>习语匹配 不会拆分</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span>:&#123;</span><br><span class="line">        "match_phrase"|"match":&#123;</span><br><span class="line">            "feild":""</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>多字段模糊匹配</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span>:&#123;</span><br><span class="line">        <span class="attr">"multi_match"</span>:&#123;</span><br><span class="line">            <span class="attr">"query"</span>:<span class="string">"wali"</span>,</span><br><span class="line">            <span class="attr">"feilds"</span>:[<span class="string">"feild1"</span>,<span class="string">"feild2"</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>语法查询</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query_string"</span>:&#123;</span><br><span class="line">        <span class="attr">"query"</span>:<span class="string">"(elastic And 大法)orpython"</span>,</span><br><span class="line">        <span class="attr">"fildes"</span>:[]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>范围查询</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span>:&#123;</span><br><span class="line">        <span class="attr">"range"</span>:&#123;</span><br><span class="line">           <span class="attr">"publish_date"</span>:&#123;</span><br><span class="line">            <span class="attr">"gte"</span>:<span class="number">1000</span>,</span><br><span class="line">            <span class="attr">"lte"</span>:<span class="number">2000</span></span><br><span class="line">        	&#125; </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>◆字段级别查询针对结构化数据,如数字、日期等</p>
+<p><strong>Filter context</strong></p>
+<p>在查询过程中,只判断该文档是否满足条件,只有Yes或者No</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"qury"</span>:&#123;</span><br><span class="line">        <span class="attr">"bool"</span>:&#123;</span><br><span class="line">            <span class="attr">"filter"</span>:&#123;</span><br><span class="line">                <span class="attr">"term"</span>:&#123;</span><br><span class="line">                    <span class="attr">"word_count"</span>:<span class="number">1000</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>复合条件查询  以一定的逻辑组合子条件查询</p>
+<p>固定分数查询</p>
+<p>布尔查询</p>
+<p>…….</p>
+<h4 id="springboot-集成elasticsearch"><a href="#springboot-集成elasticsearch" class="headerlink" title="springboot 集成elasticsearch"></a>springboot 集成elasticsearch</h4><p><strong>依赖</strong></p>
+<p>transport</p>
+<p>log4j-core</p>
+<p><strong>log4j2.properties</strong></p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">appender.console.type</span> <span class="string">Console</span></span><br><span class="line"><span class="meta">appender.console.name</span>= <span class="string">Console</span></span><br><span class="line"><span class="meta">appender.console.layout.type</span>= <span class="string">PatternLayout</span></span><br><span class="line"><span class="meta">appender.console.layout.pattern</span> =<span class="string">[%t] %-5p %C-%m%n</span></span><br><span class="line"></span><br><span class="line"><span class="meta">rootLogger.level</span>= <span class="string">info</span></span><br><span class="line"><span class="meta">rootLogger.appenderRef.console.ref</span> = <span class="string">console</span></span><br></pre></td></tr></table></figure>
+
+<p>config配置</p>
+<p>InetSocketTransPortAddress node （ip，tcp端口）</p>
+<p>client.addTransPortAddress(node)</p>
+<p>集群名</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564629339020.png" alt="1564629339020"></p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640213421.png" alt="1564640213421"></p>
+<p>文档实体</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640765687.png" alt="1564640765687"></p>
+<p>索引服务测试</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640897350.png" alt="1564640897350"></p>
+<p>文档实体测试</p>
+<p>增删改查</p>
+<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640997965.png" alt="1564640997965"></p>
+
       
 
       
@@ -279,7 +952,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/17/notebook/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%A6%20Elasticsearch/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -293,18 +966,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/05/17/notebook/Platform/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/05/17/notebook/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          notebook/Platform
+          notebook/技术架构
         
       </div>
     </a>
   
   
-    <a href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">spring-guide Redis 消息服务构建</div>
+    <a href="/2021/05/17/notebook/tcp/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">notebook/tcp</div>
       <i class="icon-circle-right"></i>
     </a>
   
