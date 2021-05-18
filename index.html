@@ -166,88 +166,39 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-notebook/梳理es" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-mybatis-缓存" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/17/notebook/%E6%A2%B3%E7%90%86es/">notebook/梳理es</a>
+      <a class="article-title" href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/">mybatis-缓存</a>
     </h1>
   
 
         
-        <a href="/2021/05/17/notebook/%E6%A2%B3%E7%90%86es/" class="archive-article-date">
-  	<time datetime="2021-05-17T09:01:54.950Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
+        <a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" class="archive-article-date">
+  	<time datetime="2021-05-16T03:44:04.627Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-16</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="定义索引和文档"><a href="#定义索引和文档" class="headerlink" title="定义索引和文档"></a>定义索引和文档</h2><p><strong>@Document</strong></p>
-<p>设置</p>
-<ul>
-<li>设置索引名</li>
-<li>索引类型</li>
-<li>分片数量、副本数量、刷新间隔。。</li>
+        <p>mybatis缓存</p>
+<p>装饰器模式</p>
+<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><h3 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h3><ul>
+<li>JVM中最普遍的引用，我们常用的赋值操作就是强引用</li>
 </ul>
-<p>mappings，定义结构化的索引</p>
-<p>@Field</p>
-<p>字段类型、searchAnalyzer、indexAnalyzer</p>
-<p><strong>BaseESDomain</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id：UUID.randomUUID().toString()</span><br></pre></td></tr></table></figure>
-
-<p>通过继承BaseESDomain和加入@Document、@Field注解我们就定义好了一个结构化的索引，和文档</p>
-<h2 id="对索引的操作"><a href="#对索引的操作" class="headerlink" title="对索引的操作"></a>对索引的操作</h2><p>IESClient接口定义了对索引的基本操作由ESClient来实现。</p>
-<p>注入<code>RestClient restClient</code></p>
-<p>实际操作由restClient来执行</p>
-<p>基本操作</p>
-<h3 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">boolean createIndex(String indexName)</span><br></pre></td></tr></table></figure>
-
-<p>restClient执行<code>PUT indexName</code>请求—-》接受响应—》将响应转化为json对象—》josn对象不为空且json.getBoolean(“acknowledged”)为真则返回true</p>
-<h3 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h3><p>与创建索引的流程一样，发送的是DELETE请求</p>
-<ul>
-<li>创建索引结构</li>
+<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><ul>
+<li>当JVM内存不足时，GCオ会回收那些只被软引用指向的对象</li>
+<li>特别适合做缓存，因为缓存中的数据可以从数据库中恢复0<br>所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象</li>
+<li>当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉。</li>
 </ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">boolean createMapping(String indexName, String tableName, List&lt;ESColumn&gt; columns)</span><br></pre></td></tr></table></figure>
-
-<p>创建请求<code>Request(&quot;PUT&quot;, indexName + &quot;/_mapping/&quot; + tableName)</code>—》把tableMap转化成Josn字符串作为请求中的主体—》restClient执行请求—-》接受响应—》将响应转化为json对象—》josn对象不为空且json.getBoolean(“acknowledged”)为真则返回true</p>
-<ol>
-<li>tableMap.put(“properties”, columnMap);<strong>Mappings</strong></li>
-<li>properties—》columnMap  定义属性即列<strong>properties</strong></li>
-<li>columnMap.getName—》cMap  定义列的具体信息 type、analyzer、search_analyzer。。。</li>
-</ol>
-<p>也就是定义索引的结构</p>
-<p>这个有趣的是如何将Mapping定义的结构封装成Json字符串作为请求体发送给es服务器，使用了hashMap这种数据结构</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">"properties": &#123;</span><br><span class="line">                    "content": &#123;</span><br><span class="line">                        "type": "text",</span><br><span class="line">                        "term_vector": "with_positions_offsets",</span><br><span class="line">                        "analyzer": "ik_smart"</span><br><span class="line">                    &#125;,</span><br><span class="line">                    "deleteFlag": &#123;</span><br><span class="line">                        "type": "keyword"</span><br><span class="line">                    &#125;,</span><br><span class="line">                    "id": &#123;</span><br><span class="line">                        "type": "text"</span><br><span class="line">                    &#125;,</span><br><span class="line">                    "name": &#123;</span><br><span class="line">                        "type": "text",</span><br><span class="line">                        "term_vector": "with_positions_offsets",</span><br><span class="line">                        "analyzer": "ik_smart"</span><br><span class="line">                    &#125;,</span><br><span class="line">                    "pk_project": &#123;</span><br><span class="line">                        "type": "keyword"</span><br><span class="line">                    &#125;,</span><br><span class="line">                    "property": &#123;</span><br><span class="line">                        "type": "text",</span><br><span class="line">                        "term_vector": "with_positions_offsets",</span><br><span class="line">                        "analyzer": "ik_smart"</span><br><span class="line">                    &#125;,</span><br><span class="line">                    "type": &#123;</span><br><span class="line">                        "type": "keyword"</span><br><span class="line">                    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="文档保存"><a href="#文档保存" class="headerlink" title="文档保存"></a>文档保存</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JSONObject save(String indexName, String mappingName, String id, Map&lt;String, Object&gt; data)</span><br></pre></td></tr></table></figure>
-
-<p>id==null？id：uuid—》创建请求–》将data对象转为json字符串，封装到请求体中—》restClient执行请求–》将response对象转成json对象返回</p>
-<h3 id="文档删除"><a href="#文档删除" class="headerlink" title="文档删除"></a>文档删除</h3><p>封装请求—》执行请求</p>
-<h3 id="文档搜索"><a href="#文档搜索" class="headerlink" title="文档搜索"></a>文档搜索</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Object&gt; search(String[] indexNames, String[] mappingNames, String[] fields, String keyword, int page, int size)</span><br></pre></td></tr></table></figure>
-
-<p>根据page*size得到from变量的值–》使用字符串工具类将indexNames，mappingNames数组分隔开—》创建搜索请求—》使用JSONObject来封装请求体—》restClient执行请求–》将response对象转成json对象–》将hits、total、page、size、data、totalPage都从json对象中取出来放到Map中返回</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">query&#123;</span><br><span class="line">    multi_match:&#123;</span><br><span class="line">        feilds:&#123;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        query:&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="对文档的操作"><a href="#对文档的操作" class="headerlink" title="对文档的操作"></a>对文档的操作</h2><p>IESDomainClient接口定义了对索引的基本操作由ESDomainClient来实现。</p>
-<blockquote>
-<p>注入<code>RestClient restClient</code>  <code>IESClient esClient</code></p>
-</blockquote>
-<p><strong>新增文档</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;T extends BaseESDomain&gt; T save(T domain)</span><br></pre></td></tr></table></figure>
-
-<p>domain.id==null？id：domain.setId(UUID.randomUUID().toString()—》使用DomainUtil工具类根据domain对象的类从<strong>ConcurrentHashMap</strong> map中获得ESObject对象，没有就创建一个，ESObject对象eso根据传进来的文档对象domain来进行实例化，再把他加入到map中 &lt;domain.getclassname,eso&gt;。—》创建请求–》将domain对象转为json字符串，封装到请求体中—》restClient执行请求–》返回domain</p>
-<p>增加ESObject类是用来干嘛的？</p>
-<p>作为了一个索引模板类？</p>
-<p>DomainUtil存储了定义好的文档类型，创建ESObject对象</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DomainUtil</span><br><span class="line">ConcurrentHashMap&lt;String, ESObject&gt; map</span><br></pre></td></tr></table></figure>
+<p>实现类</p>
+<p><code>SoftReference</code></p>
+<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3>
       
 
       
@@ -259,7 +210,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/17/notebook/%E6%A2%B3%E7%90%86es/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/">展开全文 >></a>
         </p>
       
 
@@ -289,40 +240,71 @@
 
 
   
-    <article id="post-notebook/线程的几种状态？" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-spring-guide Redis 消息服务构建" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/17/notebook/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81%EF%BC%9F/">notebook/线程的几种状态？</a>
+      <a class="article-title" href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">spring-guide Redis 消息服务构建</a>
     </h1>
   
 
         
-        <a href="/2021/05/17/notebook/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81%EF%BC%9F/" class="archive-article-date">
-  	<time datetime="2021-05-17T09:01:54.950Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
+        <a href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/" class="archive-article-date">
+  	<time datetime="2020-03-09T13:52:53.476Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="线程的几种状态？"><a href="#线程的几种状态？" class="headerlink" title="线程的几种状态？"></a>线程的几种状态？</h1><p><img src="https://raw.githubusercontent.com/coy0725/Figure-bed/typora/img/20180502203945924" alt="img"></p>
-<h2 id="start"><a href="#start" class="headerlink" title="start"></a>start</h2><p>使该线程开始执行;Java虚拟机调用这个线程的run方法。</p>
-<p>结果是两个线程并发地运行:当前线程(从调用start方法返回的线程)和另一个线程(执行run方法的线程)。</p>
-<p>多次启动线程是不合法的。特别是，线程在完成执行之后可能不会重新启动</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 此方法不会被VM创建/设置的主方法线程或“系统”组线程调用。</span></span><br><span class="line"><span class="comment">     * threadStatus=0 corresponds to state "NEW".</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">if</span> (threadStatus != <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalThreadStateException();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 将线程添加到线程组中threads[nthreads] = t;	         </span></span><br><span class="line"><span class="comment">     * 未启动线程计数减一 nUnstartedThreads--;</span></span><br><span class="line"><span class="comment">     /</span></span><br><span class="line"><span class="comment">    group.add(this);</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">    boolean started = false;</span></span><br><span class="line"><span class="comment">    try &#123;</span></span><br><span class="line"><span class="comment">        start0();</span></span><br><span class="line"><span class="comment">        started = true;</span></span><br><span class="line"><span class="comment">    &#125; finally &#123;</span></span><br><span class="line"><span class="comment">        try &#123;</span></span><br><span class="line"><span class="comment">            if (!started) &#123;</span></span><br><span class="line"><span class="comment">                group.threadStartFailed(this);</span></span><br><span class="line"><span class="comment">            &#125;</span></span><br><span class="line"><span class="comment">        &#125; catch (Throwable ignore) &#123;</span></span><br><span class="line"><span class="comment">            /* do nothing. If start0 threw a Throwable then</span></span><br><span class="line"><span class="comment">              it will be passed up the call stack */</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>Redis 消息服务构建</p>
+<p>需要做哪些工作呢？</p>
+<ol>
+<li>需要启动一个redis服务实例</li>
+<li>redis和springboot的整合</li>
+</ol>
+<p>会涉及哪些概念？</p>
+<p>消息生产者，消息接收者，主题</p>
+<p>消息接收者怎么定义呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Receiver</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(Receiver<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> AtomicInteger counter = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receiveMessage</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        LOGGER.info(<span class="string">"Received &lt;"</span> + message + <span class="string">"&gt;"</span>);</span><br><span class="line">        counter.incrementAndGet();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> counter.get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>线程与线程对象</p>
-<p>线程对象中一部分信息是用来描述线程的特征的，通过继承等得到的线程对象中自己定义的方法则可以被任何线程去执行。</p>
-<p>   The Thread object is not the thread itself; it is instead a set of methods and data that encapsulates information about the thread. And that method and data can be accessed by any other thread.</p>
-<p>线程对象不是线程本身，线程本身是代码的一次执行过程，在这个执行过程中，线程可以执行代表它的线程对象所定义的方法也可以执行其它的线程对象或者一般对象中的方法</p>
-<h2 id="sleep"><a href="#sleep" class="headerlink" title="sleep"></a>sleep</h2><p>使当前执行的线程休眠(暂时停止执行)指定的毫秒数，这取决于系统计时器和调度器的精度。线程不会失去任何监视器的所有权。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sleep</span><span class="params">(<span class="keyword">long</span> millis, <span class="keyword">int</span> nanos)</span></span></span><br><span class="line"><span class="function"><span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (millis &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"timeout value is negative"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (nanos &lt; <span class="number">0</span> || nanos &gt; <span class="number">999999</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(</span><br><span class="line">                            <span class="string">"nanosecond timeout value out of range"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (nanos &gt;= <span class="number">500000</span> || (nanos != <span class="number">0</span> &amp;&amp; millis == <span class="number">0</span>)) &#123;</span><br><span class="line">        millis++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    sleep(millis);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>接收方是一个POJO，它定义了接收消息的方法。当您将接收方注册为消息侦听器时，您可以随意命名消息处理方法</p>
+<p>注册监听者和发送消息</p>
+<ul>
+<li>监听者注册到哪？<ul>
+<li>message listener</li>
+</ul>
+</li>
+<li>使用谁发送消息<ul>
+<li>Redis template</li>
+</ul>
+</li>
+</ul>
+<p>Spring Data Redis提供了使用Redis发送和接收消息所需的所有组件。具体来说，您需要配置</p>
+<ul>
+<li>A connection factory</li>
+<li>A message listener container</li>
+<li>A Redis template</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessagingRedisApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(MessagingRedisApplication<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">RedisMessageListenerContainer <span class="title">container</span><span class="params">(RedisConnectionFactory connectionFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">			MessageListenerAdapter listenerAdapter)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		RedisMessageListenerContainer container = <span class="keyword">new</span> RedisMessageListenerContainer();</span><br><span class="line">        <span class="comment">//设置消息监听连接工厂</span></span><br><span class="line">		container.setConnectionFactory(connectionFactory);</span><br><span class="line">        <span class="comment">//设置消息监听者 监控哪个主题</span></span><br><span class="line">		container.addMessageListener(listenerAdapter, <span class="keyword">new</span> PatternTopic(<span class="string">"chat"</span>));</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> container;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//redis的消息接收者需要接收消息，也需要监听主题，使用对象适配器完成此项工作，适配器模式，需要指定接收消息之后调用哪个方法</span></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">MessageListenerAdapter <span class="title">listenerAdapter</span><span class="params">(Receiver receiver)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> MessageListenerAdapter(receiver, <span class="string">"receiveMessage"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">Receiver <span class="title">receiver</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> Receiver();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">StringRedisTemplate <span class="title">template</span><span class="params">(RedisConnectionFactory connectionFactory)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> StringRedisTemplate(connectionFactory);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">		ApplicationContext ctx = SpringApplication.run(MessagingRedisApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line"></span><br><span class="line">		StringRedisTemplate template = ctx.getBean(StringRedisTemplate<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">		Receiver receiver = ctx.getBean(Receiver<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span> (receiver.getCount() == <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">			LOGGER.info(<span class="string">"Sending message..."</span>);</span><br><span class="line">			template.convertAndSend(<span class="string">"chat"</span>, <span class="string">"Hello from Redis!"</span>);</span><br><span class="line">			Thread.sleep(<span class="number">500L</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		System.exit(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h2 id="join"><a href="#join" class="headerlink" title="join"></a>join</h2><p>Waits for this thread to die.等待线程死亡。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public MessageListenerAdapter(Object delegate, String defaultListenerMethod) &#123;    this(delegate);    this.setDefaultListenerMethod(defaultListenerMethod);&#125;</span><br></pre></td></tr></table></figure>
+
+<p>redis containner监听方法代码如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">private void lazyListen() &#123;</span><br><span class="line">        boolean debug &#x3D; this.logger.isDebugEnabled();</span><br><span class="line">        boolean started &#x3D; false;</span><br><span class="line">        if (this.isRunning() &amp;&amp; !this.listening) &#123;</span><br><span class="line">            synchronized(this.monitor) &#123;</span><br><span class="line">                if (!this.listening &amp;&amp; (this.channelMapping.size() &gt; 0 || this.patternMapping.size() &gt; 0)) &#123;</span><br><span class="line">                &#x2F;&#x2F;执行器 执行任务</span><br><span class="line">                    this.subscriptionExecutor.execute(this.subscriptionTask);</span><br><span class="line">                    this.listening &#x3D; true;</span><br><span class="line">                    started &#x3D; true;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (debug) &#123;</span><br><span class="line">                if (started) &#123;</span><br><span class="line">                    this.logger.debug(&quot;Started listening for Redis messages&quot;);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    this.logger.debug(&quot;Postpone listening for Redis messages until actual listeners are added&quot;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用到了哪些技术？</p>
+<ul>
+<li>redis</li>
+<li>对象适配器模式</li>
+<li>观察者模式</li>
+<li>代理模式</li>
+<li>消息</li>
+</ul>
+<p><img src="C:%5CUsers%5Ccoy%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200309204028440.png" alt="image-20200309204028440"></p>
 
       
 
@@ -335,7 +317,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/17/notebook/%E7%BA%BF%E7%A8%8B%E7%9A%84%E5%87%A0%E7%A7%8D%E7%8A%B6%E6%80%81%EF%BC%9F/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">展开全文 >></a>
         </p>
       
 
@@ -365,196 +347,93 @@
 
 
   
-    <article id="post-notebook/深入理解ElasticSearch" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-spring guide之文件上传下载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/17/notebook/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ElasticSearch/">notebook/深入理解ElasticSearch</a>
+      <a class="article-title" href="/2020/03/09/spring%20guide%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD/">spring guide之文件上传下载</a>
     </h1>
   
 
         
-        <a href="/2021/05/17/notebook/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ElasticSearch/" class="archive-article-date">
-  	<time datetime="2021-05-17T09:01:54.950Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
+        <a href="/2020/03/09/spring%20guide%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD/" class="archive-article-date">
+  	<time datetime="2020-03-09T11:08:04.375Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="Apache-Lucene"><a href="#Apache-Lucene" class="headerlink" title="Apache Lucene"></a>Apache Lucene</h2><h3 id="Lucene的总体架构"><a href="#Lucene的总体架构" class="headerlink" title="Lucene的总体架构"></a>Lucene的总体架构</h3><p>尽管我们可以直接探讨 Apache Lucene架构的细节,但有些概念还是需要提前了解,以便更好地理解 Lucene的架构,它们包括:</p>
-<ul>
-<li>口文档( document):索引与搜索的主要数据载体,它包含一个或多个字段,存放将要写入索引或将从索引搜索出来的数据。</li>
-<li>口字段( field):文档的一个片段,它包括两个部分:字段的名称和内容。</li>
-<li>口词项(term):搜索时的一个单位,代表文本中的某个词。</li>
-<li>口词条( token):词项在字段中的一次出现,包括词项的文本、开始和结束的位移以及类型。</li>
-</ul>
-<p>Apache Lucene将写入索引的所有信息组织成一种名为倒排索引( inverted index)的结</p>
-<p>构。该结构是一种将词项映射到文档的数据结构,其工作方式与传统的关系数据库不同</p>
-<p>你大可以认为倒排索引是面向词项而不是面向文档的。接下来我们看看简单的倒排索引是</p>
-<p>什么样的。例如,我们有一些只包含 title字段的文档,如下所示</p>
-<h3 id="分析你的数据"><a href="#分析你的数据" class="headerlink" title="分析你的数据"></a>分析你的数据</h3><p><strong>分析</strong></p>
-<p>数据—》倒排索引</p>
-<p>查询串–》可以搜索的词项</p>
-<p><strong>分析器</strong></p>
-<ol>
-<li>字符映射器  文本–》预处理 如html文本去标签</li>
-<li>分词器  预处理文本–》词条–》词条流</li>
-<li>过滤器 词条流–》处修创造–》新的词条<ol>
-<li>小写过滤器</li>
-<li>ascll过滤器</li>
-<li>同义词过滤器</li>
+        <h1 id="学习文件上传"><a href="#学习文件上传" class="headerlink" title="学习文件上传"></a>学习文件上传</h1><p>我的思考路径</p>
+<h2 id="文件上传服务"><a href="#文件上传服务" class="headerlink" title="文件上传服务"></a>文件上传服务</h2><h3 id="1、前端上传文件"><a href="#1、前端上传文件" class="headerlink" title="1、前端上传文件"></a>1、前端上传文件</h3><ol>
+<li>前端页面，有一个输入框，点击之后，选择文件，将文件传给使用post方式传给后台接口</li>
 </ol>
-</li>
-</ol>
-<p>索引于查询</p>
-<p>检索：查询串—》查询分析器</p>
-<p><strong>索引器与检索期的文本分析要采用同样的分析器，只有查询分析出来的词项与索引中词项能匹配上时，才会返回预期的文档集。</strong></p>
-<h3 id="Lucene查询语言"><a href="#Lucene查询语言" class="headerlink" title="Lucene查询语言"></a>Lucene查询语言</h3><p>es提供一些查询类型（query type）来支持lucene的查询解析语法</p>
-<p><strong>基本概念</strong></p>
-<p>查询：词项+操作符</p>
-<p><strong>布尔操作符</strong></p>
-<p>与、或、非连接词项构成从句。</p>
-<p><strong>其他操作符</strong></p>
-<p>+:它的含义是,只有包含+操作符后面词项的文档才会被认为是与从句匹配。例如,查找那些必须包含 lucene,但是 apache可出现可不出现的文档,可执行查询:<code>+lucene apache</code></p>
-<p>-:它的含义是,与从句匹配的文档不能出现-操作符后的词项。例如,查找那些包含 lucene但不包含 elasticsearch的文档,可以执行查询:<code>+lucene- elasticsearch</code>如果查询中没有出现前面提到过的任意操作符,那么默认使用OR操作符。</p>
-<p>另外,你还可以使用圆括号对从句进行分组,以构造更复杂的从句,例如:</p>
-<p><code>elasticsearch AND (mastering OR book）</code></p>
-<p><strong>在字段中查询</strong></p>
-<p>lucene所有数据都存储在字段中，实现针对字段的查询，</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">字段：查询从句&#123;词项，短语&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;form method&#x3D;&quot;POST&quot; enctype&#x3D;&quot;multipart&#x2F;form-data&quot; action&#x3D;&quot;&#x2F;&quot;&gt;</span><br><span class="line">        &lt;table&gt;</span><br><span class="line">            &lt;tr&gt;</span><br><span class="line">                &lt;td&gt;File to upload:&lt;&#x2F;td&gt;</span><br><span class="line">                &lt;td&gt;&lt;input type&#x3D;&quot;file&quot; name&#x3D;&quot;file&quot; &#x2F;&gt;&lt;&#x2F;td&gt;</span><br><span class="line">            &lt;&#x2F;tr&gt;</span><br><span class="line">            &lt;tr&gt;</span><br><span class="line">                &lt;td&gt;确认上传&lt;&#x2F;td&gt;</span><br><span class="line">                &lt;td&gt;&lt;input type&#x3D;&quot;submit&quot; value&#x3D;&quot;Upload&quot;&#x2F;&gt;&lt;&#x2F;td&gt;</span><br><span class="line">            &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;&#x2F;table&gt;</span><br><span class="line">    &lt;&#x2F;form&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
 
-<p><strong>词项修饰符</strong></p>
+<p>​    <strong>知识点</strong></p>
 <ul>
-<li>？匹配任意一个字符</li>
-<li>*匹配多个字符</li>
+<li><p>表单组件<code>enctype=&quot;multipart/form-data&quot;</code>，<code>method=&quot;POST&quot;</code></p>
+</li>
+<li><p>input框  <code>type=&quot;file&quot; name=&quot;file&quot;</code></p>
+</li>
 </ul>
-<p>通配符不能作为词项的第一个字符出现（性能考虑）</p>
-<p><strong>模糊查询</strong></p>
-<p>词项~数值：近似词项与原始词项最大编辑距离</p>
-<p>例如：<code>ab-2：ab abcd</code>，包含ab和abcd的文档都能匹配</p>
-<p><strong>词项^float</strong>：对词项进行加权（boosting）</p>
-<p><strong>范围查询</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">feild：[from TO end]</span><br></pre></td></tr></table></figure>
+<p>扩展</p>
+<p>input框有哪几种类型？</p>
+<p>答案23种<a href="https://blog.csdn.net/qq_36171618/article/details/80802588" target="_blank" rel="noopener">参考链接</a></p>
+<h3 id="2、controller层调用文件存储服务处理前端文件上传请求"><a href="#2、controller层调用文件存储服务处理前端文件上传请求" class="headerlink" title="2、controller层调用文件存储服务处理前端文件上传请求"></a>2、controller层调用文件存储服务处理前端文件上传请求</h3><ol start="2">
+<li>上传的数据类型是<code>multipart/form-data</code>，应该如何接受数据呢？文件保存接口怎么写？</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping</span>(<span class="string">"/"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">handleFileUpload</span><span class="params">(@RequestParam(<span class="string">"file"</span>)</span> MultipartFile file,</span></span><br><span class="line"><span class="function">                                   RedirectAttributes redirectAttributes) </span>&#123;</span><br><span class="line"></span><br><span class="line">        storageService.store(file);</span><br><span class="line">        redirectAttributes.addFlashAttribute(<span class="string">"message"</span>,</span><br><span class="line">                <span class="string">"You successfully uploaded "</span> + file.getOriginalFilename() + <span class="string">"!"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"redirect:/"</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-<p>方括号花括号</p>
-<p>例如：peice：[10.00 TO 15.00]   name:[adam TO boy]</p>
-<p><strong>特殊字符</strong></p>
-<p>反斜杠转义\</p>
-<h2 id="ElasticSearch"><a href="#ElasticSearch" class="headerlink" title="ElasticSearch"></a>ElasticSearch</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><strong>基本概念</strong></h3><ul>
-<li>索引</li>
-</ul>
-<p>ES将数据存储在一个或多个索引Index中。</p>
+<p>知识点</p>
 <ul>
-<li>文档</li>
+<li>使用<code>MultipartFile</code>类获取文件</li>
+<li>@RequestParam(“file”)获取key为file的参数值，于前端页面定义的<code>name</code>字段匹配</li>
 </ul>
-<p>文档是ES世界的主要实体，由字段构成，字段有他的字段名以及一个或多个字段值，es文档–》Lucene文档，客户端角度：文档是一个Json对象。</p>
-<ul>
-<li>映射</li>
-</ul>
-<p>文档写入索引前需要进行分析，映射定义分析的规则</p>
-<ul>
-<li>类型</li>
-</ul>
-<p>文档有与之对应的类型，特性相同的文档定义成同一类型</p>
-<ul>
-<li>节点</li>
-</ul>
-<p>单个提供ES服务的实例称为节点</p>
-<ul>
-<li>集群</li>
-</ul>
-<p>组成节点的系统称为集群（cluster），来提供协同处理服务</p>
-<ul>
-<li>分片</li>
-</ul>
-<p>集群运行系统存储数据总量超过的那几容量—》数据分布到多个物理Lucene索引上—》这些lucene索引称为分片（shard），分片创建在创建时确定，后期无法改变</p>
-<ul>
-<li>副本</li>
-</ul>
-<p>解决访问压力过大时单机无法处理所有请求的问题。为每个分片创建冗余副本</p>
-<ul>
-<li>网关</li>
-</ul>
-<p>持久化集群状态，索引设置等各种信息</p>
-<h3 id="ES工作流程"><a href="#ES工作流程" class="headerlink" title="ES工作流程"></a>ES工作流程</h3><p><strong>节点启动</strong></p>
-<p>发现集群中其他节点并与他们连接（广播技术）</p>
-<p>选出管理节点（master node）管理集群状态以及在集群拓扑变化时分发索引分片到相应节点（用户无需在意哪个节点时管理节点，对等架构）</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564729430492.png" alt="1564729430492"></p>
-<p><strong>故障检测</strong></p>
-<p>管理节点发送ping请求到其他节点，等待响应，没有响应则将该节点移出集群。</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564729532412.png" alt="1564729532412"></p>
-<p><strong>与ElasticSearch通信</strong></p>
-<p>向ES推送数据并构建查询</p>
-<p>基于REST的API，只要系统支持HTTP协议通信</p>
-<p>JAVA API</p>
-<p><strong>索引数据</strong></p>
-<ul>
-<li>索引API</li>
-</ul>
-<p>发送一个文档给特定的索引，最简单的方式</p>
-<ul>
-<li><p>bulk API </p>
-<p>http协议 可靠 一次多个文档</p>
-</li>
-<li><p>UDP bulk API</p>
-</li>
-</ul>
-<p>udp协议 速度快 不可靠，一次多个文档</p>
-<ul>
-<li>插件 river，river运行在其他es节点上，能够从外部获取数据</li>
-</ul>
-<blockquote>
-<p>建立索引的操作只会发生在主分片上</p>
-</blockquote>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564730064616.png" alt="1564730064616"></p>
-<p><strong>查询数据</strong></p>
-<p>DSL</p>
-<p><strong>过程</strong></p>
-<ol>
-<li><p>分散阶段</p>
-<p>query分发—》包含相关文档的多个分片中–》执行查询</p>
-</li>
-<li><p>合并阶段</p>
-<p>各个分片的结果–》合并、排序、处理–》返回给客户端</p>
+<h3 id="3、文件存储服务将数据持久化"><a href="#3、文件存储服务将数据持久化" class="headerlink" title="3、文件存储服务将数据持久化"></a>3、文件存储服务将数据持久化</h3><ol start="3">
+<li><p>如何保存文件到本地磁盘呢？猜测大概需要哪些类，File，Path</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(MultipartFile file)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> (file.isEmpty()) &#123;</span><br><span class="line">				<span class="keyword">throw</span> <span class="keyword">new</span> StorageException(<span class="string">"Failed to store empty file "</span> + file.getOriginalFilename());</span><br><span class="line">			&#125;</span><br><span class="line">			Files.copy(file.getInputStream(), <span class="keyword">this</span>.rootLocation.resolve(file.getOriginalFilename()));</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> StorageException(<span class="string">"Failed to store file "</span> + file.getOriginalFilename(), e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>知识点</strong></p>
+<p>Files类的copy方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static long copy(InputStream in, Path target, CopyOption... options)</span><br></pre></td></tr></table></figure>
+
+<p>MultipartFile类的    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String getOriginalFilename();</span><br><span class="line">返回客户端系统原始的文件名，之前拼接过一次</span><br></pre></td></tr></table></figure>
+
+<p>Path类的resolve方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">path rootLocation&#x3D;&quot;D:\Pictures\upload&quot;</span><br><span class="line">假设原文件名为a.jpg,则拼接之后为&quot;D:\Pictures\upload\a.jpg&quot;</span><br></pre></td></tr></table></figure>
+
+<p>Paths类</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">返回一个系统路径变量</span><br><span class="line">this.rootLocation &#x3D; Paths.get(properties.getLocation());</span><br></pre></td></tr></table></figure>
+
+<p>到此文件就保存到了系统磁盘上</p>
 </li>
 </ol>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564730394342.png" alt="1564730394342"></p>
-<p><strong>索引配置</strong></p>
+<h2 id="文件下载服务"><a href="#文件下载服务" class="headerlink" title="文件下载服务"></a>文件下载服务</h2><h3 id="1、前端页面显示文件列表，点击文件，选择文件夹进行保存"><a href="#1、前端页面显示文件列表，点击文件，选择文件夹进行保存" class="headerlink" title="1、前端页面显示文件列表，点击文件，选择文件夹进行保存"></a>1、前端页面显示文件列表，点击文件，选择文件夹进行保存</h3><p><img src="C:%5CUsers%5Ccoy%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200309171405772.png" alt="image-20200309171405772"></p>
+<p>也就是点击文件链接，会首先获取文件，然后在将文件进行保存。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">        &lt;li th:each&#x3D;&quot;file : $&#123;files&#125;&quot;&gt;</span><br><span class="line">            &lt;a th:href&#x3D;&quot;$&#123;file&#125;&quot; th:text&#x3D;&quot;$&#123;file&#125;&quot;&#x2F;&gt;</span><br><span class="line">        &lt;&#x2F;li&gt;</span><br><span class="line">    &lt;&#x2F;ul&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、Controller层接收请求根据文件名，获取文件"><a href="#2、Controller层接收请求根据文件名，获取文件" class="headerlink" title="2、Controller层接收请求根据文件名，获取文件"></a>2、Controller层接收请求根据文件名，获取文件</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/files/&#123;filename:.+&#125;"</span>)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Resource&gt; <span class="title">serveFile</span><span class="params">(@PathVariable String filename)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        Resource file = storageService.loadAsResource(filename);</span><br><span class="line">        <span class="keyword">return</span> ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,</span><br><span class="line">                <span class="string">"attachment; filename=\""</span> + file.getFilename() + <span class="string">"\""</span>).body(file);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>疑惑</p>
+<p>返回的响应体是文件资源，怎么就会选择保存路径呢？</p>
+<p>请求头内容描述</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">header(HttpHeaders.CONTENT_DISPOSITION,</span><br><span class="line">                &quot;attachment; filename&#x3D;\&quot;&quot; + file.getFilename() + &quot;\&quot;&quot;)</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://blog.csdn.net/sinat_38364990/article/details/70867357?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">http上传/下载文件时，Content-Disposition的使用</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(&quot;&#x2F;files&#x2F;&#123;filename:.+&#125;&quot;)为什么是“&#123;filename:.+&#125;”??</span><br><span class="line">跳转路径怎么和前端页面请求的地址不大一样</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-、将文件加载为Resource返回"><a href="#3-、将文件加载为Resource返回" class="headerlink" title="3 、将文件加载为Resource返回"></a>3 、将文件加载为Resource返回</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Resource <span class="title">loadAsResource</span><span class="params">(String filename)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//获取文件路径</span></span><br><span class="line">			Path file = load(filename);</span><br><span class="line">            使用UrlResource加载文件</span><br><span class="line">			Resource resource = <span class="keyword">new</span> UrlResource(file.toUri());</span><br><span class="line">			<span class="keyword">if</span>(resource.exists() || resource.isReadable()) &#123;</span><br><span class="line">				<span class="keyword">return</span> resource;</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>知识点</p>
 <ul>
-<li>自定义文档结构（mapping）</li>
-<li>索引分片、副本数</li>
-<li>定制文本分析过程</li>
+<li>Resource接口</li>
 </ul>
-<h2 id="ElasticSearch-Java-api"><a href="#ElasticSearch-Java-api" class="headerlink" title="ElasticSearch Java api"></a>ElasticSearch Java api</h2><h3 id="连接到集群"><a href="#连接到集群" class="headerlink" title="连接到集群"></a>连接到集群</h3><h4 id="成为es节点"><a href="#成为es节点" class="headerlink" title="成为es节点"></a>成为es节点</h4><p>思路，把应用程序作为es集群中的一个节点，并和其他节点相同对待。</p>
-<p><strong>优劣</strong></p>
-<p>需要更多的时间，操作更快</p>
-<p>重要声明</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564731988837.png" alt="1564731988837"></p>
-<p>创建客户端实例</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564732052623.png" alt="1564732052623"></p>
-<p>注意</p>
-<p>.client(true),将创建的节点指定为客户端节点，客户端节点不会持有数据。</p>
-<p>创建过程需要读取classpath中的elasticsearch.yml配置文件来定义节点配置。</p>
-<h4 id="使用传输机连接"><a href="#使用传输机连接" class="headerlink" title="使用传输机连接"></a>使用传输机连接</h4><p><strong>优劣</strong></p>
-<p>启动速度快，需要资源少，更少的socket连接，但是发送查询和数据需要消耗更多的资源</p>
-<p>本方法允许只连接到集群而不会加入集群。你会发现,客户端可以同时连接到多个节点,并通过轮询调度( round- robin)的方式使用它们。这意味着每个请求将被发送到不同的节点上,并由收到请求的节点负责把请求转发到合适的节点(这是对 ElasticSearch自身节点转发功能的补充)</p>
-<p>声明</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564732448355.png" alt="1564732448355"></p>
-<p>创建连接</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564732479182.png" alt="1564732479182"></p>
-<p>这个方法很简单。首先我们使用 Immutable Settings类的静态方法 settings Builder来建立合适的配置对象,如本例中只需设置好集群名称(本例之后我们会展开更多传输机客户端的配置和功能)。接着我们使用这个配置对象来建立一个 TransportClient的客户端对象,然后把待连接节点的网络地址添加给它。这可以通过调用 TransportClient类的 addTransportAddress方法并传递 InetSocket TransportAddress对象来实现。为创建InetSocketTransportAddress对象我们需要提供 ElasticSearch节点所在机器的P和节点传输层监听的端口号。注意这里的端口号不是9200,而是9300。9200端口用来让 Http reStAPI访问 ElasticSearch,而9300端口是传输层监听的默认端口。</p>
-<p>我们再回过头来看 TransportClient类的可用配置</p>
-<ul>
-<li>口 client. transport. sniff(默认值: false):如果设为true, Elastic Search会读取集群中的节点信息。因此你不需要在建立 TransportClient对象时提供所有节点的网络地址。ElasticSearch很智能,它会自动检测到活跃节点并把它们加入到列表中。</li>
-<li>口 client. transport. ignore cluster name(默认值: false):如果设为true,则 ElasticSearch会忽视配置中的集群名称并尝试连接到某个可连接集群上,而不管集群名称是否匹配。这一点很危险,你可能会首先连接到你不想要的集群上。</li>
-<li>口 client. transport. ping timeout(默认值:5s):该参数指定了ping命令响应的超时时间。如果客户端和集群间的网络延迟较大或连接不稳定,可能需要调大这个取值。</li>
-<li>口 client. transport nodes sampler interval(默认值:5s):该参数指定了检查节点可用性的时间间隔。与前一个参数类似,如果网络延迟较大或者网络不稳定,可能需要调大这个值。</li>
-</ul>
-<p><strong>在选择合适的连接方式时请记住,第一种方式并不总是可行的。例如,当要连接的Elastic Search集群处于另一个局域网中,唯一可选的方式就是使用 TransportClient对象。</strong></p>
+<p><a href="https://github.com/spring-guides/gs-uploading-files.git" target="_blank" rel="noopener">项目地址</a></p>
 
       
 
@@ -567,7 +446,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/17/notebook/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3ElasticSearch/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/03/09/spring%20guide%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD/">展开全文 >></a>
         </p>
       
 
@@ -597,43 +476,41 @@
 
 
   
-    <article id="post-notebook/文档的读写" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-kafka-windows demo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/17/notebook/%E6%96%87%E6%A1%A3%E7%9A%84%E8%AF%BB%E5%86%99/">notebook/文档的读写</a>
+      <a class="article-title" href="/2020/03/05/kafka-windows%20demo/">kafka-windows demo</a>
     </h1>
   
 
         
-        <a href="/2021/05/17/notebook/%E6%96%87%E6%A1%A3%E7%9A%84%E8%AF%BB%E5%86%99/" class="archive-article-date">
-  	<time datetime="2021-05-17T09:01:54.949Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
+        <a href="/2020/03/05/kafka-windows%20demo/" class="archive-article-date">
+  	<time datetime="2020-03-05T02:09:58.856Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-05</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>文档的读写</strong></p>
-<p>Elasticsearch中的每个索引都分为<strong>碎片</strong>，每个碎片可以有多个副本</p>
-<p>这些副本是已知的作为<strong>复制组</strong>并且在添加或删除文档时必须保持同步.</p>
-<p>如果我们不这样做，从一个副本中读取将导致与从另一个副本中读取的结果截然不同的结果。</p>
-<p>保持碎片副本同步并从中提供读取的过程就是我们所说的数据复制模型。</p>
-<p>Elasticsearch的数据复制模型基于<strong>主备份模型</strong>,该模型基于具有来自复制组的单个副本，该副本充当主要分片其他副本称为副本分片.主节点是所有索引操作的主要入口点,负责验证它们并确保它们是正确的.一旦索引操作被主服务器接受，主服务器还负责将该操作复制到其他副本。</p>
-<p>基本写模型</p>
-<p>Elasticsearch中的每个索引操作首先使用路由解析为复制组，通常基于文档ID.一旦确定了复制组，操作将在内部转发到该组的当前主碎片。主分片负责验证操作并将其转发到其他副本.由于副本可以脱机，因此不需要将主副本复制到所有副本。 相反，Elasticsearch维护应该接收操作的分片副本列表。此列表称为同步副本，由主节点维护。</p>
-<p>顾名思义，这些是“好”分片副本的集合，保证已经处理了已经向用户确认的所有索引和删除操作。</p>
-<p>主服务器负责维护这个不变量，因此必须将所有操作复制到这个集合中的每个副本。</p>
-<p>主分片遵循以下基本流程： </p>
+        <h2 id="kafka下载"><a href="#kafka下载" class="headerlink" title="kafka下载"></a>kafka下载</h2><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>将文件夹解压即可，注意不要解压到目录名有空格的文件夹中，会找不到运行的类。</p>
+<h2 id="kafka简单使用，"><a href="#kafka简单使用，" class="headerlink" title="kafka简单使用，"></a>kafka简单使用，</h2><p>在解压后的kakfa主目录中使用命令行运行以下命令行参数</p>
 <ol>
-<li>​     验证传入操作并在结构无效时拒绝它（例如：有一个对象字段，其中包含一个数字） </li>
-<li>​     在本地执行操作，即索引或删除相关文档。 这也将验证字段的内容并在需要时拒绝（例如：关键字值太长，无法在Lucene中进行索引）。 </li>
-<li>​     将操作转发到当前同步副本集中的每个副本。 如果有多个副本，则这是并行完成的。 </li>
-<li>​     一旦所有副本成功执行了操作并响应主服务器，主服务器就会确认成功完成对客户端的请求。</li>
+<li>启动zookeeper<br><code>bin\windows\zookeeper-server-start.bat config\zookeeper.properties</code></li>
+<li>启动kafka<br><code>bin\windows\kafka-server-start.bat config\server.properties</code></li>
+<li>创建topic demo<br><code>bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic demo</code></li>
+<li>查看topic列表<br><code>bin\windows\kafka-topics.bat --list --bootstrap-server localhost:9092</code></li>
+<li>启动生产者 producer<br><code>bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic demo</code></li>
+<li>启动消费者 customer<br><code>bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic demo --from-beginning</code></li>
 </ol>
+<h2 id="kafka配置"><a href="#kafka配置" class="headerlink" title="kafka配置"></a>kafka配置</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#kafka相关配置</span></span><br><span class="line"><span class="meta">spring.kafka.bootstrap-servers</span>=<span class="string">&#123;kafka实例ip地址&#125;:9092</span></span><br><span class="line"><span class="comment">#设置一个默认组</span></span><br><span class="line"><span class="meta">spring.kafka.consumer.group-id</span>=<span class="string">defaultGroup</span></span><br><span class="line"><span class="comment">#key-value序列化反序列化</span></span><br><span class="line"><span class="meta">spring.kafka.consumer.key-deserializer</span>=<span class="string">org.apache.kafka.common.serialization.StringDeserializer</span></span><br><span class="line"><span class="meta">spring.kafka.consumer.value-deserializer</span>=<span class="string">org.apache.kafka.common.serialization.StringDeserializer</span></span><br><span class="line"><span class="meta">spring.kafka.producer.key-serializer</span>=<span class="string">org.apache.kafka.common.serialization.StringSerializer</span></span><br><span class="line"><span class="meta">spring.kafka.producer.value-serializer</span>=<span class="string">org.apache.kafka.common.serialization.StringSerializer</span></span><br><span class="line"><span class="meta">spring.kafka.producer.batch-size</span>=<span class="string">65536</span></span><br><span class="line"><span class="meta">spring.kafka.producer.buffer-memory</span>=<span class="string">524288</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>参考连接<br>kafka 在windows 平台的搭建和简单实用<br><a href="https://blog.csdn.net/woshixiazaizhe/article/details/80610432" target="_blank" rel="noopener">https://blog.csdn.net/woshixiazaizhe/article/details/80610432</a><br>spring boot + kafka 使用详细步骤<br><a href="https://blog.csdn.net/lcj_star/article/details/77337640?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">https://blog.csdn.net/lcj_star/article/details/77337640?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task</a><br>Spring Boot + Kafka的使用<br><a href="https://blog.csdn.net/Black1499/article/details/90474929" target="_blank" rel="noopener">https://blog.csdn.net/Black1499/article/details/90474929</a></p>
 
       
 
@@ -646,7 +523,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/17/notebook/%E6%96%87%E6%A1%A3%E7%9A%84%E8%AF%BB%E5%86%99/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/03/05/kafka-windows%20demo/">展开全文 >></a>
         </p>
       
 
@@ -676,50 +553,119 @@
 
 
   
-    <article id="post-notebook/技术架构" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-hexo-博客搭建" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/17/notebook/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/">notebook/技术架构</a>
+      <a class="article-title" href="/2020/03/02/hexo-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">hexo 博客搭建</a>
     </h1>
   
 
         
-        <a href="/2021/05/17/notebook/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/" class="archive-article-date">
-  	<time datetime="2021-05-17T09:01:54.949Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
+        <a href="/2020/03/02/hexo-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" class="archive-article-date">
+  	<time datetime="2020-03-02T02:23:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-02</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>技术架构</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564558661826.png" alt="1564558661826"></p>
-<p>会话层</p>
-<p>解决负载均衡</p>
-<p>物理隔离–&gt;逻辑隔离</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564559116206.png" alt="1564559116206"></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564559248674.png" alt="1564559248674"></p>
-<p>业务层 架构设计</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564559583467.png" alt="1564559583467"></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564559988484.png" alt="1564559988484"></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564560104018.png" alt="1564560104018"></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564560115091.png" alt="1564560115091"></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564560299941.png" alt="1564560299941"></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564560353818.png" alt="1564560353818"></p>
-<p>Entity</p>
-<p>设计阶段就设计好数据用哪种存储引擎来进行</p>
-<p>不同前缀的id,统一的id生成器来生成</p>
-<p>查询&gt;200ms 默认慢查询 —&gt;异步结果</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564560673819.png" alt="1564560673819"></p>
-<p>无限扩容的方案</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564560817607.png" alt="1564560817607"></p>
-<p>老数据同步</p>
-<p>新数据插入 同步一半就行了</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564561117490.png" alt="1564561117490"></p>
+        <h1 id="搭建个人博客"><a href="#搭建个人博客" class="headerlink" title="搭建个人博客"></a>搭建个人博客</h1><h3 id="一-安装node-js"><a href="#一-安装node-js" class="headerlink" title="一 安装node.js"></a>一 安装<code>node.js</code></h3><h4 id="模块组成"><a href="#模块组成" class="headerlink" title="模块组成"></a><strong>模块组成</strong></h4><ul>
+<li><code>node.js</code></li>
+<li><code>npm</code>包管理工具</li>
+</ul>
+<h4 id="检查是否安装成功"><a href="#检查是否安装成功" class="headerlink" title="检查是否安装成功"></a><strong>检查是否安装成功</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\coy&gt; node -v</span><br><span class="line">v12.16.1</span><br><span class="line">PS C:\Users\coy&gt; npm -v</span><br><span class="line">6.13.4</span><br><span class="line">PS C:\Users\coy&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="下载连接"><a href="#下载连接" class="headerlink" title="下载连接"></a><strong>下载连接</strong></h4><blockquote>
+<p><a href="https://nodejs.org/zh-cn/" target="_blank" rel="noopener">https://nodejs.org/zh-cn/</a></p>
+</blockquote>
+<h3 id="二-安装hexo"><a href="#二-安装hexo" class="headerlink" title="二 安装hexo"></a>二 安装hexo</h3><h4 id="安装淘宝镜像源"><a href="#安装淘宝镜像源" class="headerlink" title="安装淘宝镜像源"></a>安装淘宝镜像源</h4><p>安装命令</p>
+<p><code>npm install -g cnpm --registry=https://registry.npm.taobao.org</code></p>
+<p>结果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Windows\system32&gt; npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org</span><br><span class="line">C:\Users\coy\AppData\Roaming\npm\cnpm -&gt; C:\Users\coy\AppData\Roaming\npm\node_modules\cnpm\bin\cnpm</span><br><span class="line">+ cnpm@6.1.1</span><br><span class="line">added 686 packages from 950 contributors in 51.668s</span><br></pre></td></tr></table></figure>
+
+<p><strong>cnpm -v</strong></p>
+<ul>
+<li><p>cmd中正常运行</p>
+</li>
+<li><p>powershell 运行失败</p>
+<p><strong>命令</strong>：<code>cnpm install -g hexo-cli</code></p>
+<p><strong>安装结果</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cnpm install -g hexo-cli</span><br><span class="line">Downloading hexo-cli to C:\Users\coy\AppData\Roaming\npm\node_modules\hexo-cli_tmp</span><br><span class="line">Copying C:\Users\coy\AppData\Roaming\npm\node_modules\hexo-cli_tmp\_hexo-cli@3.1.0@hexo-cli to C:\Users\coy\AppData\Roaming\npm\node_modules\hexo-cli</span><br><span class="line">Installing hexo-cli&#39;s dependencies to C:\Users\coy\AppData\Roaming\npm\node_modules\hexo-cli&#x2F;node_modules</span><br></pre></td></tr></table></figure>
+
+<p><strong>模块安装位置</strong>：<code>C:\Users\coy\AppData\Roaming\npm\node_modules\hexo-cli</code></p>
+</li>
+</ul>
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="初始化blog"><a href="#初始化blog" class="headerlink" title="初始化blog"></a><strong>初始化blog</strong></h4><ul>
+<li>创建一个文件夹来作为<code>blog</code>的主程序存放地址 <code>mkdir blog cd blog</code></li>
+<li><code>hexo init</code></li>
+</ul>
+<h4 id="git-bash"><a href="#git-bash" class="headerlink" title="git bash"></a><strong>git bash</strong></h4><h4 id="PowerShell"><a href="#PowerShell" class="headerlink" title="PowerShell"></a><strong>PowerShell</strong></h4><blockquote>
+<p><a href="">使用管理员方式运行powershell的几种方式</a></p>
+<ul>
+<li>用户模式下输入 <code>Start-Process powershell -Verb runAs</code></li>
+</ul>
+</blockquote>
+<p>参考连接](<a href="https://www.bilibili.com/video/av44544186?t=1365" target="_blank" rel="noopener">https://www.bilibili.com/video/av44544186?t=1365</a>)</p>
+<h3 id="三-部署到GitHub上"><a href="#三-部署到GitHub上" class="headerlink" title="三 部署到GitHub上"></a>三 部署到GitHub上</h3><ol>
+<li><p>创建GitHub仓库，命名为：<code>{username}.github.io</code></p>
+</li>
+<li><p>修改 _config.yml文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Deployment</span><br><span class="line">## Docs: https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;deployment.html</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:coy0725&#x2F;coy0725.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="3">
+<li><p>部署到远程仓库 hexo d</p>
+</li>
+<li><p>访问 <a href="https://coy0725.github.io/" target="_blank" rel="noopener">https://coy0725.github.io/</a></p>
+</li>
+</ol>
+<h3 id="自定义博客"><a href="#自定义博客" class="headerlink" title="自定义博客"></a>自定义博客</h3><h4 id="修改主题"><a href="#修改主题" class="headerlink" title="修改主题"></a>修改主题</h4><ol>
+<li><p>下载主题  <code>git clone git@github.com:litten/hexo-theme-yilia.git themes/yilia</code></p>
+</li>
+<li><p>修改 <code>_config.yml</code>文件</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Plugins: https://hexo.io/plugins/</span></span><br><span class="line"><span class="comment">## Themes: https://hexo.io/themes/</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">yilia</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>清楚 重新生成并推送到远端</p>
+<ol>
+<li><code>hexo clean</code></li>
+<li><code>hexo generate</code></li>
+<li><code>hexo deploy</code></li>
+</ol>
+</li>
+</ol>
+<h4 id="增加分类和标签"><a href="#增加分类和标签" class="headerlink" title="增加分类和标签"></a>增加分类和标签</h4><ol>
+<li><p>新建相关页面</p>
+<p><code>hexo new page &quot;about&quot;</code></p>
+</li>
+<li><p>配置主题<code>menu</code>属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  主页: &#x2F;</span><br><span class="line">  标签: &#x2F;tags</span><br><span class="line">  分类: &#x2F;categories</span><br><span class="line">  归档: &#x2F;archives</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="3">
+<li><p>设置页面的<code>type</code>属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">title: about</span><br><span class="line">date: 2019-06-25 19:16:17</span><br><span class="line">type: &quot;tags&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ol>
+<ol start="4">
+<li><p>重新生成和发布</p>
+<p><code>hexo generate</code></p>
+<p><code>hexo deploy</code></p>
+</li>
+</ol>
+<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a href="https://blog.csdn.net/sinat_37781304/article/details/82729029?utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control" target="_blank" rel="noopener">hexo </a></p>
 
       
 
@@ -728,11 +674,22 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/17/notebook/%E6%8A%80%E6%9C%AF%E6%9E%B6%E6%9E%84/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/03/02/hexo-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">展开全文 >></a>
         </p>
       
 
@@ -762,673 +719,39 @@
 
 
   
-    <article id="post-notebook/为什么要学 Elasticsearch" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/17/notebook/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%A6%20Elasticsearch/">notebook/为什么要学 Elasticsearch</a>
+      <a class="article-title" href="/2020/03/02/hello-world/">Hello World</a>
     </h1>
   
 
         
-        <a href="/2021/05/17/notebook/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%A6%20Elasticsearch/" class="archive-article-date">
-  	<time datetime="2021-05-17T09:01:54.949Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
+        <a href="/2020/03/02/hello-world/" class="archive-article-date">
+  	<time datetime="2020-03-02T01:51:58.680Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-02</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>为什么要学 Elasticsearch</strong></p>
-<p>Kiana</p>
-<p>实现数据可视化,在 Elastic stack中进行导航</p>
-<p>Kiana能够以图表的形式现数据,并且具有可扩展的用户界面,供您全方位配置和管理 ELastic Stack</p>
-<p>Elasticsearch</p>
-<p>对您的数据进行分析,搜素和存储</p>
-<p>Elasticsearch是基于josn的分布式搜索和分析引擎,专为实现水平可扩展性,高可靠性和管理使捷性而设计</p>
-<p>采集任何来源、任何格式的数据</p>
-<p>Beats</p>
-<p>Beats是一个面向轻量型来集器的平台, Logstash是动态数据,拥有可</p>
-<p>这些采集器可从边缘机器向Logstash和Elasticsearch发送数据,蓝够与</p>
-<p>Logstash</p>
-<p>Logstash是动态数据收集管道,拥有可扩展的插件生态系统,能够与Elasticsearch产生强大的协同作用,</p>
-<p><strong>主要功能</strong></p>
-<ul>
-<li>分布式搜索引擎</li>
-<li>大数据近实时分析引擎</li>
-</ul>
-<p><strong>产品特性</strong></p>
-<ul>
-<li>容易使用/容易扩展</li>
-<li>高性能,和T+1说不</li>
-</ul>
-<p>起源- Lucene</p>
-<ul>
-<li>基于Java语言开发的搜索引擎库类</li>
-<li>创建于1999年,2005年成为 Apache顶级开源项目</li>
-<li>Lucene具有高性能、易扩展的优点</li>
-</ul>
-<p>Lucene的局限性</p>
-<ul>
-<li>只能基于Java语言开发</li>
-<li>类库的接口学习曲线陡峭</li>
-<li>原生并不支持水平扩展</li>
-</ul>
-<p>solr和 elasticsearch都是基于 Lucene实现的</p>
-<p>solr利用 zookeeper进行分布式管理,而 elasticsearch自身带有分布式协调管理功能</p>
-<p>solr比 elasticsearch实现更加全面,solr官方提供的工能能够更多,</p>
-<p>而 elasticsearch本身更注重于核心功能,高级功能多由第三方插件提</p>
-<p>供;</p>
-<p>solr在传统的搜索应用中表现好于 elasticsearch,而 elasticsearch在<strong>实时搜索</strong>应用方面比solr表现好</p>
-<p>·当单纯的对已有数据进行搜索时,solr更快。</p>
-<p>·当实时建立索引时,solr会产生io阻塞,查询性能較差,Elasticsearch具有明显的优势。</p>
-<p>·随着数据量的増加,solr的搜索效率会变得更低,而Elasticsearch却没有明显的变化。</p>
-<p>新特性7.</p>
-<p>Lucene 8.0</p>
-<p>重大改进一正式废除单个索引下多Type的支持</p>
-<p>7.1开始, Security功能免费使用</p>
-<p>ECK-Elasticseach Operator on Kubernetes</p>
-<p>新功能</p>
-<ul>
-<li>New Cluster coordination</li>
-<li>Feature-Complete High Level REST Client</li>
-<li>Script Score Query</li>
-</ul>
-<p>性能优化</p>
-<ul>
-<li>默认的 Primary Shard数从5改为1,避免 Over Sharding</li>
-<li>性能优化,更快的Top K</li>
-</ul>
-<h3 id="Elasticsearch的分布式架构"><a href="#Elasticsearch的分布式架构" class="headerlink" title="Elasticsearch的分布式架构"></a><strong>Elasticsearch的分布式架构</strong></h3><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564465962462.png" alt="1564465962462"></p>
-<ul>
-<li><p>集群规模可以从单个扩展至数百个节点</p>
-</li>
-<li><p>高可用&amp;水平扩展</p>
-<p>服务和数据两个纬度</p>
-</li>
-<li><p>支持不同的节点类型</p>
-<p>支持Hot&amp;Warm架构</p>
-</li>
-</ul>
-<p><strong>支持多种方式接入</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466069329.png" alt="1564466069329"></p>
-<p><strong>主要功能</strong></p>
-<ul>
-<li><p>海量数据的分户式存储以及集群管理</p>
-<p>​    服务与数据的高可用,水平扩展</p>
-</li>
-<li><p>近实时搜索,性能卓越</p>
-<p>​    结构化/全文/地理位置/自动完成</p>
-</li>
-<li><p>海量数据的近实时分析</p>
-<p>​    聚合功能</p>
-</li>
-</ul>
-<p><strong>Elastic Stack生态圈</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466345541.png" alt="1564466345541"></p>
-<h3 id="LogStash-数据处理管道"><a href="#LogStash-数据处理管道" class="headerlink" title="LogStash:数据处理管道"></a>LogStash:数据处理管道</h3><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466449868.png" alt="1564466449868"></p>
-<p>LogStash 特性</p>
-<ul>
-<li><p>实时解析和转换数据</p>
-<ul>
-<li>从IP地址破译出地理坐标</li>
-<li>将IP数据匿名化,完全排除敏感字段</li>
-</ul>
-</li>
-<li><p>可扩展</p>
-<ul>
-<li>200多个插件(日志/数据库/ Arcsigh/ Netflow)</li>
-</ul>
-</li>
-<li><p>可靠性安全性</p>
-<ul>
-<li>Logstash会通过持久化队列来保证至少将运行中的事件送达一次</li>
-<li>数据传输加密</li>
-</ul>
-</li>
-<li><p>监控</p>
-</li>
-</ul>
-<p><strong>Kibana:可视化分析利器</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564466634445.png" alt="1564466634445"></p>
-<p><strong>Beats</strong></p>
-<p>轻量的数据采集器</p>
-<p>全品类采集器,搞定所有数据类型</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564471529564.png" alt="1564471529564"></p>
-<p><strong>用户场景</strong></p>
-<ul>
-<li><p>网站搜索/垂直搜索/代码搜索</p>
-</li>
-<li><p>日志管理与分析/安全指标监控/应用性能监控/WEB抓取舆情分析</p>
-</li>
-</ul>
-<p><strong>日志的重要性</strong></p>
-<ul>
-<li><p>为什么重要</p>
-<ul>
-<li>运维:医生给病人看病。日志就是病人对自己的陈述</li>
-<li>恶意攻击,恶意注册,刷单,恶意密码猜测</li>
-</ul>
-</li>
-<li><p>挑战</p>
-<ul>
-<li>关注点很多,任何一个点都有可能引起问题</li>
-<li>日志分散在很多机器,出了问题时,才发现日志被删了</li>
-<li>很多运维人员是消防员,哪里有问题去哪里</li>
-</ul>
-</li>
-</ul>
-<p><strong>日志管理</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467097852.png" alt="1564467097852"></p>
-<h3 id="ElasticSearch与数据库的集成"><a href="#ElasticSearch与数据库的集成" class="headerlink" title="ElasticSearch与数据库的集成"></a><strong>ElasticSearch与数据库的集成</strong></h3><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467141719.png" alt="1564467141719"></p>
-<ul>
-<li>单独使用 Elasticsearch存储</li>
-<li>以下情况可考虑与数据库集成<ul>
-<li>与现有系统的集成</li>
-<li>需考虑事务性</li>
-<li>数据更新频繁</li>
-</ul>
-</li>
-</ul>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467318299.png" alt="1564467318299"></p>
-<p>最终同步</p>
-<p>第一种:同步双写 </p>
-<p>维护方便,思路清晰</p>
-<p>写mysql的时候,同步将数据更新到我们的es.业务强耦合.</p>
-<p>第二种:异步双写</p>
-<p>MQ.通过MQ消费来触发更新.缺点:网络延迟导致数据不一致</p>
-<p>第三种:异步双写</p>
-<p>数据库,表time,crud.更新time字段</p>
-<p>worker. 定时器</p>
-<p>第四种:binlog,将信息转为mq,mq的消费程序. 千万用户</p>
-<p>程序员水平高,binlog,mq网络延迟,丢包.</p>
-<p><strong>指标分析/日志分析</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467765374.png" alt="1564467765374"></p>
-<p><strong>安全分析:集成ArcSight</strong></p>
-<p><strong>ElasticSearch的文件目录结构</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564467951855.png" alt="1564467951855"></p>
-<p><strong>jvm配置</strong></p>
-<p>修改jvm -config/jvm.options      </p>
-<ul>
-<li>7.1下载的默认设置是1g  </li>
-</ul>
-<p>配置的建议</p>
-<ul>
-<li>xmx和xms设置成一样   </li>
-<li>xmx不要超过机器内存的50%    </li>
-<li>不要超过 o xti 30GB-https: //<a href="http://www.elastic" target="_blank" rel="noopener">www.elastic</a>. co/blog/a-heap-of-troubl</li>
-</ul>
-<h3 id="ElasticSearch基本概念"><a href="#ElasticSearch基本概念" class="headerlink" title="ElasticSearch基本概念"></a><strong>ElasticSearch基本概念</strong></h3><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564468199045.png" alt="1564468199045"></p>
-<p>index索引    </p>
-<ul>
-<li>Type类型     </li>
-<li>Document文档          </li>
-</ul>
-<p>Node节点</p>
-<ul>
-<li>Shard分片</li>
-</ul>
-<p><strong>Lucene的总体架构</strong></p>
-<p>尽管我们可以直接探讨 Apache Lucene架构的细节,但有些概念还是需要提前了解,以</p>
-<p>哽更好地理解 Lucene的架构,它们包括:</p>
-<ul>
-<li>文档( document):索引与搜索的主要数据载体,它包含一个或多个字段,存放将要写入索引或将从索引搜索出来的数据。</li>
-<li>字段( field):文档的一个片段,它包括两个部分:字段的名称和内容。</li>
-<li>词项(term):搜索时的一个单位,代表文本中的某个词。</li>
-<li>词条( token):词项在字段中的一次出现,包括词项的文本、开始和结束的位移以及类型。</li>
-</ul>
-<p>Apache Lucene将写入索引的所有信息组织成一种名为倒排索引( inverted index)的结构。该结构是一种将<strong>词项映射到文档的数据结构</strong>,其工作方式与传统的关系数据库不同,</p>
-<p>你大可以认为倒排索引是面向词项而不是面向文档的。接下来我们看看简单的倒排索引是</p>
-<p><strong>词向量</strong></p>
-<p>为单个字段创建的小索引，存储该字段的所有词条</p>
-<p><strong>抽象与类比</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564468846882.png" alt="1564468846882"></p>
-<p>（1）关系型数据库中的数据库（DataBase），等价于ES中的索引（Index）<br>（2）一个数据库下面有N张表（Table），等价于1个索引Index下面有N多类型（Type），<br>（3）一个数据库表（Table）下的数据由多行（ROW）多列（column，属性）组成，等价于1个Type由多个文档（Document）和多Field组成。<br>（4）在一个关系型数据库里面，schema定义了表、每个表的字段，还有表和字段之间的关系。<br>与之对应的，在ES中：Mapping定义索引下的Type的字段处理规则，即索引如何建立、索引类型、是否保存原始索引JSON文档、是否压缩原始JSON文档、是否需要分词处理、如何进行分词处理等。<br>（5）在数据库中的增insert、删delete、改update、查search操作等价于ES中的增PUT/POST、删Delete、改_update、查GET.</p>
-<h4 id="document-文档"><a href="#document-文档" class="headerlink" title="document(文档)"></a><strong>document(文档)</strong></h4><ul>
-<li><p>Elasticsearch是面向文档的，文档可被索引的基础信息单元,文档必须被索引/赋予一个索引的type</p>
-<ul>
-<li>日志文件中的日志项</li>
-<li>一部电影的具体信息/一张唱片的详细信息</li>
-<li>MP3播放器里的一首歌/一篇PDF文档中的具体内容</li>
-</ul>
-</li>
-<li><p>文档会被序列化成JSON格式，保存在Elasticsearch中</p>
-<ul>
-<li>JSON对象由字段组成，</li>
-<li>每个字段都有对应的字段类型（字符串/数值/布尔/日期/二进制/范围类型)</li>
-</ul>
-</li>
-<li><p>每个文档都有一个Unique ID</p>
-<ul>
-<li><p>你可以自己指定ID</p>
-</li>
-<li><p>或者通过Elasticsearch自动生成</p>
-</li>
-</ul>
-</li>
-</ul>
-<p><strong>文档的元数据</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564468804501.png" alt="1564468804501"></p>
-<h4 id="index-索引"><a href="#index-索引" class="headerlink" title="index(索引)"></a><strong>index</strong>(索引)</h4><ul>
-<li><p>index-索引是文档的容器,是含有某些相似特性的文档的集合  </p>
-<ul>
-<li>Index体现了逻辑空间的概念:每个索引都有自己的 Mapping定义,用于定义包含的文档的字段名和字段类型</li>
-<li>Shard体现了物理空间的概念,索引中的数据分散在Shard上</li>
-</ul>
-</li>
-<li><p>索引的 Mapping与 Settings</p>
-<ul>
-<li>Mapping定义文档字段的类型  </li>
-<li>Setting定义不同的数据分布</li>
-</ul>
-</li>
-</ul>
-<p><strong>索引的不同语意</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564477646892.png" alt="1564477646892"></p>
-<ul>
-<li>名词:一个 Elasticsearch集群中,可以创建很多个不同的索引        </li>
-<li><h2 id="动词-保存一个文档到-Elastlcsearch的过程也叫索引-dexing"><a href="#动词-保存一个文档到-Elastlcsearch的过程也叫索引-dexing" class="headerlink" title="动词:保存一个文档到 Elastlcsearch的过程也叫索引( dexing)"></a>动词:保存一个文档到 Elastlcsearch的过程也叫索引( dexing)</h2>  ES中,创建一个倒排索引的过程</li>
-<li>名词:一个B树索引,一个<strong>倒排索引</strong></li>
-</ul>
-<h4 id="Type-类型"><a href="#Type-类型" class="headerlink" title="Type(类型):"></a><strong>Type(类型):</strong></h4><p>在一个索引中，你可以定义一种或多种类型。一个类型是你的索引的一个逻辑上的分类/分区，其语义完全由你来定。</p>
-<p>通常，会为具有一组共同字段的文档定义一个类型。比如说，我们假设你运营一个博客平台并且将你所有的数据存储到一个索引中。在这个索引中，你可以为用户数据定义一个类型，为博客数据定义另一个类型，当然，也可以为评论数据定义另一个类型。</p>
-<p><strong>REST API 容易被各种语言调用</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564477989966.png" alt="1564477989966"></p>
-<p>分布式系统的可用性与扩展性</p>
-<ul>
-<li>高可用性<ul>
-<li>服务可用性-允许所有节点停止服务</li>
-<li>数据可用性-部分节点丢失,不会丢失数据</li>
-</ul>
-</li>
-<li>可扩展性<ul>
-<li>请求量提升/数据的不断增长(将数据分布到所有节点上)</li>
-</ul>
-</li>
-</ul>
-<p><strong>分布式特性</strong></p>
-<ul>
-<li>Elasticsearch的分布式架构的好处<ul>
-<li>存储的水平扩容</li>
-<li>提高系统的可用性，部分节点停止服务，整个集群的服务不受影响</li>
-</ul>
-</li>
-<li>Elasticsearch的分布式架构<ul>
-<li>不同的集群通过不同的名字来区分，默认名字“elasticsearch”</li>
-<li>通过配置文件修改，或者在命令行中-E cluster.name=”xxx” 进行设定</li>
-<li>一个集群可以有一个或者多个节点</li>
-</ul>
-</li>
-</ul>
-<h4 id="Node-节点"><a href="#Node-节点" class="headerlink" title="Node(节点)"></a><strong>Node(节点)</strong></h4><ul>
-<li>节点是一个 Elasticsearch的实例     <ul>
-<li>本质上就是一个JAVA进程     </li>
-<li>一台机器上可以运行多个 Elasticsearch进程,但是生产环境一般建议一台机器上只运行一个 Elasticsearch实例</li>
-</ul>
-</li>
-<li>每一个节点都有名字,通过配置文件配置,或者启动时候 -E node name=node1指定  </li>
-<li>每一个节点在启动之后,会分配一个UID,保存在data目录下</li>
-</ul>
-<p><strong>Master-eligible nodes和 Master Node</strong>    </p>
-<ul>
-<li>每个节点启动后,默认就是一个 Master eligible节点    <ul>
-<li>可以设置 node.master false禁止   </li>
-</ul>
-</li>
-<li>Master-eligible节点可以参加选主流程,成为 Master节点    </li>
-<li>当第一个节点启动时候,它会将自己选举成 Master节点</li>
-<li>每个节点上都保存了集群的状态,只有 Master节点才能修改集群的状态信息                   <ul>
-<li>集群状态(Cluster State),维护了一个集群中,必要的信息                                   <ul>
-<li>所有的节点信息  </li>
-<li>所有的索引和其相关的Mapping 与Setting信息  </li>
-<li>分片的路由信息</li>
-</ul>
-</li>
-<li>任意节点都能修改信息会导致数据的不一致性 </li>
-</ul>
-</li>
-</ul>
-<p><strong>Data Node &amp; Coordinating Node</strong></p>
-<ul>
-<li>Data Node<ul>
-<li>可以保存数据的节点，叫做Data Node。负责保存分片数据。在数据扩展上起到了至关重要的作用</li>
-</ul>
-</li>
-<li>Coordinating Node<ul>
-<li>负责接受Client的请求，将请求分发到合适的节点，最终把结果汇集到一起</li>
-<li>每个节点默认都起到了Coordinating Node的职责</li>
-</ul>
-</li>
-</ul>
-<p><strong>其他节点类型</strong></p>
-<ul>
-<li>Hot &amp;Warm Node<ul>
-<li>不同硬件配置的Data Node，用来实现Hot &amp;Warm架构，降低集群部署的成本</li>
-</ul>
-</li>
-<li>Machine Learning Node<ul>
-<li>负责跑机器学习的Job，用来做异常检测</li>
-</ul>
-</li>
-<li>Tribe Node<ul>
-<li>（5.3开始使用Cross Cluster Serarch)Tribe Node 连接到不同的Elasticsearch 集群,并且支持将这些集群当成一个单独的集群处理</li>
-</ul>
-</li>
-</ul>
-<p><strong>配置节点类型</strong></p>
-<ul>
-<li>开发环境中一个节点可以承担多种角色</li>
-<li>生产环境中,应该设置单一的角色的节点( dedicated node)</li>
-</ul>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564535860148.png" alt="1564535860148"></p>
-<p><strong>分片(primary Shard &amp;Replica Shard)</strong></p>
-<ul>
-<li>主分片,用以解决数据水平扩展的问题。通过主分片,可以将数据分布到集群內的所有节点之上<ul>
-<li>一个分片是一个运行的 Lucene的实例</li>
-<li>主分片数在索引创建时指定,后续不允许修改,除非 Reindex</li>
-</ul>
-</li>
-<li>副本,用以解决数据高可用的问题。分片是主分片的拷贝<ul>
-<li>副本分片数,可以动态的调整</li>
-<li>增加副本数,还可以在一定程度上提高服务的可用性(读取的吞吐)</li>
-</ul>
-</li>
-</ul>
-<p>每个分片都是一个运行的lucene实例</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564536154851.png" alt="1564536154851"></p>
-<h4 id="shards-amp-replicas"><a href="#shards-amp-replicas" class="headerlink" title="shards &amp; replicas:"></a><strong>shards &amp; replicas:</strong></h4><p>一个索引可以存储超出单个结点硬件限制的大量数据。比如，一个具有10亿文档的索引占据1TB的磁盘空间，而任一节点都没有这样大的磁盘空间；或者单个节点处理搜索请求，响应太慢。</p>
-<p>为了解决这个问题，Elasticsearch提供了将索引划分成多份的能力，这些份就叫做分片。</p>
-<p>当你创建一个索引的时候，你可以指定你想要的分片的数量。每个分片本身也是一个功能完善并且独立的“索引”，这个“索引”可以被放置到集群中的任何节点上。</p>
-<p><strong>分片之所以重要，主要有两方面的原因</strong>：</p>
-<blockquote>
-<ul>
-<li>允许你水平分割/扩展你的内容容量</li>
-<li>允许你在分片（潜在地，位于多个节点上）之上进行分布式的、并行的操作，进而提高性能/吞吐量</li>
-</ul>
-</blockquote>
-<p>至于一个分片怎样分布，它的文档怎样聚合回搜索请求，是完全由Elasticsearch管理的，对于作为用户的你来说，这些都是透明的。<br>在一个网络/云的环境里，失败随时都可能发生，在某个分片/节点不知怎么的就处于离线状态，或者由于任何原因消失了，这种情况下，有一个故障转移机制是非常有用并且是强烈推荐的。为此目的，Elasticsearch允许你创建分片的一份或多份拷贝，这些拷贝叫做复制分片，或者直接叫复制。</p>
-<p><strong>复制之所以重要，有两个主要原因</strong>：</p>
-<blockquote>
-<ul>
-<li>在分片/节点失败的情况下，提供了高可用性。因为这个原因，注意到复制分片从不与原/主要（original/primary）分片置于同一节点上是非常重要的。</li>
-<li>扩展你的搜索量/吞吐量，因为搜索可以在所有的复制上并行运行</li>
-</ul>
-</blockquote>
-<p>​           </p>
-<p>总之，每个索引可以被分成多个分片。一个索引也可以被复制0次（意思是没有复制）或多次。一旦复制了，每个索引就有了主分片（作为复制源的原来的分片）和复制分片（主分片的拷贝）之别。分片和复制的数量可以在索引创建的时候指定。在索引创建之后，你可以在任何时候动态地改变复制的数量，但是你事后不能改变分片的数量。</p>
-<p>默认情况下，Elasticsearch中的每个索引被分片5个主分片和1个复制，这意味着，如果你的集群中至少有两个节点，你的索引将会有5个主分片和另外5个复制分片（1个完全拷贝），这样的话每个索引总共就有10个分片。</p>
-<h4 id="分片的设定"><a href="#分片的设定" class="headerlink" title="分片的设定"></a>分片的设定</h4><p>对于生产环境中分片的设定,需要提前做好容量规划</p>
-<ul>
-<li>分片数设置过小<ul>
-<li>导致后续无法增加节点实现水品扩展</li>
-<li>单个分片的数据量太大,导致数据重新分配耗时</li>
-</ul>
-</li>
-<li>分片数设置过大,7.0开始,默认主分片设置成1,解决了over- sharding的问题<ul>
-<li>影响搜索结果的相关性打分,影响统计结果的准确性</li>
-<li>单个节点上过多的分片,会导致资源浪费,同时也会影响性能</li>
-</ul>
-</li>
-</ul>
-<p>查看集群的健康情况</p>
-<blockquote>
-<p>GET _cluster/healthy</p>
-</blockquote>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564536614080.png" alt="1564536614080"></p>
-<blockquote>
-<p>Cerebro</p>
-</blockquote>
-<ul>
-<li>Green-主分片与副本都正常分配</li>
-<li>Yellow-主分片全部正常分配,有副本分片未能正常分配</li>
-<li>Red-有主分片未能分配</li>
-</ul>
-<p>例如,当服务器的磁盘容量超过85%时,去创建了一个新的索引</p>
-<h4 id="文档的CRUD"><a href="#文档的CRUD" class="headerlink" title="文档的CRUD"></a><strong>文档的CRUD</strong></h4><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564473114232.png" alt="1564473114232"></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564476706322.png" alt="1564476706322"></p>
-<p>日志分析,搜索 使用es</p>
-<p>删除索引</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE [index]</span><br></pre></td></tr></table></figure>
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
 
-<p>创建文档</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">POST users&#x2F;_doc</span><br><span class="line">&#123;</span><br><span class="line">&quot;user&quot;:&quot;mike&quot;,</span><br><span class="line">&quot;message&quot;:&quot;trying es&quot;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">PUT users&#x2F;_doc&#x2F;1?op_type&#x3D;create&#123;</span><br><span class="line">&quot;user&quot;:&quot;jack&quot;,</span><br><span class="line">&quot;meassage&quot;:&quot;try es&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
 
-<p>查看索引结构</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">GET [index_name]/_mapping</span><br><span class="line">GET users/_mapping</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
 
-<p>搜索</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">GET users/_search</span><br><span class="line">&#123;</span><br><span class="line"><span class="string">"query"</span>:&#123;</span><br><span class="line">	<span class="string">"march_all"</span>:&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 
-<p>更新文档</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST users&#x2F;_update&#x2F;1</span><br><span class="line">&#123;</span><br><span class="line">&quot;doc&quot;:&#123;</span><br><span class="line">	&quot;meassage&quot;:&quot;trying es 2&quot;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>删除文档</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE uses&#x2F;_doc&#x2F;1</span><br></pre></td></tr></table></figure>
-
-<p>批量操作</p>
-<p>GET /_mget</p>
-<p>节省线程资源</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">POST _bluk</span><br><span class="line">&#123;<span class="string">"index"</span>:&#123;<span class="string">"_index"</span>:<span class="string">"test"</span>,<span class="string">"_id"</span>:<span class="string">"1"</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"filed1"</span>:<span class="string">"value1"</span>&#125;</span><br><span class="line">&#123;<span class="string">"delete"</span>:&#123;<span class="string">"_index"</span>:<span class="string">"test"</span>,<span class="string">"id"</span>:<span class="string">"2"</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"create"</span>:&#123;<span class="string">"_index"</span>:<span class="string">"test2"</span>,<span class="string">"_id"</span>:<span class="string">"3"</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"filed1"</span>:<span class="string">"value3"</span>&#125;</span><br><span class="line">&#123;<span class="string">"update"</span>:&#123;<span class="string">"_id"</span>:<span class="string">"1"</span>,<span class="string">"_index"</span>:<span class="string">"test"</span>&#125;&#125;</span><br><span class="line">&#123;<span class="string">"doc"</span>:&#123;<span class="string">"filed2"</span>:<span class="string">"value2"</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>执行结果</p>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;index&quot;:&#123;&quot;_index&quot;:&quot;test&quot;,&quot;_id&quot;:&quot;1&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564540729648.png" alt="1564540729648"></p>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;delete&quot;:&#123;&quot;_index&quot;:&quot;test&quot;,&quot;id&quot;:&quot;2&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564540915519.png" alt="1564540915519"></p>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;create&quot;:&#123;&quot;_index&quot;:&quot;test2&quot;,&quot;_id&quot;:&quot;3&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564540991616.png" alt="1564540991616"></p>
-<blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;update&quot;:&#123;&quot;_id&quot;:&quot;1&quot;,&quot;_index&quot;:&quot;test&quot;&#125;&#125;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564541034803.png" alt="1564541034803"></p>
-<p>ES如何实现近实时搜索的?</p>
-<p>Apache官方定义：Lucene是一个高效的，基于Java的全文检索库;开源免费</p>
-<p>先来谈什么叫全文检索?</p>
-<p>全文检索主要针对非结构化数据，主要有两种方法：</p>
-<p>(1)、顺序扫描法</p>
-<p>比如我们想要在成千上万的文档中，查找包含某一字符串的所有文档，顺序扫描法就必须逐个的扫描每个文档，并且每个文档都要从头看到尾，如果找到，就继续找下一个，直至遍历所有的文档;这种方法通常应用于数据量较小的场景，比如经常使用的grep命令就是这种查找方式</p>
-<p>(2)、全文检索</p>
-<p>试想一下结构化数据的查询方式，例如数据库的查找方式，我们知道在数据库中构建索引可以极大程度的提高查询速度，这是因为结构化数据有一定程度固定的结构使得我们可以采取某些搜索算法加速查询速度，那既然如此，为什么我们不可以尝试在非结构化数据中，将一部分结构化信息抽取出来，重新组织，然后针对这部分有结构的数据进行索引建立，从而达到加速查询的目的;</p>
-<p>上述想法很天然，但却构成了全文检索的基本思路</p>
-<p><strong>在非结构化数据中，将一部分结构化信息抽取出来，重新组织，然后针对这部分有结构的数据进行索引建立，从而达到加速查询的目的</strong></p>
-<p>从非结构化数据中抽取部分结构化数据，并建立索引，再对索引进行搜索的过程，我们成为全文索引</p>
-<p>从上面我们可以看出，全文检索分为两步：</p>
-<p>第一步：索引创建</p>
-<p>第二步：搜索索引</p>
-<p>从上述思路中，可以引出来三个问题：</p>
-<p><strong>1、索引里究竟存了些什么?</strong></p>
-<p><strong>2、如何创建索引</strong>?</p>
-<p><strong>3、如何对索引进行搜索?</strong></p>
-<p>针对上述问题，我们逐个探讨：</p>
-<h4 id="问题1：索引里究竟存了些什么"><a href="#问题1：索引里究竟存了些什么" class="headerlink" title="问题1：索引里究竟存了些什么?"></a>问题1：索引里究竟存了些什么?</h4><p>想要知道索引里究竟存了些什么?我们必须先来了解一下正向索引和反向索引</p>
-<p>正向索引：从文档中查找字符串 关系型数据库使用的是正向索引</p>
-<p>反向索引：从字符串查找文档 搜索引擎lucene使用的是反向索引</p>
-<p>反向索引的解释如下：</p>
-<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/1da3f2bda2e64741a5b9e8098aa583d7.png" alt="img"></p>
-<p>如上图所示，假如我有100个文档，对他们从1-100进行编号;</p>
-<p>左边保存的是一系列的字符串，也可以理解为词，我们称这些字符串集合为词典;</p>
-<p>右边保存的是包含左边字符串的文档链表，此文档链表成为倒排表</p>
-<p>在上面中，我们对词典中包含的字符串创建索引，而这些字符串也正是我们搜索的信息，因此可以大大加快查询速度</p>
-<p>比如说我们要查找同时包含lucene和hadoop的文档，我们只需以下几步：</p>
-<p>第一步：取出包含lucene的文档链表</p>
-<p>第二步：取出包含hadoop的文档链表</p>
-<p>第三步：合并链表，取出交集</p>
-<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/2609086b42114436bac2bc7b59a95bcf.png" alt="img"></p>
-<blockquote>
-<p>疑问：全文检索的确加快了搜索的速度，但是多了索引的过程，两者加起来不一定有顺序扫描快。这种说法的确有一定道理，在数据量小的情况下，顺序扫描未必比全文检索慢，但全文检索设计的初衷就是用于大数据量的业务环境中。</p>
-<p>解答：全文检索和顺序扫描的区别在于：顺序扫描每次都必须从头至尾扫描全部数据，但全文检索的索引创建过程只需一次，以后查询无需再次创建，但却可以一直为搜索所用。</p>
-<p>总结：<strong>全文检索相对于顺序扫描的优势在于一次索引创建，多次使用</strong></p>
-</blockquote>
-<h4 id="问题2：如何创建索引"><a href="#问题2：如何创建索引" class="headerlink" title="问题2：如何创建索引?"></a>问题2：如何创建索引?</h4><p>索引的创建一般分为以下几步：</p>
-<p>第一步：将文档交给切词组件(Tokenizer)进行切词处理</p>
-<p>第二步：将得到的词元(Token)交给语言处理组件</p>
-<p>第三步：将得到的词(Term)交给索引组件</p>
-<p>第四步：由索引组件针对词建立索引</p>
-<p>针对上述步骤，我们给出2个示例文档，加以详细说明</p>
-<p>Document 1：Students should be allowed to go out with their friends, but not allowed to drink beer.</p>
-<p>Document 2：My friend Jerry went to school to see his students but found them drunk which is not allowed.</p>
-<h5 id="第一步：切词组件处理"><a href="#第一步：切词组件处理" class="headerlink" title="第一步：切词组件处理"></a>第一步：切词组件处理</h5><p>上述2个文档会被交给切词组件，切词组件主要针对文档进行切割，将文档中的单词一个一个切割出来，同时消除一些无意义的词，比如标点符号、英文中的the和is、中文中的的等。因为标点符号和一些形容词，在实际的搜索中是很少会被搜索的，所以在该步骤会剃掉这些词语，减少索引的大小</p>
-<p>经过切割以后，可能会被切分成以下词元：</p>
-<p>“Students”，“allowed”，“go”，“their”，“friends”，“allowed”，“drink”，“beer”，“My”，“friend”，“Jerry”，“went”，“school”，“see”，“his”，“students”，“found”，“them”，“drunk”，“allowed”</p>
-<h5 id="第二步：语言处理组件处理"><a href="#第二步：语言处理组件处理" class="headerlink" title="第二步：语言处理组件处理"></a>第二步：语言处理组件处理</h5><p>该步骤主要针对第一步生成的词元进行自然语言同化处理，比如针对cars词元，同时生成新的词car;Student词元中的大写字母小写化，这样能够实现一个student搜索，可以同时搜索处理像Student、STUDENT、stuDENT等多种情况，经过该步骤处理后，可能会被切分成以下词：</p>
-<p>“student”，“allow”，“go”，“their”，“friend”，“allow”，“drink”，“beer”，“my”，“friend”，“jerry”，“go”，“school”，“see”，“his”，“student”，“find”，“them”，“drink”，“allow”</p>
-<p>正因为有了自然语言处理组件，才能使得搜索drove，drive也能被搜出来</p>
-<h5 id="第三步：将得到的词交给索引组件建立索引"><a href="#第三步：将得到的词交给索引组件建立索引" class="headerlink" title="第三步：将得到的词交给索引组件建立索引"></a>第三步：将得到的词交给索引组件建立索引</h5><p>索引组件主要做以下几件事情：</p>
-<p>(1)、利用得到的词创建一个词典</p>
-<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/577b0f4bd43b48d1a6e975c2d8c9e6c5.png" alt="img"></p>
-<p>(2)、对字典按字母顺序进行排序</p>
-<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/c0f141f53f9d4a2586ebda13c6bed862.png" alt="img"></p>
-<p>(3) 、合并相同的词并建立倒排链表</p>
-<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/96aa8dc611ff4dceaf32b9ef857b5f8f.png" alt="img"></p>
-<p>在上述表中，有几个定义：</p>
-<p>Document Frequency：表示该词出现在所有文档的总数</p>
-<p>Frequency：表示在某一个文档中该词出现的次数</p>
-<h5 id="第四步：建立索引"><a href="#第四步：建立索引" class="headerlink" title="第四步：建立索引"></a>第四步：建立索引</h5><p>针对最后生成的词典，进行索引的建立，至此我们发现根据搜索词，我们可以立即找到对应的文档;而且诸如drink、drunk等都可以找到同一个文档</p>
-<h4 id="问题3：如何对索引进行搜索"><a href="#问题3：如何对索引进行搜索" class="headerlink" title="问题3：如何对索引进行搜索?"></a>问题3：如何对索引进行搜索?</h4><p>搜索可以分为以下几步：</p>
-<p>第一步：用户输入查询语句</p>
-<p>第二步：对查询语句进行词法分析、语法分析、语言处理</p>
-<p>第三步：搜索索引，得到符合语法树的文档</p>
-<p>第四步：根据得到的文档和查询语句相关性，对结果进行排序予以展示</p>
-<p>第一步：用户输入语句</p>
-<p>查询语句的语法根据全文检索系统的实现而不同。</p>
-<p>比如用户输入：lucene AND learned NOT hadoop ——— 用户想要查找包含lucene和learned，但是不包含hadoop的文档</p>
-<p>第二步：对查询语句进行词法分析、语法分析、语言处理</p>
-<p>(1)、词法分析主要用来识别单词和关键字</p>
-<p>比如针对上述用户的输入，经过词法分析，得到单词为lucene、learned、hadoop，关键词为AND、NOT</p>
-<p>(2)、语言分析主要根据查询语句来生成一颗语法树</p>
-<p>受限进行语法判断，如果不满足语法要求，则直接报错;若满足语法要求，则可以生成下面的语法树：</p>
-<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/a61ab3018f0a411a81201c25f9774a12.png" alt="img"></p>
-<p>(3)、语言处理和索引建立过程中得语言处理几乎一样</p>
-<p>例如将learned变成learn，经过处理后得到以下结果：</p>
-<p><img src="http://5b0988e595225.cdn.sohucs.com/images/20181026/ce789c570a824076b94bf25903979f33.png" alt="img"></p>
-<p>第三步：搜索索引，得到符合语法树得文档</p>
-<p>首先，在反向索引链表里，找到包含lucene、learn和hadoop得文档</p>
-<p>其次，对包含lucene和learn得文档进行求合集操作，得到同时包含两者得文档链条</p>
-<p>然后，将得到合集后得链表与hadoop得文档链表进行差集操作，去除包含hadoop得文档</p>
-<p>最后，此文档链表就是我们要找得文档</p>
-<p>第四步：根据得到的文档和查询语句的相关性，对结果进行排序</p>
-<p>此过程也是极其复杂的，比如谷歌搜索，查询出来的结果有几十万上百万，如何排序显示，这个过程涉及到一些自然语言的理解，过程非常复杂，在此不再赘述</p>
-<p>总结：Lucene是一个开源的分部署搜索引擎的实现，ElasticSearch底层就是基于Lucene实现的，之所以能够实现分布式搜索，原因就在于每一个文档在出库入库之前，就已经被进行切词分析处理，针对每个词建立索引，是一种空间换时间的做法</p>
-<h3 id="杂项"><a href="#杂项" class="headerlink" title="杂项"></a>杂项</h3><p>ES服务端口</p>
-<ol>
-<li>9200（restful的对外端口)供其他编程语言调用，以及等一些插件的访问也会使用此端口</li>
-<li>9300（java api的对外端口）给java程序使用的端口</li>
-</ol>
-<p>必备插件</p>
-<ol>
-<li>head插件：可以查看索引情况，搜索索引，查看集群状态和分片分布等 </li>
-<li>bigdesk插件：可以查看集群的jvm信息，磁盘IO，索引创建删除信息等，适合查找系统瓶颈，监控集群状态等 </li>
-</ol>
-<p>分词器组件配置详解</p>
-<p>在es中，一个analysis集合<br>可以包含多个analyzer，而一个analyzer则由一个单个的tokenizer，零个或多个的tokenfilter组成，而一个tokenizer又可以包含零个或多个</p>
-<p>模板配置</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">index :  </span><br><span class="line">  analysis :<span class="comment">//一个analysis可以包含多个analyzer，tokenizer，filter，char_filter配置  </span></span><br><span class="line">      analyzer :<span class="comment">// 一个analyzer下面可以包含一个tokenizer，多个filter和char_filter， position_increment_gap是距离查询时，最大允许查询的距离，默认是100  </span></span><br><span class="line">        myAnalyzer1 :  </span><br><span class="line">              type : custom  </span><br><span class="line">              tokenizer : myTokenizer1  </span><br><span class="line">              filter : [myTokenFilter1, myTokenFilter2]  </span><br><span class="line">              char_filter : [my_html]  </span><br><span class="line">              position_increment_gap: <span class="number">256</span>  </span><br><span class="line">         myAnalyzer2 :  </span><br><span class="line">              type : custom  </span><br><span class="line">              tokenizer : myTokenizer1  </span><br><span class="line">              filter : [myTokenFilter1, myTokenFilter2]  </span><br><span class="line">              char_filter : [my_html]  </span><br><span class="line">              position_increment_gap: <span class="number">256</span>  </span><br><span class="line"></span><br><span class="line">      tokenizer :  </span><br><span class="line">          myTokenizer1 :  </span><br><span class="line">              type : standard  </span><br><span class="line">              max_token_length : <span class="number">900</span>  </span><br><span class="line">          myTokenizer2 :  </span><br><span class="line">              type : keyword  </span><br><span class="line">              max_token_length : <span class="number">900</span>  </span><br><span class="line">      filter :  </span><br><span class="line">          myTokenFilter1 :  </span><br><span class="line">              type : stop  </span><br><span class="line">              stopwords : [stop1, stop2, stop3, stop4]  </span><br><span class="line">          myTokenFilter2 :  </span><br><span class="line">              type : length  </span><br><span class="line">              min : <span class="number">0</span>  </span><br><span class="line">              max : <span class="number">2000</span>  </span><br><span class="line">      char_filter :  </span><br><span class="line">            my_html :  </span><br><span class="line">              type : html_strip  </span><br><span class="line">              escaped_tags : [xxx, yyy]  </span><br><span class="line">              read_ahead : <span class="number">1024</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>Elasticsearch还具有无模式的能力，这意味着可以索引文档而无需显式指定如何处理文档中可能出现的每个不同字段。启用动态映射后，Elasticsearch会自动检测并向索引添加新字段</p>
-<p>这种默认行为使您可以轻松索引和浏览数据 - 只需开始索引文档，Elasticsearch将检测并将布尔值，浮点和整数值，日期和字符串映射到相应的Elasticsearch数据类型。</p>
-<p>但是，最终，您比Elasticsearch更了解您的数据以及您希望如何使用它。 您可以定义规则来控制动态映射并显式定义映射，以完全控制字段的存储和索引方式。</p>
-<p>默认一份备份 五个分片 分片只能在索引创建时指定数量</p>
-<p>restful api</p>
-<p>◆API基本格式</p>
-<blockquote>
-<p>http://<ip>:<port>/&lt;索引&gt;/&lt;类型&gt;/&lt;文档id&gt;</p>
-</blockquote>
-<p>◆常用HTTP动词GET/PUT/POST/DELET</p>
-<p>结构化索引</p>
-<p>mapping </p>
-<p>非结构化索引</p>
-<p><strong>分布式安装</strong></p>
-<ul>
-<li>主节点配置 elasticsearch.yml</li>
-</ul>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http.cors.enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">http.cors.allow-origin:</span> <span class="string">"*"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">cluster.name:</span> <span class="string">"wali"</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">"master"</span></span><br><span class="line"><span class="attr">node.master:</span> <span class="string">"true"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br></pre></td></tr></table></figure>
-
-<p> ps -ef |grep ‘pwd’</p>
-<p>查询原来的服务进程</p>
-<p>kill pid</p>
-<ul>
-<li>slave配置</li>
-</ul>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">cluster.name:</span> <span class="string">wali</span></span><br><span class="line"><span class="attr">node.name:</span> <span class="string">slave1</span></span><br><span class="line"></span><br><span class="line"><span class="attr">network.host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line"><span class="string">http.port:8200</span></span><br><span class="line"></span><br><span class="line"><span class="attr">discovery.zen.ping.unicast.hosts:</span> <span class="string">["127.0.0.1"]</span></span><br></pre></td></tr></table></figure>
-
-<p>服务启动 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bin.elasticsearch -d</span><br></pre></td></tr></table></figure>
-
-
-
-<p><strong>查询</strong></p>
-<ul>
-<li>条件查询</li>
-</ul>
-<blockquote>
-<p>POST ip：port/index/_search</p>
-</blockquote>
-<p>body(json)</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span>:&#123;</span><br><span class="line">        <span class="attr">"match"</span>:&#123;</span><br><span class="line">            <span class="attr">"title"</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="string">"from"</span>:,<span class="comment">//从哪里开始返回</span></span><br><span class="line">    <span class="attr">"size"</span>:<span class="comment">//返回多少条数据，默认返回十条</span></span><br><span class="line">    <span class="string">"sort"</span>:[</span><br><span class="line">    &#123;<span class="attr">"feild"</span>:&#123;<span class="attr">"order"</span>:<span class="string">"desc"</span>&#125;&#125;<span class="comment">//排序规则 </span></span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>聚合查询</li>
-</ul>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span>:&#123;</span><br><span class="line">        <span class="attr">"group_by_word_count"</span>:&#123;</span><br><span class="line">            <span class="attr">"terms"</span>:&#123;</span><br><span class="line">                <span class="attr">"feild"</span>:<span class="string">""</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    <span class="attr">"aggs"</span>:&#123;</span><br><span class="line">        <span class="attr">"grades_word_count"</span>:&#123;</span><br><span class="line">            <span class="attr">"stats"</span>:&#123;<span class="comment">//对字段进行计算</span></span><br><span class="line">                <span class="attr">"feild"</span>:<span class="string">"word_count"</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>高级查询</strong></p>
-<p>子条件査询   </p>
-<p> 特定字段查询所指特定值</p>
-<p><strong>Query  context</strong></p>
-<p>在查询过程中,除了判断文档是否满足查询条件外,ES还会计算一个 score来标识匹配的程度,旨在判断目标文档和查询条件匹配的有多好。</p>
-<p>◆全文本查询针对文本类型数据</p>
-<p>模糊匹配 会将字段拆分匹配</p>
-<p>习语匹配 不会拆分</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span>:&#123;</span><br><span class="line">        "match_phrase"|"match":&#123;</span><br><span class="line">            "feild":""</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>多字段模糊匹配</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span>:&#123;</span><br><span class="line">        <span class="attr">"multi_match"</span>:&#123;</span><br><span class="line">            <span class="attr">"query"</span>:<span class="string">"wali"</span>,</span><br><span class="line">            <span class="attr">"feilds"</span>:[<span class="string">"feild1"</span>,<span class="string">"feild2"</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>语法查询</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query_string"</span>:&#123;</span><br><span class="line">        <span class="attr">"query"</span>:<span class="string">"(elastic And 大法)orpython"</span>,</span><br><span class="line">        <span class="attr">"fildes"</span>:[]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>范围查询</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"query"</span>:&#123;</span><br><span class="line">        <span class="attr">"range"</span>:&#123;</span><br><span class="line">           <span class="attr">"publish_date"</span>:&#123;</span><br><span class="line">            <span class="attr">"gte"</span>:<span class="number">1000</span>,</span><br><span class="line">            <span class="attr">"lte"</span>:<span class="number">2000</span></span><br><span class="line">        	&#125; </span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>◆字段级别查询针对结构化数据,如数字、日期等</p>
-<p><strong>Filter context</strong></p>
-<p>在查询过程中,只判断该文档是否满足条件,只有Yes或者No</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"qury"</span>:&#123;</span><br><span class="line">        <span class="attr">"bool"</span>:&#123;</span><br><span class="line">            <span class="attr">"filter"</span>:&#123;</span><br><span class="line">                <span class="attr">"term"</span>:&#123;</span><br><span class="line">                    <span class="attr">"word_count"</span>:<span class="number">1000</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>复合条件查询  以一定的逻辑组合子条件查询</p>
-<p>固定分数查询</p>
-<p>布尔查询</p>
-<p>…….</p>
-<h4 id="springboot-集成elasticsearch"><a href="#springboot-集成elasticsearch" class="headerlink" title="springboot 集成elasticsearch"></a>springboot 集成elasticsearch</h4><p><strong>依赖</strong></p>
-<p>transport</p>
-<p>log4j-core</p>
-<p><strong>log4j2.properties</strong></p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">appender.console.type</span> <span class="string">Console</span></span><br><span class="line"><span class="meta">appender.console.name</span>= <span class="string">Console</span></span><br><span class="line"><span class="meta">appender.console.layout.type</span>= <span class="string">PatternLayout</span></span><br><span class="line"><span class="meta">appender.console.layout.pattern</span> =<span class="string">[%t] %-5p %C-%m%n</span></span><br><span class="line"></span><br><span class="line"><span class="meta">rootLogger.level</span>= <span class="string">info</span></span><br><span class="line"><span class="meta">rootLogger.appenderRef.console.ref</span> = <span class="string">console</span></span><br></pre></td></tr></table></figure>
-
-<p>config配置</p>
-<p>InetSocketTransPortAddress node （ip，tcp端口）</p>
-<p>client.addTransPortAddress(node)</p>
-<p>集群名</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564629339020.png" alt="1564629339020"></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640213421.png" alt="1564640213421"></p>
-<p>文档实体</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640765687.png" alt="1564640765687"></p>
-<p>索引服务测试</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640897350.png" alt="1564640897350"></p>
-<p>文档实体测试</p>
-<p>增删改查</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564640997965.png" alt="1564640997965"></p>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
 
       
 
@@ -1441,7 +764,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/17/notebook/%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%AD%A6%20Elasticsearch/">展开全文 >></a>
+          <a class="article-more-a" href="/2020/03/02/hello-world/">展开全文 >></a>
         </p>
       
 
@@ -1471,738 +794,6 @@
 
 
   
-    <article id="post-notebook/tcp" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/17/notebook/tcp/">notebook/tcp</a>
-    </h1>
-  
-
-        
-        <a href="/2021/05/17/notebook/tcp/" class="archive-article-date">
-  	<time datetime="2021-05-17T09:01:54.948Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>连接请求报文段</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SYN&#x3D;1 ，ACK&#x3D;0. seq&#x3D;x</span><br></pre></td></tr></table></figure>
-
-<p>连接确认报文段</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SYN&#x3D;1 ，ACK&#x3D;1. seq&#x3D;y  ack&#x3D;x+1</span><br></pre></td></tr></table></figure>
-
-<p>确认报文段</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SYN&#x3D;0 ，ACK&#x3D;1. seq&#x3D;x+1  ack&#x3D;y+1</span><br></pre></td></tr></table></figure>
-
-<p>意义</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">现假定出现一种异常情况,即A发出的第一个连接请求报文段并没有丢失,而是在某</span><br><span class="line">些网络结点长时间滞留了,以致延误到连接释放以后的某个时间才到达B。本来这是一个早已失效的报文段。但B收到此失效的连接请求报文段后,就误认为是A又发出一次新的连接请求。于是就向A发出确认报文段,同意建立连接。假定不采用报文握手,那么只要B发出确认,新的连接就建立了。</span><br><span class="line">由于现在A并没有发出建立连接的请求,因此不会理睬B的确认,也不会向B发送数</span><br><span class="line">据。但B却以为新的运输连接已经建立了,并一直等待A发来数据。B的许多资源就这样白白浪费了</span><br></pre></td></tr></table></figure>
-
-<p>seq：序号</p>
-<p>ack：确认号<img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1565056373676.png" alt="1565056373676"></p>
-<p>ACK：仅当ACK=1时，确认号字段才有效。规定：连接建立后的所有报文段ACK都必须置为1</p>
-<p>SYN：连接建立时用来同步序号。SYN=1，表示这是一个连接请求或者连接接收报文。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/17/notebook/tcp/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/一个简单的web服务器" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/17/notebook/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/">notebook/一个简单的web服务器</a>
-    </h1>
-  
-
-        
-        <a href="/2021/05/17/notebook/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/" class="archive-article-date">
-  	<time datetime="2021-05-17T09:01:54.948Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="第一章-一个简单的web服务器"><a href="#第一章-一个简单的web服务器" class="headerlink" title="第一章 一个简单的web服务器"></a>第一章 一个简单的web服务器</h2><h3 id="Socket和ServerSocket类"><a href="#Socket和ServerSocket类" class="headerlink" title="Socket和ServerSocket类"></a>Socket和ServerSocket类</h3><p>基于Java的web服务器使用java.net.Socket 和 java.net.ServerSocket两个重要的类,并通过http进行通信</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Socket</span><br><span class="line">new Socket(&quot;yahoo.com&quot;,80);</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>主机:远程机器名或IP地址</li>
-<li>端口:远程应用的端口号</li>
-</ul>
-<p>该类实现客户端套接字(也称为“套接字”)。套接字是两台机器之间通信的端点。</p>
-<p>套接字的实际工作由SocketImpl类的一个实例执行。通过更改创建套接字实现的套接字工厂，应用程序为自己配置去创建适合本地防火墙的套接字。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ServerSocket</span><br></pre></td></tr></table></figure>
-
-<p>服务器套接字:等待来自客户端的连接请求.一旦服务器套接字获得一个连接请求,它将创建一个ServerSocket实例来与客户端进行通信.</p>
-<p>创建服务器套接字,需要指定IP地址和需要进行监听的端口.</p>
-<p>该类实现服务器套接字。服务器套接字等待通过网络传入的请求。它根据请求执行一些操作，然后可能返回一个结果给请求者。</p>
-<p>服务器套接字的实际工作由SocketImpl类的一个实例执行。应用程序可以更改创建套接字实现的套接字工厂，将自己配置为创建适合本地防火墙的套接字。</p>
-<h3 id="HTTP-请求"><a href="#HTTP-请求" class="headerlink" title="HTTP 请求"></a>HTTP 请求</h3><p>基于传输层的TCP协议,提供可靠的服务.</p>
-<p>请求由哪几部分组成</p>
-<ol>
-<li>方法 +统一资源标识符URI+ 协议/版本</li>
-<li>请求的头部 Headers</li>
-<li>主体 Body</li>
-</ol>
-<p>URI完全指明一个互联网资源,URI通常是相对服务器的根目录解释的.</p>
-<p>头部和主体内容使用回车换行符(CRLF)来分割,告诉http服务器主体内容在什么地方开始.</p>
-<h3 id="HTTP响应"><a href="#HTTP响应" class="headerlink" title="HTTP响应"></a>HTTP响应</h3><ol>
-<li>方法 +统一资源标识符URI+ 协议/版本</li>
-<li>响应的头部 Headers</li>
-<li>请求体 Body</li>
-</ol>
-<h3 id="HttpServer类"><a href="#HttpServer类" class="headerlink" title="HttpServer类"></a><strong>HttpServer类</strong></h3><p>await方法</p>
-<p>首先创建一个SocketServer实例,(地址+最大队列长度+端口),然后等待请求(进入while循环)</p>
-<p>socket = serverSocket.accept(),获得客户端套接字后,从socket 实例中获得java.io.InputStream input 和java.io.OutputStream output对象.</p>
-<ul>
-<li>input构造Request请求对象</li>
-<li>output构造Response响应对象</li>
-</ul>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564455967560.png" alt="1564455967560"></p>
-<h3 id="Request-类"><a href="#Request-类" class="headerlink" title="Request 类"></a><strong>Request 类</strong></h3><p>代表一个HTTP请求.从负责与客户端通信的Socket中获取InputStream对象来构造这个类的实例.调用InputStream对象的read方法来获得HTTP请求的原始数据.</p>
-<p>parse parseUri如何工作?</p>
-<p>请求行从从方法标记开始 请求行里的元素使用空格来分隔,使用回车换行结束.</p>
-<p>GET  <strong>/index.html</strong> HTTP/1.1</p>
-<p>parseUri搜索请求里边第一个和第二个空格来从中获取URI</p>
-<h3 id="Response-类"><a href="#Response-类" class="headerlink" title="Response 类"></a><strong>Response</strong> 类</h3><p>代表一个HTTP响应</p>
-<p>setRequest 方法用来传递一个Request对象给Response对象</p>
-<p>sendStaticResource 方法用来发送一个静态资源.</p>
-<h2 id="第二章-一个简单的Servlet容器"><a href="#第二章-一个简单的Servlet容器" class="headerlink" title="第二章 一个简单的Servlet容器"></a>第二章 一个简单的Servlet容器</h2><p>现在,让我们从一个 servlet容器的角度来研究一下 servlet编程。总的来说,一个全功能的servlet容器会为 servlet的每个HTP请求做下面一些工作：</p>
-<ul>
-<li>当第一次调用 servlet的时候,加载该 servlet类并调用 servlet的init方法(仅仅一次）</li>
-<li>对每次请求,构造一个 Javax. servlet. ServletRequest实例和一个Javax. servlet. Servletresponse实例。</li>
-<li>调用 servlet的 service方法,同时传递 ServletRequest和 ServletResponse对象</li>
-<li>当 servlet类被关闭的时候,调用 servlet的 destroy方法并卸载 servlet类。</li>
-</ul>
-<p>本章的第一个 servlet容器不是全功能的，因此,她只能运行非常简单的 servlet,而且也不调用 servlet的init方法和 destroy方法。相反它做了下面的事情</p>
-<ul>
-<li>等待HITP请求</li>
-<li>构造一个 ServletRequest对象和一个 ServletResponse对象</li>
-<li>假如该请求需要一个静态资源的话,调用 StaticResourceProcessor实例的 process方法,同时传递 ServletRequest和 ServletResponse对象。</li>
-<li>假如该请求需要一个 servlet的话,加载 servlet类并调用 servlet的 service方法,同时传递 ServletRequest和 ServletResponse对象</li>
-</ul>
-<p>注意:在这个 servlet容器中,每一次 servlet被请求的时候, servlet类都会被加载</p>
-<p>第一个应用程序由6个类组成</p>
-<ol>
-<li>Httpserverlet</li>
-<li>Request</li>
-<li>StaticRes</li>
-<li>processor</li>
-<li>Servletprocessor1</li>
-<li>Constants</li>
-</ol>
-<p>servlet的service方法从servlet容器中接收一个请求和响应实例，所以对于每个http请求，servlet容器都要构造一个请求和响应对象并传递给servlet的service方法。</p>
-<h2 id="第三章-连接器"><a href="#第三章-连接器" class="headerlink" title="第三章 连接器"></a>第三章 连接器</h2><p><strong>Catalina的俩个主要模块</strong></p>
-<blockquote>
-<p>connector和container</p>
-</blockquote>
-<p>StringManager类错误信息国际化</p>
-<h3 id="模块划分"><a href="#模块划分" class="headerlink" title="模块划分"></a><strong>模块划分</strong></h3><ul>
-<li>connector<ul>
-<li>连接器和他的支撑类（HttpConnector和HttpProcessor）</li>
-<li>Http请求类（HttpRequest）和他的辅助类</li>
-<li>Http响应类（HttpResponse）和他的辅助类</li>
-<li>Facade类（HttpRequestFacade、HttpResponseFacade）</li>
-<li>Constant类</li>
-</ul>
-</li>
-<li>starup<ul>
-<li>Bootstrap</li>
-</ul>
-</li>
-<li>core<ul>
-<li>ServletProcessor</li>
-<li>StaticResourceProcessor</li>
-</ul>
-</li>
-</ul>
-<p><strong>职责划分</strong></p>
-<p>等待Http请求：HttpConnector</p>
-<p>创建请求和响应对象：HttpProcessor</p>
-<p>HttpRequest—》HttpServletRequest—-》servlet.service</p>
-<p>HttpRequest增加字段以便servlet可以使用他们</p>
-<p>URI、查询字符串、参数、cookies、和其他头部</p>
-<p>连接器使用SocketInputStream类来从套接字的InputStream中获得字节流。</p>
-<p>两个重要方法：readRequestLine 返回HTTP请求的第一行，该行包括了URI、方法、HTTP版本。返回一个HttpRequestLine实例</p>
-<p>因为套接字流只能被读取一次，readRequestLine 必须在readHeader之前调用一次</p>
-<p>返回HttpHeader实例。</p>
-<h3 id="启动应用程序"><a href="#启动应用程序" class="headerlink" title="启动应用程序"></a>启动应用程序</h3><ol>
-<li>Bootstrap.main<ol>
-<li>创建HttpConnector实例并调用HttpConnector.start方法</li>
-</ol>
-</li>
-<li>HttpConnector.start<ol>
-<li>创建ServerSocket 服务套接字127.0..0.1 1 8080 等待Http请求</li>
-<li>socket=severSocket.accept（）</li>
-<li>侦听要连接到此套接字的连接，并接受它。<strong>方法阻塞，直到建立连接为止</strong>。</li>
-<li>为请求创建HttpProcessor实例</li>
-<li>调用HttpProcessor的process方法。processor.process(socket)</li>
-</ol>
-</li>
-<li>HttpProcessor.process<ol>
-<li>创建HttpRequest、HttpResponse对象</li>
-<li>解析HTTP请求的第一行和头部,并放到Httprequest对象</li>
-<li>解析 Httprequest和 Httpresponse对象到一个 Servletprocessor或者StaticResourceprocessor。像第2章里边说的, Servletprocessor调用被请求的 servlet的service方法,而 StaticResourceProcessor发送一个静态资源的内容</li>
-</ol>
-</li>
-</ol>
-<h4 id="Http请求解析"><a href="#Http请求解析" class="headerlink" title="Http请求解析"></a>Http请求解析</h4><ul>
-<li><p>读取套接字输入流</p>
-<ul>
-<li>input = new SocketInputStream(socket.getInputStream(), 2048)</li>
-</ul>
-</li>
-<li><p>解析请求行</p>
-<ul>
-<li>HttpProcessor.parseRequest</li>
-<li>uri</li>
-<li>请求参数</li>
-<li>session id</li>
-</ul>
-</li>
-<li><p>解析头部</p>
-<ul>
-<li>cookie</li>
-<li>content-length</li>
-<li>content-type</li>
-</ul>
-</li>
-<li><p>解析cookies</p>
-<ul>
-<li><p>Cookies是作为一个Http请求头部通过浏览器来发送的。这样一个头部名为” cookie”并且它的值是一些 cookie名/值对。这里是一个包括两个 cookie: username和 password的 cookie头部的例子</p>
-<p>Cookie: user Name=budi: password=pwd</p>
-<p>Cookie的解析是通过类org. apache. catalina.uti1. RequestUtil的 parse CookieHeader方去来处理的。这个方法接受 cookie头部并返回一个 Javax. servlet.htp. Cookie数组。数组内的元素数量和头部里边的 cookie名/值对个数是一样的 parseCookiesheader方法在 Listing3.5</p>
-</li>
-</ul>
-</li>
-<li><p>获取参数</p>
-<ul>
-<li>因为参数可以存在于查询字符串或者HTP请求内容中,所以 parseParameters方法会检查查询字符串和请求内容。一旦解析过后,参数将会在对象变量 parameters中找到,所以方法的开头会检査 parsed布尔变量,假如已经解析过的话, parsed将会返回true</li>
-</ul>
-</li>
-</ul>
-<h2 id="第四章-tomcat默认连接器"><a href="#第四章-tomcat默认连接器" class="headerlink" title="第四章 tomcat默认连接器"></a>第四章 tomcat默认连接器</h2><p>对象池：避免昂贵对象的创建</p>
-<h3 id="HTTP-1-1新特性"><a href="#HTTP-1-1新特性" class="headerlink" title="HTTP 1.1新特性"></a>HTTP 1.1新特性</h3><h4 id="持久连接"><a href="#持久连接" class="headerlink" title="持久连接"></a>持久连接</h4><ul>
-<li>1.1之前，服务器发送完请求的资源后就断开连接了，而建立连接需要消耗大量的资源。</li>
-<li>引入持久连接之后使用一个连接，客户端可以向服务器发送多个请求。</li>
-</ul>
-<h4 id="块编码"><a href="#块编码" class="headerlink" title="块编码"></a>块编码</h4><ul>
-<li>客户端可以发送多个请求给服务器，客户端如何去解释服务器发过来的字节流呢？</li>
-</ul>
-<p>HTTP1.1使用一个特别的头部transfer-encoding来表示有多少以块形式的字节流将会被发送。对每块来说，在数据之前，长度(十六进制)后面接着CR/LF将被发送。整个事务通过一个零长度的块来标识。假设你想用2个块发送以下38个字节，第一个长度是29，第二个长度是9。</p>
-<p>I’m as helpless as a kitten up a tree.</p>
-<p>你将这样发送：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1D\r\n </span><br><span class="line">I&#39;m as helpless as a kitten u </span><br><span class="line">9\r\n </span><br><span class="line">p a tree.</span><br><span class="line">0\r\n</span><br></pre></td></tr></table></figure>
-
-<p>1D,是29的十六进制，指示第一块由29个字节组成。0\r\n标识这个事务的结束。</p>
-<h3 id="Connector接口"><a href="#Connector接口" class="headerlink" title="Connector接口"></a>Connector接口</h3><p>setContainer是用来关联连接器和容器用的。getContainer返回关联的容器。</p>
-<p>createRequest为前来的HTTP请求构造一个请求对象，而createResponse创建一个响应对象。</p>
-<h2 id="第八章：加载器"><a href="#第八章：加载器" class="headerlink" title="第八章：加载器"></a>第八章：加载器</h2><blockquote>
-<p>使用系统的加载器来加载servlet和其他需要的类，这样servlet就可以进入Java虚拟机CLASSPATH环境下面的任何类和类库，这 会带来安全隐患。Servlet只允许访问WEB-INF/目录及其子目录下面的类以及部 署在WEB-INF/lib目录下的类库。所以一个servlet容器需要一个自己的加载器，该加载器遵守一些特定的规则来加载类。在Catalina中，加载器使用org.apache.catalina.Loader接口表示。Tomcat需要一个自己的加载器的另一个原因是它需要支持在WEB-INF/classes 或者是WEB-INF/lib目录被改变的时候会重新加载。Tomcat的加载器实现中使用一个单独的线程来检查servlet和支持类文件的时间戳。要支持类的自动加载功能，一个加载器类必须实现org.apache.catalina.loader.Reloader接口。</p>
-</blockquote>
-<p>库（repository）和源（resources）。</p>
-<p>库表示加载器查找的地方，源表示加载器中的DirContext对象，它的文档基（document base）指向了上下文的文档基。</p>
-<h3 id="Loader接口"><a href="#Loader接口" class="headerlink" title="Loader接口"></a>Loader接口</h3><p>一个Tomcat类加载器表示一个Web应用程序加载器，而不是一个类加载器。一个加载器必须实现org.apache.catalina.Loader接口。加载器的实现使用定制的类加载器org.apache.catalina.loader.WebappClassLoader。<strong>值得一提的是Loader接口定义了一系列方法跟库协作。Web应用程序的WEB-INF/classes 和WEB-INF/lib目录作为库添加上。Loader接口的addReposity方法用于添加一个库，findRepositories方法用于返回一个所有库的队列。</strong></p>
-<h3 id="Relaoder"><a href="#Relaoder" class="headerlink" title="Relaoder"></a>Relaoder</h3><p>支持自动重新加载。</p>
-<p>modified方法：</p>
-<p>如果在web应用程序中的servlet任何支持类被修改的时候该方法返回true。addRepository方法用于添加一个库而findRepositories方法用于返回实现了Reloader接口的加载器的所有的库。</p>
-<h3 id="WebappLoader"><a href="#WebappLoader" class="headerlink" title="WebappLoader"></a>WebappLoader</h3><p>负责给web应用程序加载类。</p>
-<p>WebappLoader类的start方法被调用的时候，将会完成下面几项重要任务：</p>
-<blockquote>
-<ul>
-<li><p>Creating a class loader 创建一个类加载器 </p>
-</li>
-<li><p>Setting repositories  设置库</p>
-<ul>
-<li>webappLoader的start方法会调用setRepositories方法来给类加载器添加一</li>
-</ul>
-<p>个库。WEB-INF/classes目录传递给加载器addRepository方法，而WEB-INF/lib </p>
-<p>传递给加载器的setJarPath方法。这样，类加载器能能从WEB-INF/classes 目</p>
-<p>录下面和WEB-INF/lib目录下面部署的类库里加载类。</p>
-</li>
-<li><p>Setting the class path 设置类路径</p>
-</li>
-<li><ol>
-<li>该任务由start方法调用setClassPath方法完成，setClassPath方法会给servlet上下文分配一个String类型属性保存Jasper JSP编译的类路径，该内容先不予讨论。</li>
-</ol>
-</li>
-<li><p>Setting permissions 设置访问权限</p>
-</li>
-<li><p>Starting a new thread for auto-reload. 开启一个新线程用来进行自动重载</p>
-</li>
-</ul>
-</blockquote>
-<h3 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a><strong>缓存</strong></h3><p>每一个可以被加载的类(放在WEB-INF/classes目录下的类文件或者JAR 文件)都被当做一个源。一个源被org.apache.catalina.loader.ResourceEntry类表 示。一个ResourceEntry实例保存一个byte类型的数组表示该类、最后修改的数据或者副?等等。</p>
-<p>所有缓存的源被存放在一个叫做resourceEntries的HashMap中，键值为源名，所有找不到的源都被放在一个名为notFoundResources的HashMap中。</p>
-<h3 id="加载类"><a href="#加载类" class="headerlink" title="加载类"></a>加载类</h3><p>当加载一个类的时候, WebappClassLoader类遵循以下规则:</p>
-<blockquote>
-<ul>
-<li>所有加载过的类都要进行缓存,所以首先需要检查本地缓存</li>
-<li>如果无法再本地缓存找到类,使用java. lang ClassLoader类的 findLoaderclass方法在缓存查找类</li>
-<li>如果在两个缓存中都无法找到该类,使用系统的类加载器避免从J2EE类中覆盖来的web应用程序。</li>
-<li>如果使用了安全管理器,检查该类是否允许加载,如果该类不允许加载,则抛出 ClassNot FoundException异常</li>
-<li>如果要加载的类使用了委派标志或者该类属于 trigger包中,使用父加载器来加载类,如果父加载器为null,使用系统加载器加载。</li>
-<li>从当前的源中加载类</li>
-<li>如果在当前的源中找不到该类并且没有使用委派标志,使用父类加载器。如果父类加载器为nu1l,使用系统加载器</li>
-<li>如果该类仍然找不到,抛出 ClassNotFoundException异常</li>
-</ul>
-</blockquote>
-<h3 id="应用程序"><a href="#应用程序" class="headerlink" title="应用程序"></a>应用程序</h3><p>设置系统属性 catalina.base 的值为 user.dir，这样可以告诉 StandardContext 实例查找应用程序目录。 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">System.setProperty(&quot;catalina.base&quot;, System.getProperty(&quot;user.dir&quot;));</span><br><span class="line">实际上，它是 Bootstrap 类的第一行</span><br></pre></td></tr></table></figure>
-
-<p>主方法初始化连接器： Connector connector = new HttpConnector();</p>
-<p>初始化两个 servlet 的两个包装器</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Wrapper wrapper1 = <span class="keyword">new</span> SimpleWrapper();</span><br><span class="line">wrapper1.setName(<span class="string">"Primitive"</span>);</span><br><span class="line">wrapper1.setServletClass(<span class="string">"PrimitiveServlet"</span>);</span><br><span class="line">Wrapper wrapper2 = <span class="keyword">new</span> SimpleWrapper();</span><br><span class="line">wrapper2.setName(<span class="string">"Modern"</span>);</span><br><span class="line">wrapper2.setServletClass(<span class="string">"ModernServlet"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>创建一个 StandardContext 的实例并设置该上下文的文档基（document  base）.</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Context context = <span class="keyword">new</span> StandardContext();</span><br><span class="line">context.setPath(<span class="string">"/myApp"</span>);</span><br><span class="line">context.setDocBase(<span class="string">"myApp"</span>);</span><br><span class="line"></span><br><span class="line">设置server.xml效果相同：&lt;Context path=<span class="string">"/myApp"</span> docBase=<span class="string">"myApp"</span>/&gt;</span><br></pre></td></tr></table></figure>
-
-<p>将两个包装器被添加到上下文中，并且添加映射关系，这样上下文就可以找到包装器。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">context.addChild(wrapper1);</span><br><span class="line">context.addChild(wrapper2);</span><br><span class="line">context.addServletMapping(<span class="string">"/Primitive"</span>,<span class="string">"Primitive"</span>);</span><br><span class="line">context.addServletMapping(<span class="string">"/Modern"</span>, <span class="string">"Modern"</span>);</span><br></pre></td></tr></table></figure>
-
-<p>初始化一个监听器并且在上下文中注册</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LifecycleListener listener = <span class="keyword">new</span> SimpleContextConfig();((Lifecycle) context).addLifecycleListener(listener);</span><br></pre></td></tr></table></figure>
-
-<p>初始化该上下文相关联的WebappLoader</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Loader loader = <span class="keyword">new</span> WebappLoader();</span><br><span class="line">context.setLoader(loader);</span><br></pre></td></tr></table></figure>
-
-<p>建立连接器跟上下文的关联</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">connector.setContainer(context);</span><br></pre></td></tr></table></figure>
-
-<p>调用连接器初始化和 start 方法，接下来是上 下文的 start 方法，这样 servlet 容器就可以工作了。 </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">connector.setContainer(context); </span><br><span class="line"><span class="keyword">try</span> &#123; </span><br><span class="line"></span><br><span class="line">connector.initialize(); </span><br><span class="line"></span><br><span class="line">((Lifecycle) connector).start(); </span><br><span class="line"></span><br><span class="line">((Lifecycle) context).start();</span><br></pre></td></tr></table></figure>
-
-<h2 id="第九章：session-管理"><a href="#第九章：session-管理" class="headerlink" title="第九章：session 管理"></a>第九章：session 管理</h2><h2 id="第-14-章：服务器和服务"><a href="#第-14-章：服务器和服务" class="headerlink" title="第 14 章：服务器和服务"></a><strong>第 14 章：服务器和服务</strong></h2><blockquote>
-<p>org.apache.catalina.Server 接口表示整个 Catalina Servlet 容器以及其它组 件。一个服务器相当有用，因为它提供了一种优雅的机制来启动和停止整个系统。 不必再单独的启动连接器和容器了。</p>
-</blockquote>
-<h3 id="服务器-server"><a href="#服务器-server" class="headerlink" title="服务器 server"></a>服务器 server</h3><h4 id="start-方法"><a href="#start-方法" class="headerlink" title="start 方法"></a><strong>start 方法</strong></h4><p>可以使用 start 方法来启动一个服务器，StandardServer 的 start 方法的实现 将会启动所有服务及其相关组件，例如连接器和容器。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">()</span> <span class="keyword">throws</span> LifecycleException </span>&#123;</span><br><span class="line"><span class="comment">// Validate and update our current component state</span></span><br><span class="line"><span class="keyword">if</span> (started)</span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> LifecycleException</span><br><span class="line">(sm.getString(<span class="string">"standardServer.start.started"</span>));</span><br><span class="line"><span class="comment">// Notify our interested LifecycleListeners</span></span><br><span class="line">lifecycle.fireLifecycleEvent(BEFORE_START_EVENT, <span class="keyword">null</span>);</span><br><span class="line">lifecycle.fireLifecycleEvent(START_EVENT, <span class="keyword">null</span>);</span><br><span class="line">started = <span class="keyword">true</span>;</span><br><span class="line"><span class="comment">// Start our defined Services</span></span><br><span class="line"><span class="keyword">synchronized</span> (services) &#123;</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; services.length; i++) &#123;</span><br><span class="line"><span class="keyword">if</span> (services[i] <span class="keyword">instanceof</span> Lifecycle)</span><br><span class="line">((Lifecycle) services[i]).start();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Notify our interested LifecycleListeners</span></span><br><span class="line">lifecycle.fireLifecycleEvent(AFTER_START_EVENT, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line">该方法使用了一个 started 布尔变量来避免一个服务器被启动两次。Stop 方法</span><br><span class="line">会重置该变量的值。</span><br></pre></td></tr></table></figure>
-
-<h4 id="stop-方法"><a href="#stop-方法" class="headerlink" title="stop 方法"></a><strong>stop 方法</strong></h4><p>Stop 方法用于停止一个服务器</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span> <span class="keyword">throws</span> LifecycleException </span>&#123;</span><br><span class="line"><span class="comment">// Validate and update our current component state</span></span><br><span class="line"><span class="keyword">if</span> (!started)</span><br><span class="line"><span class="keyword">throw</span> <span class="keyword">new</span> LifecycleException</span><br><span class="line">(sm.getString(<span class="string">"standardServer.stop.notStarted"</span>));</span><br><span class="line"><span class="comment">// Notify our interested LifecycleListeners</span></span><br><span class="line">lifecycle.fireLifecycleEvent(BEFORE_STOP_EVENT, <span class="keyword">null</span>);</span><br><span class="line">lifecycle.fireLifecycleEvent(STOP_EVENT, <span class="keyword">null</span>);</span><br><span class="line">started = <span class="keyword">false</span>;</span><br><span class="line"><span class="comment">// Stop our defined Services</span></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; services.length; i++) &#123;</span><br><span class="line"><span class="keyword">if</span> (services[i] <span class="keyword">instanceof</span> Lifecycle)</span><br><span class="line">((Lifecycle) services[i]).stop();</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Notify our interested LifecycleListeners</span></span><br><span class="line">lifecycle.fireLifecycleEvent(AFTER_STOP_EVENT, <span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br><span class="line">调用 stop 方法可以停止所有的服务并重置 started 变量的值，这样就可以再次</span><br><span class="line">启动服务器了。</span><br></pre></td></tr></table></figure>
-
-
-
-<h4 id="await-方法"><a href="#await-方法" class="headerlink" title="await 方法"></a>await 方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Await 负责整个 Tomcat 部署的停止机制，</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* Wait until a proper shutdown command is received, then return.</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">await</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="comment">// Set up a server socket to wait on</span></span><br><span class="line">ServerSocket serverSocket = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">serverSocket = <span class="keyword">new</span> ServerSocket(port, <span class="number">1</span>,</span><br><span class="line">InetAddress.getByName(<span class="string">"127.0.0.1"</span>));</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">System.err.println(<span class="string">"StandardServer.await: create["</span> +</span><br><span class="line">port + <span class="string">"]: "</span> + e);</span><br><span class="line">e.printStackTrace();</span><br><span class="line">System.exit(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Loop waiting for a connection and a valid command</span></span><br><span class="line"><span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line"><span class="comment">// Wait for the next connection</span></span><br><span class="line">Socket socket = <span class="keyword">null</span>;</span><br><span class="line">InputStream stream = <span class="keyword">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">socket = serverSocket.accept();</span><br><span class="line">socket.setSoTimeout(<span class="number">10</span> * <span class="number">1000</span>); <span class="comment">// Ten seconds</span></span><br><span class="line">stream = socket.getInputStream();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (AccessControlException ace) &#123;</span><br><span class="line">System.err.println(<span class="string">"StandardServer.accept security exception: "</span></span><br><span class="line">+ ace.getMessage());</span><br><span class="line"><span class="keyword">continue</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">System.err.println(<span class="string">"StandardServer.await: accept: "</span> + e);</span><br><span class="line">e.printStackTrace();</span><br><span class="line">System.exit(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Read a set of characters from the socket</span></span><br><span class="line">StringBuffer command = <span class="keyword">new</span> StringBuffer();</span><br><span class="line"><span class="keyword">int</span> expected = <span class="number">1024</span>; <span class="comment">// Cut off to avoid DoS attack</span></span><br><span class="line"><span class="keyword">while</span> (expected &lt; shutdown.length()) &#123;</span><br><span class="line"><span class="keyword">if</span> (random == <span class="keyword">null</span>)</span><br><span class="line">random = <span class="keyword">new</span> Random(System.currentTimeMillis());</span><br><span class="line">expected += (random.nextInt() % <span class="number">1024</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">while</span> (expected &gt; <span class="number">0</span>) &#123;</span><br><span class="line"><span class="keyword">int</span> ch = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">ch = stream, read();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">System.err.println(<span class="string">"StandardServer.await: read: "</span> + e);</span><br><span class="line">e.printStackTrace();</span><br><span class="line">ch = -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (ch &lt; <span class="number">32</span>) <span class="comment">// Control character or EOF terminates loop</span></span><br><span class="line"><span class="keyword">break</span>;</span><br><span class="line">command.append((<span class="keyword">char</span>) ch);</span><br><span class="line">expected--;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Close the socket now that we are done with it</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">socket.close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Match against our command string</span></span><br><span class="line"><span class="keyword">boolean</span> match = command.toString().equals(shutdown);</span><br><span class="line"><span class="keyword">if</span> (match) &#123;</span><br><span class="line"><span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">System.err.println(<span class="string">"StandardServer.await: Invalid command '"</span> +</span><br><span class="line">command.toString() + <span class="string">"' received"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Close the server socket and return</span></span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">serverSocket.close();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>方法 await 在 8085 端口创建一个 ServerSocket 对象，在 while 循环调用它的 accept 方法。Accept 方法仅仅接受 8085 端口的信息。它将接受到的信息跟 shutdown 命令进行匹配，如果匹配的话跳出循环关闭 SocketServer，如果不匹 配继续 while 循环等待另一个命令</p>
-</blockquote>
-<h3 id="服务service"><a href="#服务service" class="headerlink" title="服务service"></a>服务service</h3><blockquote>
-<p>org.apache.catalina.Service 接口用于表示服务。一个服务可以可以有一个容 器和多个连接器。你可以添加多个连接器 ，并将它们跟容器相关联。</p>
-</blockquote>
-<h3 id="容器和连接器"><a href="#容器和连接器" class="headerlink" title="容器和连接器"></a><strong>容器和连接器</strong></h3><p>一个 StandardService 实例包括两种组件：一个容器和多个连接器。多个连接器 </p>
-<p>可以使得 Tomcat 能服务于多个协议。一个协议用处处理 HTTP 请求，另一个用于 处理 HTTPS 请求。 </p>
-<p>StandardService 类用 container 变量来持有容器实例，用 connectors 数组来 持有所有的连接器 </p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> Container container = <span class="keyword">null</span>; </span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> Connector connectors[] = <span class="keyword">new</span> Connector[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
-
-<p>容器和服务相关联：调用服务的setContainer方法。</p>
-<p>给服务添加连接器：addConnector</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/17/notebook/%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84web%E6%9C%8D%E5%8A%A1%E5%99%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/elasticsearch" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/17/notebook/elasticsearch/">notebook/elasticsearch</a>
-    </h1>
-  
-
-        
-        <a href="/2021/05/17/notebook/elasticsearch/" class="archive-article-date">
-  	<time datetime="2021-05-17T09:01:54.947Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="全文检索"><a href="#全文检索" class="headerlink" title="全文检索"></a>全文检索</h2><p>问题</p>
-<p>Library Maven: <code>com.shareworx:Platform-elasticsearch-embed:4.0.6.2131</code></p>
-<p><strong>has broken classes path</strong>:   <code>D:\devTool\apache-maven-3.6.1\repository\com\shareworx\Platform-elasticsearch-embed\4.0.6.2131\Platform-elasticsearch-embed-4.0.6.2131.jar</code> [Fix]</p>
-<p>尝试解决:</p>
-<ol>
-<li>pom文件删除依赖再导入依赖失败.</li>
-<li>删除本地仓库关于该文件的依赖再导入,依旧失败.</li>
-</ol>
-<p>添加对应版本号,添加了依旧失败</p>
-<p>maven命令行:mvn -U idea:idea</p>
-<p>命令行输出:解决项目依赖时出现一个错误,原因是缺少com.shareworx:Platform-elasticsearch-embed:4.0.6.2131</p>
-<p>依赖,</p>
-<p>尝试使用命令行命令下载</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn install:install-file -DgroupId=com.shareworx -DartifactId=Platform-elasticsearch-embed -Dversion=<span class="number">4.0</span><span class="number">.6</span><span class="number">.2131</span> -Dpackaging=jar -Dfile=/path/to/file</span><br></pre></td></tr></table></figure>
-
-<p>或者.如果你的主机拥有自己的存储库,你可以发布文件到这里:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mvn deploy:deploy-file -DgroupId=com.shareworx -DartifactId=Platform-elasticsearch-embed -Dversion=<span class="number">4.0</span><span class="number">.6</span><span class="number">.2131</span> -Dpackaging=jar -Dfile=/path/to/file -Durl=[url] -DrepositoryId=[id]</span><br></pre></td></tr></table></figure>
-
-<p>最后版本放弃,${shareworx.version} 换成了<version>4.0.6.1004</version></p>
-<p><strong>1004版</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564394323014.png" alt="1564394323014"></p>
-<p><strong>${shareworx.version}</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564394353476.png" alt="1564394353476"></p>
-<p>没吧\把jar包下进来 ,尝试了几次还是没下过来</p>
-<p><strong>添加elasticsearch依赖</strong></p>
-<p><strong>在application.properties中配置elasticsearch</strong></p>
-<p><strong>添加全文检索实体</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Document</span>(indexName = <span class="string">"platform_test"</span>,type=<span class="string">"pmv_teacher"</span>)<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TeacherDocument</span> <span class="keyword">extends</span> <span class="title">DocumentDomain</span></span></span><br></pre></td></tr></table></figure>
-
-<p>indexName:数据库名 pmv_teacher:数据库表名</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Id</span></span><br><span class="line"><span class="keyword">private</span> String id;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Field</span>(type = FieldType.String, indexAnalyzer = <span class="string">"ik"</span>, searchAnalyzer = <span class="string">"ik"</span>)<span class="keyword">private</span> String title;</span><br></pre></td></tr></table></figure>
-
-<p>所有的全文检索实体必须继承DocumentDomain，</p>
-<p>这里title和content字段我们都使用<strong>ik</strong>分词器。</p>
-<p><strong>添加Repository</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TeacherSearchRepsitory</span> <span class="keyword">extends</span> <span class="title">BaseSearchRepository</span>&lt;<span class="title">TeacherDocument</span>, <span class="title">String</span>&gt; </span>&#123;    &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>添加Service接口和实现</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">TeacherSearchService</span> <span class="keyword">extends</span> <span class="title">BaseSearchService</span>&lt;<span class="title">TeacherDocument</span>,<span class="title">String</span>&gt; </span>&#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>添加Service实现</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Repository</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TeacherSearchServiceImpl</span> <span class="keyword">extends</span> <span class="title">BaseSearchServiceImpl</span>&lt;<span class="title">TeacherDocument</span>,<span class="title">String</span>&gt; <span class="keyword">implements</span> <span class="title">TeacherSearchService</span> </span>&#123;   <span class="meta">@Autowired</span>    </span><br><span class="line"><span class="keyword">private</span> TeacherSearchRepsitory teacherSearchRepsitory;    </span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)    </span><br><span class="line"><span class="meta">@Override</span>    </span><br><span class="line"><span class="keyword">public</span> &lt;B extends BaseSearchRepository&lt;TeacherDocument, String&gt;&gt; <span class="function">B <span class="title">getSearchRepository</span><span class="params">()</span> </span>&#123;        <span class="keyword">return</span> (B) teacherSearchRepsitory;    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>调用例子</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping</span>(<span class="string">"/teacherSearch"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TeacherSearchController</span> </span>&#123;    </span><br><span class="line"><span class="meta">@Autowired</span>    </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> TeacherSearchService teacherSearchService;    </span><br><span class="line">String keyword=<span class="string">"is"</span>;    </span><br><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/test"</span>)    </span><br><span class="line"><span class="keyword">public</span> FacetedPage&lt;Map&lt;String, Object&gt;&gt; serachTest() &#123;        </span><br><span class="line">FacetedPage&lt;Map&lt;String, Object&gt;&gt; page = teacherSearchService.multiSearchHighlight(                <span class="keyword">new</span> String[]&#123;<span class="string">"platform_test"</span>&#125;,</span><br><span class="line">		 <span class="keyword">new</span> String[]&#123;<span class="string">"pmv_teacher"</span>,<span class="string">"user"</span>&#125;,                </span><br><span class="line">		 <span class="keyword">new</span> String[]&#123;<span class="string">"name"</span>,<span class="string">"title"</span>,<span class="string">"content"</span>&#125;,                </span><br><span class="line">		 keyword,         </span><br><span class="line">         <span class="string">"&lt;a&gt;"</span>,<span class="string">"&lt;/a&gt;"</span>,         </span><br><span class="line">         <span class="keyword">new</span> PageRequest(<span class="number">0</span>,<span class="number">10</span>));</span><br><span class="line">         <span class="keyword">return</span>  page;    &#125;</span><br><span class="line">         &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>报错</strong></p>
-<p><strong>Exception in thread “main” java.lang.AbstractMethodError: org.springframework.boot.context.config.ConfigFileApplicationListener.supportsSourceType(Ljava/lang/Class;)Z</strong></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564392874997.png" alt="1564392874997"></p>
-<ol>
-<li>SpringApplication.run–&gt;</li>
-<li>SpringApplication.prepareEnvironment–&gt;spring应用 准备环境</li>
-<li>EventPublishingRunListener.environmentPrepared–&gt;事件发布运行侦听器 环境准备</li>
-<li>SimpleApplicationEventMulticaster.multicastEvent–&gt;简单应用事件组播 组播事件</li>
-<li>AbstractApplicationEventMulticaster.getApplicationListeners–&gt;抽象应用事件组播器:获得应用程序监听器</li>
-<li>AbstractApplicationEventMulticaster.retrieveApplicationListeners–&gt;抽象应用事件组播器:检索应用程序监听器</li>
-<li>AbstractApplicationEventMulticaster.supportsEvent–&gt; 应用事件组播 支持事件</li>
-<li>.GenericApplicationListenerAdapter.supportsSourceType–&gt;</li>
-<li>GenericApplicationListenerAdapter.supportsSourceType 通用应用程序监听器适配器 支持资源类型</li>
-</ol>
-<p>解决方案1</p>
-<p>jar包冲突</p>
-<p>添加依赖</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">&lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;</span><br><span class="line">&lt;artifactId&gt;spring-boot-starter-parent&lt;&#x2F;artifactId&gt;</span><br><span class="line">&lt;version&gt;2.1.3.RELEASE&lt;&#x2F;version&gt;</span><br><span class="line">&lt;relativePath&#x2F;&gt; &lt;!-- lookup parent from repository --&gt;</span><br><span class="line">&lt;&#x2F;parent&gt;</span><br></pre></td></tr></table></figure>
-
-<p>报错</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564389944215.png" alt="1564389944215"></p>
-<p>重启试试</p>
-<p>还是找不到</p>
-<p>然后修改了@Filed注释</p>
-<p>再次启动</p>
-<p>报错</p>
-<p>Caused by: java.lang.IllegalStateException: StandardEngine[Tomcat].StandardHost[localhost].TomcatEmbeddedContext[] failed to start</p>
-<p>Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat</p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564393164769.png" alt="1564393164769"></p>
-<p>网上搜索的,但是我这也没配置web.xml </p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564631249924.png" alt="1564631249924"></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564637883520.png" alt="1564637883520"></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564638677311.png" alt="1564638677311"></p>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1564638779648.png" alt="1564638779648"></p>
-<h3 id="Document"><a href="#Document" class="headerlink" title="@Document"></a>@Document</h3><p>必填</p>
-<ul>
-<li>索引名：</li>
-<li>索引类型：</li>
-</ul>
-<p>默认</p>
-<ul>
-<li>分片 5</li>
-<li>副本 1</li>
-<li>刷新间隔 ls</li>
-<li>索引存储类型 fs</li>
-</ul>
-<h3 id="Field"><a href="#Field" class="headerlink" title="@Field"></a>@Field</h3><p>默认</p>
-<ul>
-<li>字段类型 FieldType.Auto</li>
-<li>索引 true</li>
-<li>索引分析器</li>
-<li>搜索分析器</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/17/notebook/elasticsearch/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/mapping添加字段" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/17/notebook/mapping%E6%B7%BB%E5%8A%A0%E5%AD%97%E6%AE%B5/">notebook/mapping添加字段</a>
-    </h1>
-  
-
-        
-        <a href="/2021/05/17/notebook/mapping%E6%B7%BB%E5%8A%A0%E5%AD%97%E6%AE%B5/" class="archive-article-date">
-  	<time datetime="2021-05-17T09:01:54.947Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-17</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>mapping添加字段</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">PUT &#x2F;my_index&#x2F;_mapping&#x2F;my_type</span><br><span class="line">&#123;</span><br><span class="line">  &quot;properties&quot;: &#123;</span><br><span class="line">       &quot;new_field_name&quot;: &#123;</span><br><span class="line">           &quot;type&quot;:     &quot;string&quot;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>public boolean addField(String indexName, String tableName, List<ESColumn> columns)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Request request &#x3D; new Request(&quot;PUT&quot;, indexName + &quot;&#x2F;_mapping&#x2F;&quot; + tableName);</span><br></pre></td></tr></table></figure>
-
-<p>构造一个json字符串作为请求的请求体</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tablemap  &lt;properties,columnMap&gt;   		properties</span><br><span class="line">columnMap &lt;column.getName(), cMap&gt;		feild</span><br><span class="line">cmap      &lt;K，v&gt;						    词项</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">request.setJsonEntity(JSON.toJSONString(tableMap)</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<p>全文检索</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public Map&lt;String, Object&gt; search(String[] indexNames, String[] mappingNames, String[] fields, String keyword, int page, int size)</span><br></pre></td></tr></table></figure>
-
-
-
-<p>构造一个josn字符串作为查询请求的请求体</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Request request &#x3D; new Request(&quot;GET&quot;, indexName + &quot;&#x2F;&quot; + mappingName + &quot;&#x2F;_search&quot;);</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-<h2 id="DmsRedisCacheManager-弃用"><a href="#DmsRedisCacheManager-弃用" class="headerlink" title="DmsRedisCacheManager  弃用"></a><strong>DmsRedisCacheManager</strong>  弃用</h2><ol>
-<li><p>配置application.properties</p>
-<blockquote>
-<p>app.cache= dmsRedisCachemanage</p>
-</blockquote>
-</li>
-<li><p>引入Platform-cache-redis.jar</p>
-</li>
-<li><p>部署redis服务？</p>
-</li>
-</ol>
-<p>这个部署集体细节不大懂</p>
-<p>看了spring boot整合redis的是这样的流程</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">app.cache</span>=<span class="string">dmsRedisCachemanager</span></span><br><span class="line"><span class="meta">cache.redis.host</span>=<span class="string">127.0.0.1</span></span><br><span class="line"><span class="meta">cache.redis.port</span>=<span class="string">6379</span></span><br><span class="line"><span class="meta">cache.redis.maxidle</span>=<span class="string">10</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="spring-boot整合redis-流程"><a href="#spring-boot整合redis-流程" class="headerlink" title="spring boot整合redis:流程"></a><strong>spring boot整合redis:</strong>流程</h3><ol>
-<li><p>添加<code>spring-boot-starter-redis</code>依赖</p>
-</li>
-<li><p>application.properties中配置redis</p>
-<ol>
-<li><pre><code class="properties"><span class="meta">spring.redis.host</span>=<span class="string">192.168.1.100</span>
-<span class="meta">spring.redis.port</span>=<span class="string">6379</span>
-<span class="comment">#连接池最大连接数</span>
-<span class="meta">spring.redis.jedis.pool.max-active</span>=<span class="string">8</span>
-<span class="comment">#最小空闲连接</span>
-<span class="meta">spring.redis.jedis.pool.min-idle</span>=<span class="string">0</span>
-<span class="comment">#最大阻塞等待时间，负值表示没有限制</span>
-<span class="meta">spring.redis.jedis.pool.max-wait</span>=<span class="string">-1</span>
-<span class="comment">#最大空闲连接</span>
-<span class="meta">spring.redis.jedis.pool.max-idle</span>=<span class="string">8</span>
-<span class="comment">#连接超时时间(毫秒)</span>
-<span class="meta">spring.redis.timeout</span>=<span class="string">20</span>
-<span class="attr"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">      </span><br><span class="line"></span><br><span class="line">3. 在springboot启动类上加上&#96;@EnableCaching&#96;注解</span><br><span class="line"></span><br><span class="line">4. 在需要使用的地方加上@Cacheable()注解</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### **注意事项：**</span><br><span class="line"></span><br><span class="line">**1、**首先你的redis得支持远程连接。</span><br><span class="line">**2、**实体类必须实现序列化接口。</span><br><span class="line">**3、**redis的注解是&#96;@Cacheable(value &#x3D; &quot;?&quot;,key&#x3D;&quot;?&quot;)&#96;这样的key、value形式，value必须自己指定，可以随便写，key可以不写，不写会自动生成。</span><br><span class="line">**4、**如果要使用缓存的方法的参数是引用类型，比如方法是&#96;getStudent(Student stu)&#96;那么该引用类型的必须重写toString方法，即Student实体类必须重写toString方法，否则使用缓存时会报错&#96;can not convert com.zhu.entity.Student toString&#96;。</span><br><span class="line">**5、**若项目发布到服务器上，一开始redis可以正常使用，一段时间后redis不能正常使用，用&#96;redis-cli -h xx.xxx.x.xxx -p 6379&#96;命令连接显示&#96;connection timeout&#96;，访问项目中用到了redis的路由会报错&#96;could not get a resource from pool&#96;，可按如下步骤解决：</span><br><span class="line">先kill掉redis的服务：</span><br><span class="line">&#96;ps aux | grep redis&#96;</span><br><span class="line">&#96;kill -9 redis服务的pid&#96;</span><br><span class="line">换端口开启redis服务：</span><br><span class="line">&#96;redis-server redis.conf --port 6000 &amp;&#96;</span><br><span class="line">这里指定的6000端口，也可以是其他的，&amp;表示后台启动。再用&#96;redis-cli -h xx.xxx.x.xxx -p 6000&#96;就可以连接上了。然后把项目中的redis配置的端口换成6000，重新发布项目即可。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## DmsSimpleCacheManager</span><br><span class="line"></span><br><span class="line">1 配置application.properties</span><br></pre></td></tr></table></figure></span>
-<span class="meta">app.cache</span>=<span class="string">dmsSimpleCacheManager</span>
-<span class="attr"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2 方法上添加注解</span><br></pre></td></tr></table></figure></span>
-<span class="meta">@CacheFetch(namespace</span> = <span class="string">"mapping")</span>
-<span class="attr"><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#96;&#96;&#96;java</span><br><span class="line">public @interface CacheFetch &#123;</span><br><span class="line">    String namespace() default &quot;__cache_defualt__&quot;;</span><br><span class="line"></span><br><span class="line">    String key() default &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    String condition() default &quot;&quot;;</span><br><span class="line">    </span><br><span class="line">    boolean queryForNull() default false;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></span>
-
-
-</code></pre>
-</li>
-</ol>
-</li>
-</ol>
-<h2 id="library-has-broken-path"><a href="#library-has-broken-path" class="headerlink" title="library has broken path"></a>library has broken path</h2><p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1565093240070.png" alt="1565093240070"></p>
-<p><strong>可能原因</strong></p>
-<ol>
-<li>写pom.xml的时候，没有添加版本</li>
-<li>可能是Maven 未下好jar包就被中断，所以删除对应sjar 包(找不到的话，看下Problem 那里的提示，有jar包路径)，更新maven，Reimport 即可</li>
-<li><strong>去仓库看最新版本</strong> </li>
-</ol>
-<p><img src="C:%5CUsers%5Cyuhui.deng%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5C1565093075308.png" alt="1565093075308"></p>
-<p>删除本地依赖重新添加还是下载的这个</p>
-<p>之前也有过这种情况 最后是选择的下载其他版本解决的，这个工件只有一个版本。。。。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/17/notebook/mapping%E6%B7%BB%E5%8A%A0%E5%AD%97%E6%AE%B5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-  
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
-    </nav>
   
 
 
