@@ -8,15 +8,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2021/5 | Hexo</title>
+  <title>notebook/20210517-分布式一致Hash | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2021/05/index.html">
+  <meta name="description" content="背景训练营第22节稳定性提升课后作业 通过 Java 实现两种（以及）更多的一致性 Hash 算法（可选）实现服务节点动态更新  参考org.apache.dubbo.rpc.cluster.loadbalance.ConsistentHashLoadBalance   ConsistentHashLoadBalance从名称上来看，一致性hash负载均衡  LoadBalance 1234567">
+<meta property="og:type" content="article">
+<meta property="og:title" content="notebook&#x2F;20210517-分布式一致Hash">
+<meta property="og:url" content="http://yoursite.com/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="背景训练营第22节稳定性提升课后作业 通过 Java 实现两种（以及）更多的一致性 Hash 算法（可选）实现服务节点动态更新  参考org.apache.dubbo.rpc.cluster.loadbalance.ConsistentHashLoadBalance   ConsistentHashLoadBalance从名称上来看，一致性hash负载均衡  LoadBalance 1234567">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/coy0725/Figure-bed/typora/img/715283-20160811153507027-302498592.png">
+<meta property="article:published_time" content="2021-05-18T15:29:20.051Z">
+<meta property="article:modified_time" content="2021-05-18T14:40:10.258Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/coy0725/Figure-bed/typora/img/715283-20160811153507027-302498592.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -164,76 +170,212 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-notebook/20210517-分布式一致Hash" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      notebook/20210517-分布式一致Hash
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/" class="archive-article-date">
+
+        
+        <a href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/" class="archive-article-date">
   	<time datetime="2021-05-18T15:29:20.051Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-18</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/">notebook/20210517-分布式一致Hash</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="训练营第22节稳定性提升课后作业"><a href="#训练营第22节稳定性提升课后作业" class="headerlink" title="训练营第22节稳定性提升课后作业"></a>训练营第22节稳定性提升课后作业</h3><ul>
+<li><p>通过 Java 实现两种（以及）更多的一致性 Hash 算法（可选）实现服务节点动态更新</p>
+</li>
+<li><p>参考<code>org.apache.dubbo.rpc.cluster.loadbalance.ConsistentHashLoadBalance</code></p>
+</li>
+</ul>
+<h3 id="ConsistentHashLoadBalance"><a href="#ConsistentHashLoadBalance" class="headerlink" title="ConsistentHashLoadBalance"></a><code>ConsistentHashLoadBalance</code></h3><p>从名称上来看，一致性hash负载均衡</p>
+<ul>
+<li><p><code>LoadBalance</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SPI</span>(RandomLoadBalance.NAME)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">LoadBalance</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * select one invoker in list.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invokers   invokers.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> url        refer url</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invocation invocation.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> selected invoker.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Adaptive</span>(<span class="string">"loadbalance"</span>)</span><br><span class="line">    &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> <span class="keyword">throws</span> RpcException</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-        <div class="article-info info-on-right">
-          
-          
+<p>该接口为负载均衡的核心接口，目前能够获取的信息为从<code>Invoker</code>集合中选出一个<code>Invoker</code>，所以其核心是如何选出该<code>Invoker</code>?</p>
+</li>
+<li><p><code>AbstractLoadBalance</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (CollectionUtils.isEmpty(invokers)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (invokers.size() == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> invokers.get(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> doSelect(invokers, url, invocation);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
+<p>该接口实现了<code>LoadBalance</code>的共用逻辑，处理<code>Invoker</code>对象为空和只有一个<code>Invoker</code>对象的情况，其他情况由子类实现<code>doSelect</code>方法去实现</p>
+</li>
+<li><p><code>ConsistentHashSelector&lt;T&gt;</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsistentHashSelector</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> TreeMap&lt;Long, Invoker&lt;T&gt;&gt; virtualInvokers;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> replicaNumber;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> identityHashCode;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[] argumentIndex;</span><br><span class="line"></span><br><span class="line">        ConsistentHashSelector(List&lt;Invoker&lt;T&gt;&gt; invokers, String methodName, <span class="keyword">int</span> identityHashCode) &#123;</span><br><span class="line">            <span class="keyword">this</span>.virtualInvokers = <span class="keyword">new</span> TreeMap&lt;Long, Invoker&lt;T&gt;&gt;();</span><br><span class="line">            <span class="keyword">this</span>.identityHashCode = identityHashCode;</span><br><span class="line">            URL url = invokers.get(<span class="number">0</span>).getUrl();</span><br><span class="line">            <span class="keyword">this</span>.replicaNumber = url.getMethodParameter(methodName, HASH_NODES, <span class="number">160</span>);</span><br><span class="line">            String[] index = COMMA_SPLIT_PATTERN.split(url.getMethodParameter(methodName, HASH_ARGUMENTS, <span class="string">"0"</span>));</span><br><span class="line">            argumentIndex = <span class="keyword">new</span> <span class="keyword">int</span>[index.length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index.length; i++) &#123;</span><br><span class="line">                argumentIndex[i] = Integer.parseInt(index[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> (Invoker&lt;T&gt; invoker : invokers) &#123;</span><br><span class="line">                String address = invoker.getUrl().getAddress();</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; replicaNumber / <span class="number">4</span>; i++) &#123;</span><br><span class="line">                    <span class="keyword">byte</span>[] digest = Bytes.getMD5(address + i);</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> h = <span class="number">0</span>; h &lt; <span class="number">4</span>; h++) &#123;</span><br><span class="line">                        <span class="keyword">long</span> m = hash(digest, h);</span><br><span class="line">                        virtualInvokers.put(m, invoker);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Invoker&lt;T&gt; <span class="title">select</span><span class="params">(Invocation invocation)</span> </span>&#123;</span><br><span class="line">            String key = toKey(invocation.getArguments());</span><br><span class="line">            <span class="keyword">byte</span>[] digest = Bytes.getMD5(key);</span><br><span class="line">            <span class="keyword">return</span> selectForKey(hash(digest, <span class="number">0</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> String <span class="title">toKey</span><span class="params">(Object[] args)</span> </span>&#123;</span><br><span class="line">            StringBuilder buf = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i : argumentIndex) &#123;</span><br><span class="line">                <span class="keyword">if</span> (i &gt;= <span class="number">0</span> &amp;&amp; i &lt; args.length) &#123;</span><br><span class="line">                    buf.append(args[i]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> buf.toString();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> Invoker&lt;T&gt; <span class="title">selectForKey</span><span class="params">(<span class="keyword">long</span> hash)</span> </span>&#123;</span><br><span class="line">            Map.Entry&lt;Long, Invoker&lt;T&gt;&gt; entry = virtualInvokers.ceilingEntry(hash);</span><br><span class="line">            <span class="keyword">if</span> (entry == <span class="keyword">null</span>) &#123;</span><br><span class="line">                entry = virtualInvokers.firstEntry();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> entry.getValue();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">hash</span><span class="params">(<span class="keyword">byte</span>[] digest, <span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> (((<span class="keyword">long</span>) (digest[<span class="number">3</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">24</span>)</span><br><span class="line">                    | ((<span class="keyword">long</span>) (digest[<span class="number">2</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">16</span>)</span><br><span class="line">                    | ((<span class="keyword">long</span>) (digest[<span class="number">1</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">8</span>)</span><br><span class="line">                    | (digest[number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>))</span><br><span class="line">                    &amp; <span class="number">0xFFFFFFFFL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>该类为<code>ConsistentHashLoadBalance</code> 的内部类，其实现了一致性hash的核心逻辑</p>
+<ol>
+<li>获取<code>Invocation</code>的参数生成一个字符类型的key</li>
+<li>生成该key的MD5字节数组</li>
+<li>对该字节数组进行<code>hash</code> 获取一个long型的hash值</li>
+<li>根据该hash值从<code>virtualInvokers</code>里拿到与之对应的<code>Invoker</code>对象</li>
+</ol>
+</li>
+<li><p>ConsistentHashSelector 实例对象的生成逻辑</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.replicaNumber = url.getMethodParameter(methodName, HASH_NODES, <span class="number">160</span>);</span><br></pre></td></tr></table></figure>
+
+<p>副本数量赋值为 url方法参数？这是个什么意思</p>
+</li>
+</ul>
+<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="hashcode"><a href="#hashcode" class="headerlink" title="hashcode()"></a>hashcode()</h3><ul>
+<li><p>hashcode()</p>
+<p>Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by java.util.HashMap.</p>
+<p>从上述信息可以获知，hashCode方法将会返回一个int型的hash code值，这会对<code>hash table</code>很有益,看看<code>HashMap</code> 在哪里用到了<code>HashCode</code>方法也就是可以通过hashCode 来区分对象是否是同一个。使得对象均匀的分布在散列表里头</p>
+</li>
+</ul>
+<h3 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h3><ul>
+<li>扩容，普通hash的扩容可能会影响所有元素的移动</li>
+</ul>
+<h3 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h3><p><strong>背景</strong></p>
+<p>在分布式系统中，节点的宕机、某个节点加入或者移出集群是常事。对于分布式存储而言，假设存储集群中有10台机子，如果采用Hash方式对数据分片(即将数据根据哈希函数映射到某台机器上存储)，哈希函数应该是这样的：hash(file) % 10。根据上面的介绍，扩容是非常不利的，如果要添加一台机器，很多已经存储到机器上的文件都需要重新分配移动，如果文件很大，这种移动就造成网络的负载。</p>
+<p>在一致性哈希中，机器节点变成了<code>hash表</code>的桶，桶的变化引发的重新hash，而普通hash的重新hash是由元素的增加导致的重新哈希<code>reHash</code></p>
+<p>不管是普通哈希，还是一致性哈希，最核心的诉求是<strong>减少数据的移动</strong>，这种移动包括内存中的移动，或者是数据在机器节点中的移动。一致性哈希，其实就是<strong>把哈希函数可映射空间即普通哈希中桶的数目固定下来了</strong></p>
+<p>势必需要引入一个中间的东东，通过这个中间人维护外部与内部的映射关系。</p>
+<p><strong>解决</strong></p>
+<p>引入一个环，划分区间，这样节点的减少和增加只会影响到部分数据.相比于普通哈希方式，<strong>一致性哈希的好处就是：当添加新机器或者删除机器时，不会影响到全部数据的存储，而只是影响到这台机器上所存储的数据(落在这台机器所负责的环上的数据)。</strong></p>
+<p><img src="https://raw.githubusercontent.com/coy0725/Figure-bed/typora/img/715283-20160811153507027-302498592.png" alt="img"></p>
+<h2 id="功能目标"><a href="#功能目标" class="headerlink" title="功能目标"></a>功能目标</h2><h2 id="设计实现"><a href="#设计实现" class="headerlink" title="设计实现"></a>设计实现</h2><p>这些算法实现移位操作有迹可循吗？？？</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://www.cnblogs.com/hapjin/p/5760463.html" target="_blank" rel="noopener">分布式hash算法</a></p>
+<p><a href="https://blog.csdn.net/cywosp/article/details/23397179" target="_blank" rel="noopener">五分钟理解一致性哈希算法(consistent hashing)</a></p>
+<p><a href="https://www.acodersjourney.com/system-design-interview-consistent-hashing/" target="_blank" rel="noopener">system-design-interview-consistent-hashing</a></p>
+<p><a href="https://www.codeproject.com/Articles/56138/Consistent-hashing" target="_blank" rel="noopener">Consistent hashing</a></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2021-05-16T03:44:04.627Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-16</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">mybatis-缓存</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/">mybatis-缓存</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -258,8 +400,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
