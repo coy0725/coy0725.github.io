@@ -8,15 +8,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2021/5 | Hexo</title>
+  <title>notebook/20210519-异步 async | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2021/05/index.html">
+  <meta name="description" content="一般异步系统从字面意思上来理解，异步是一个形容词，是对某种行为的描述。单从异步 async一词很难理解到底是什么意思。缺少相应的语境和上下文信息。 如果从一般系统思维的方式去解析的话需要了解以下信息  异步行为的参与者 异步行为的功能或目标 异步行为参与者之间的关系  异步相关概念 IO RPC服务调用 servlet异步 webFlux  异步IO模型参与者 用户线程  系统内核    如何确定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="notebook&#x2F;20210519-异步 async">
+<meta property="og:url" content="http://yoursite.com/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一般异步系统从字面意思上来理解，异步是一个形容词，是对某种行为的描述。单从异步 async一词很难理解到底是什么意思。缺少相应的语境和上下文信息。 如果从一般系统思维的方式去解析的话需要了解以下信息  异步行为的参与者 异步行为的功能或目标 异步行为参与者之间的关系  异步相关概念 IO RPC服务调用 servlet异步 webFlux  异步IO模型参与者 用户线程  系统内核    如何确定">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210519154012758.png">
+<meta property="og:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210519223344340.png">
+<meta property="og:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210519223629933.png">
+<meta property="og:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210519224356662.png">
+<meta property="article:published_time" content="2021-05-20T02:12:20.973Z">
+<meta property="article:modified_time" content="2021-05-20T02:12:18.000Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210519154012758.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -164,130 +173,233 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-notebook/20210519-异步 async" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/05/27/notebook/20210527-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2021-05-27T15:22:05.857Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-27</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/05/27/notebook/20210527-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/">notebook/20210527-服务注册与发现</a>
+    <h1 class="article-title" itemprop="name">
+      notebook/20210519-异步 async
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/" class="archive-article-date">
+        
+        <a href="/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/" class="archive-article-date">
   	<time datetime="2021-05-20T02:12:20.973Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-20</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/">notebook/20210519-异步 async</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="一般异步系统"><a href="#一般异步系统" class="headerlink" title="一般异步系统"></a>一般异步系统</h1><p>从字面意思上来理解，异步是一个形容词，是对某种行为的描述。单从<code>异步 async</code>一词很难理解到底是什么意思。缺少相应的语境和上下文信息。</p>
+<p>如果从一般系统思维的方式去解析的话需要了解以下信息</p>
+<ul>
+<li>异步行为的参与者</li>
+<li>异步行为的功能或目标</li>
+<li>异步行为参与者之间的关系</li>
+</ul>
+<h2 id="异步相关概念"><a href="#异步相关概念" class="headerlink" title="异步相关概念"></a><code>异步</code>相关概念</h2><ul>
+<li>IO</li>
+<li>RPC服务调用</li>
+<li>servlet异步</li>
+<li>webFlux</li>
+</ul>
+<h1 id="异步IO模型"><a href="#异步IO模型" class="headerlink" title="异步IO模型"></a>异步IO模型</h1><h2 id="参与者"><a href="#参与者" class="headerlink" title="参与者"></a>参与者</h2><ul>
+<li><p>用户线程</p>
+</li>
+<li><p>系统内核</p>
+</li>
+</ul>
+<blockquote>
+<p>如何确定异步IO模型中的参与者呢？假设从数据流经的节点来分析的话，参与者有用户缓冲区、内核缓冲区、磁盘</p>
+<p>但从另一方面来讲异步行为的主体应该是用户线程和系统内核</p>
+</blockquote>
+<h2 id="数据流经节点"><a href="#数据流经节点" class="headerlink" title="数据流经节点"></a>数据流经节点</h2><ul>
+<li>用户缓冲区</li>
+<li>内核缓冲区</li>
+<li>物理设备</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用户缓冲区-&gt;内核缓冲区: write系统调用</span><br><span class="line">内核缓冲区--&gt;物理磁盘: 操作系统决定何时写入磁盘</span><br></pre></td></tr></table></figure>
 
-        <div class="article-info info-on-right">
-          
-          
+<h2 id="同步与异步-Netty、-Redis、-Zookeeper高并发实战"><a href="#同步与异步-Netty、-Redis、-Zookeeper高并发实战" class="headerlink" title="同步与异步[^  Netty、 Redis、 Zookeeper高并发实战]"></a>同步与异步[^  Netty、 Redis、 Zookeeper高并发实战]</h2><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519154012758.png"  />
 
+<p>从上图可以获取到的信息是，首先要确定观察者。站在用户线程的角度来说，异步是系统内核发起IO请求，同步是指用户空间的线程发起IO请求。</p>
+<p>引入新的概念<code>用户空间</code>和<code>内核空间</code>。系统内核发起IO请求，系统内核与用户线程如何关联，是不是用户线程首先需要声明当系统内核调用时会触发的动作？</p>
+<h2 id="异步IO读流程"><a href="#异步IO读流程" class="headerlink" title="异步IO读流程"></a>异步IO读流程</h2><p>（1）当用户线程发起了read系统调用，立刻就可以开始去做其他的事，用户线程不阻塞。</p>
+<p>（2）内核就开始了IO的第一个阶段：准备数据。等到数据准备好了，内核就会将数据从内核缓冲区复制到用户缓冲区（用户空间的内存）。</p>
+<p>（3）内核会给用户线程发送一个信号（Signal），或者回调用户线程注册的回调接口，告诉用户线程read操作完成了。</p>
+<p>（4）用户线程读取用户缓冲区的数据，完成后续的业务操作。</p>
+<h2 id="异步IO优缺点"><a href="#异步IO优缺点" class="headerlink" title="异步IO优缺点"></a>异步IO优缺点</h2><p><strong>两个阶段都不会阻塞</strong></p>
+<ol>
+<li><p>内核等待数据</p>
+</li>
+<li><p>内核将数据从内核缓冲区复制到用户缓冲区</p>
+</li>
+</ol>
+<p><strong>特点</strong>：在内核等待数据和复制数据的两个阶段，用户线程都不是阻塞的。用户线程需要接收内核的IO操作完成的事件，或者用户线程需要注册一个IO操作完成的回调函数。正因为如此，异步IO有的时候也被称为信号驱动IO。</p>
+<p><strong>缺点</strong>：应用程序仅需要进行事件的注册与接收，其余的工作都留给了操作系统，也就是说，需要底层内核提供支持</p>
+<p>感觉同步和阻塞的语义是有重合的，用户线程在异步IO读的时候是非阻塞的。异步是实现非阻塞的一种手段？</p>
+<h1 id="Servlet非阻塞IO"><a href="#Servlet非阻塞IO" class="headerlink" title="Servlet非阻塞IO"></a>Servlet非阻塞IO</h1><p>Web 容器中的非阻塞请求处理有助于提高对改善 Web 容器可扩展性不断增加的需求，增加 Web 容器可同时处理请求的连接数量。servlet容器的非阻塞IO允许开发人员在数据可用时读取数据或在数据可写时写数据</p>
+<p>组件 </p>
+<ul>
+<li><p><code>ReadListener</code> 监听Read</p>
+</li>
+<li><p><code>AsyncContext</code>  异步上下文</p>
+</li>
+</ul>
+<h2 id="spring-的-reactive-实现"><a href="#spring-的-reactive-实现" class="headerlink" title="spring 的 reactive 实现"></a>spring 的 reactive 实现</h2><p>所以如何利用非阻塞IO的api来进行编程呢?</p>
+<p>那就看下spring的实现吧</p>
+<p><code>ServletServerHttpRequest</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestBodyPublisherReadListener</span> <span class="keyword">implements</span> <span class="title">ReadListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDataAvailable</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">				RequestBodyPublisher.<span class="keyword">this</span>.onDataAvailable();</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAllDataRead</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">				RequestBodyPublisher.<span class="keyword">this</span>.onAllDataRead();</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable throwable)</span> </span>&#123;</span><br><span class="line">				RequestBodyPublisher.<span class="keyword">this</span>.onError(throwable);</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>RequestBodyPublisherReadListener</code> 将任务委托给了<code>RequestBodyPublisher</code></p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519223344340.png" alt="image-20210519223344340"></p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519223629933.png" alt="image-20210519223629933"></p>
+<p>实现了reactive Stream流的Publisher接口。</p>
+<p>有点复杂，整不明白。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519224356662.png" alt="image-20210519224356662"></p>
+<p>枚举这样玩，是真的秀。</p>
+<p>Publisher实现的抽象基类，bridge between event-listener read APIs and Reactive Streams </p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/" class="archive-article-date">
-  	<time datetime="2021-05-18T15:29:20.051Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-18</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2021/05/27/notebook/20210527-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          notebook/20210527-服务注册与发现
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">notebook/20210517-分布式一致Hash</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/">notebook/20210517-分布式一致Hash</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2021-05-16T03:44:04.627Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/">mybatis-缓存</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
 
 
           </div>
@@ -312,8 +424,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
