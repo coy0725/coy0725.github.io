@@ -8,19 +8,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>notebook/20210527-服务注册与发现 | Hexo</title>
+  <title>notebook/spring编程核心思想/12章 Spring 国际化/134-Spring国际化使用场景 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="系统维度进行分析参与者 服务提供方 Service Provider 服务使用方 Service User 服务注册中心-服务提供方与服务使用方直接的桥梁- Service Registry  关系 服务提供方将服务注册到注册中心 服务使用方到注册中心查询获取服务提供方的服务地址，然后使用服务提供方的服务 注册中心保存服务地址，为服务使用使用方提供服务查询服务  功能、目标 服务稳定，上下先平滑">
+  <meta name="description" content="讨论这两大方面Spring国际化相关接口以及其相关实现Java对于国际化的支持以及相关内容详细内容1、Spring 国际化2、Spring国际化使用场景 普通国际化文案  主要利用到spring的国际化的抽象的接口获取文本文案，很少直接去这样做   Bean Validation 检验国际化文案(需要学习)  spring boot 场景中用到的比较多，因为Spring boot会默认加载 Bea">
 <meta property="og:type" content="article">
-<meta property="og:title" content="notebook&#x2F;20210527-服务注册与发现">
-<meta property="og:url" content="http://yoursite.com/2021/05/27/notebook/20210527-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/index.html">
+<meta property="og:title" content="notebook&#x2F;spring编程核心思想&#x2F;12章 Spring 国际化&#x2F;134-Spring国际化使用场景">
+<meta property="og:url" content="http://yoursite.com/2021/06/01/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="系统维度进行分析参与者 服务提供方 Service Provider 服务使用方 Service User 服务注册中心-服务提供方与服务使用方直接的桥梁- Service Registry  关系 服务提供方将服务注册到注册中心 服务使用方到注册中心查询获取服务提供方的服务地址，然后使用服务提供方的服务 注册中心保存服务地址，为服务使用使用方提供服务查询服务  功能、目标 服务稳定，上下先平滑">
+<meta property="og:description" content="讨论这两大方面Spring国际化相关接口以及其相关实现Java对于国际化的支持以及相关内容详细内容1、Spring 国际化2、Spring国际化使用场景 普通国际化文案  主要利用到spring的国际化的抽象的接口获取文本文案，很少直接去这样做   Bean Validation 检验国际化文案(需要学习)  spring boot 场景中用到的比较多，因为Spring boot会默认加载 Bea">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-05-27T15:22:05.857Z">
-<meta property="article:modified_time" content="2021-05-27T16:08:38.361Z">
+<meta property="og:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210602001717942.png">
+<meta property="og:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210601223257142.png">
+<meta property="og:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210601230307822.png">
+<meta property="article:published_time" content="2021-06-01T14:06:52.271Z">
+<meta property="article:modified_time" content="2021-06-01T16:25:43.151Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210602001717942.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -168,47 +172,115 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-notebook/20210527-服务注册与发现" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/134-Spring国际化使用场景" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      notebook/20210527-服务注册与发现
+      notebook/spring编程核心思想/12章 Spring 国际化/134-Spring国际化使用场景
     </h1>
   
 
         
-        <a href="/2021/05/27/notebook/20210527-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2021-05-27T15:22:05.857Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-27</time>
+        <a href="/2021/06/01/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="archive-article-date">
+  	<time datetime="2021-06-01T14:06:52.271Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="系统维度进行分析"><a href="#系统维度进行分析" class="headerlink" title="系统维度进行分析"></a>系统维度进行分析</h1><h2 id="参与者"><a href="#参与者" class="headerlink" title="参与者"></a>参与者</h2><ul>
-<li>服务提供方 Service Provider</li>
-<li>服务使用方 Service User</li>
-<li>服务注册中心-服务提供方与服务使用方直接的桥梁- Service Registry</li>
+        <h1 id="讨论这两大方面"><a href="#讨论这两大方面" class="headerlink" title="讨论这两大方面"></a>讨论这两大方面</h1><h2 id="Spring国际化相关接口以及其相关实现"><a href="#Spring国际化相关接口以及其相关实现" class="headerlink" title="Spring国际化相关接口以及其相关实现"></a>Spring国际化相关接口以及其相关实现</h2><h2 id="Java对于国际化的支持以及相关内容"><a href="#Java对于国际化的支持以及相关内容" class="headerlink" title="Java对于国际化的支持以及相关内容"></a>Java对于国际化的支持以及相关内容</h2><h1 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h1><h2 id="1、Spring-国际化"><a href="#1、Spring-国际化" class="headerlink" title="1、Spring 国际化"></a>1、Spring 国际化</h2><h2 id="2、Spring国际化使用场景"><a href="#2、Spring国际化使用场景" class="headerlink" title="2、Spring国际化使用场景"></a>2、Spring国际化使用场景</h2><ul>
+<li><p>普通国际化文案</p>
+<blockquote>
+<p>主要利用到spring的国际化的抽象的接口获取文本文案，很少直接去这样做</p>
+</blockquote>
+</li>
+<li><p>Bean Validation 检验国际化文案(需要学习)</p>
+<blockquote>
+<p>spring boot 场景中用到的比较多，因为Spring boot会默认加载 Bean Validation，也就是我们所谓的Bean 校验（jsr标准 Bean校验框架）</p>
+<p>spring 和Bean Validation 的一个实现，比如说 <code>Hibernate Validator</code>的api进行整合，与国际化文案交相呼应</p>
+<p>在Bean Validation的标准中，已经规定了国际化的一些文案的一个生产方式，什么方式？</p>
+<p>并且在<code>Hibernate Validator</code>中也有相应实现，不过这个实现spring会加以转换，加以适配，编程符合Spring标准的这么一个实现方案</p>
+<p><code>SmartValidator</code>？</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210602001717942.png" alt="image-20210602001717942"></p>
+</blockquote>
+</li>
+<li><p>web 站点页面渲染（两部分）</p>
+<ul>
+<li>文案</li>
+<li>主题</li>
 </ul>
-<h2 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h2><ul>
-<li>服务提供方将服务注册到注册中心</li>
-<li>服务使用方到注册中心查询获取服务提供方的服务地址，然后使用服务提供方的服务</li>
-<li>注册中心保存服务地址，为服务使用使用方提供服务查询服务</li>
+<blockquote>
+<p>国际化购物时，你可能通过不同国家或地区的ip进行访问</p>
+<p>不同国家的物流查询，会收到不同的页面渲染，文字或者布局会发生变化（这个倒是没弄）</p>
+</blockquote>
+</li>
+<li><p>web mvc 错误消息提示（正在使用 ，异常多语言）</p>
+<blockquote>
+<p>当你的请求头了带有locate？</p>
+<p>我们使用的不是标准的Locale ，而是自己定义了一个请求头 lang-type，为啥不使用标准的呢?</p>
+</blockquote>
+</li>
 </ul>
-<h2 id="功能、目标"><a href="#功能、目标" class="headerlink" title="功能、目标"></a>功能、目标</h2><ul>
-<li>服务稳定，上下先平滑</li>
-<li>高可用，</li>
-<li>服务的负载均衡</li>
+<h2 id="3、Spring国际化接口"><a href="#3、Spring国际化接口" class="headerlink" title="3、Spring国际化接口"></a>3、Spring国际化接口</h2><h3 id="核心包-org-springframework-context-i18n"><a href="#核心包-org-springframework-context-i18n" class="headerlink" title="核心包 org.springframework.context.i18n"></a>核心包 <code>org.springframework.context.i18n</code></h3><p><strong>packageinfo</strong>:</p>
+<p>用于确定当前语言环境的抽象，加上公开线程绑定区域设置的全局持有者</p>
+<h3 id="核心接口"><a href="#核心接口" class="headerlink" title="核心接口"></a>核心接口</h3><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210601223257142.png" alt="image-20210601223257142"></p>
+<h4 id="LocaleContextHolder"><a href="#LocaleContextHolder" class="headerlink" title="LocaleContextHolder"></a>LocaleContextHolder</h4><p><code>LocaleContextHolder</code>与我们项目中<code>LanguageHelper</code>之间有何联系？</p>
+<p><code>LanguageHelper</code>为当前请求线程存储请求所关联的国家属性和语言环境属性,依赖与<code>org.slf4j.MDC</code></p>
+<ul>
+<li>X-Nat-country</li>
+<li>lang-type</li>
 </ul>
-<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>服务可以分为应用内的服务依赖和应用间的服务依赖。前者是进程内组件的服务调用，后者是进程间应用的服务调用。</p>
-<p>在Java应用中我们使用spring 框架帮助我们简化应用组件间的服务依赖关系，在这之中服务提供方使用注解或者xml配置的方式声明自己为服务提供方。而spring ioc 容器扮演着的的就是服务注册中心的角色，保存服务。而服务使用方使用注解或者xml配置声明自己需要的服务。spring ioc 容器会将为其准备好它所需要的服务。即人们常说的依赖注入（服务注入）。需要注意的是这种服务一般是单例的，即不存在服务的负载均衡问题。</p>
-<p>服务提供方-@Bean</p>
-<p>服务使用方-@Autowired</p>
-<p>服务注册中心-BeanFactory</p>
+<p>其底层实现依赖于<code>InheritableThreadLocal</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BasicMDCAdapter</span> <span class="keyword">implements</span> <span class="title">MDCAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> InheritableThreadLocal&lt;Map&lt;String, String&gt;&gt; inheritableThreadLocal = <span class="keyword">new</span> InheritableThreadLocal&lt;Map&lt;String, String&gt;&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Map&lt;String, String&gt; <span class="title">childValue</span><span class="params">(Map&lt;String, String&gt; parentValue)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (parentValue == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> HashMap&lt;String, String&gt;(parentValue);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p><code>LocaleContextHolder</code>为当前请求线程存储请求所关联的<code>LocaleContext</code> 实例</p>
+<h3 id="如何理解InheritableThreadLocal-？"><a href="#如何理解InheritableThreadLocal-？" class="headerlink" title="如何理解InheritableThreadLocal ？"></a>如何理解<code>InheritableThreadLocal</code> ？</h3><p>可以继承的ThreadLocal，ThreadLocal 是线程相关的，所以其想表达的意思是，<code>InheritableThreadLocal</code>实例能被其他线程所共享？</p>
+<blockquote>
+<p>This class extends ThreadLocal to provide inheritance of values from parent thread to child thread: when a child thread is created, the child receives initial values for all inheritable thread-local variables for which the parent has values. Normally the child’s values will be identical to the parent’s; however, the child’s value can be made an arbitrary function of the parent’s by overriding the childValue method in this class.<br>Inheritable thread-local variables are used in preference to ordinary thread-local variables when the per-thread-attribute being maintained in the variable (e.g., User ID, Transaction ID) must be automatically transmitted to any child threads that are created</p>
+</blockquote>
+<p>问：什么时候使用<code>InheritableThreadLocal</code> ?</p>
+<p>答：当在变量中维护的每个线程属性(例如，用户ID，事务ID<strong>)必须自动传输到所创建的任何子线程时</strong>，可继承的线程本地变量<code>InheritableThreadLocal</code> 优先于普通线程本地变量<code>ThreadLocal</code></p>
+<p>子类继承父类的属性和方法，子线程继承父线程的ThreadLocal变量</p>
+<p>demo?</p>
+<p>1、创建一个线程，线程关联一个<code>InheritableThreadLocal</code> </p>
+<p>2、在该线程中创建一个子线程，看子线程有不有父线程中的<code>ThreadLocal</code>变量?</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210601230307822.png" alt="image-20210601230307822"></p>
+<h3 id="LocaleContext"><a href="#LocaleContext" class="headerlink" title="LocaleContext"></a><code>LocaleContext</code></h3><p>用于确定当前语言环境的策略接口,<code>LocaleContext</code>实例通过<code>LocaleContextHolder</code>关联一个线程</p>
+<blockquote>
+<p>Spring 是如何设计策略接口的？</p>
+<p>Context 上下文，策略接口？</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">LocaleContext</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Return the current Locale, which can be fixed or determined dynamically,</span></span><br><span class="line"><span class="comment">	 * depending on the implementation strategy.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the current Locale, or &#123;<span class="doctag">@code</span> null&#125; if no specific Locale associated</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="function">Locale <span class="title">getLocale</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到该接口是用来返回一个<code>Locale</code>实例，其决定如何返回<code>Locale</code>实例，策略模式即对行为的抽象</p>
+<h3 id="如何理解国际化？"><a href="#如何理解国际化？" class="headerlink" title="如何理解国际化？"></a>如何理解国际化？</h3><p>顾名思义，国际化的主要内容是各个国家的语言文字不同，提供的互联网服务能给很多个国家使用，主要在于根据当地语言渲染某些文本内容，所以需要拿到确定当前是什么语言环境，英语？中文？日文？</p>
+<h3 id="区域Locale又该如何理解呢？"><a href="#区域Locale又该如何理解呢？" class="headerlink" title="区域Locale又该如何理解呢？"></a>区域Locale又该如何理解呢？</h3><p>先看下Locale 这个类</p>
+<blockquote>
+<p>A Locale object represents a specific geographical, political, or cultural region. An operation that requires a Locale to perform its task is called locale-sensitive and uses the Locale to tailor information for the user. For example, displaying a number is a locale-sensitive operation— the number should be formatted according to the customs and conventions of the user’s native country, region, or culture.</p>
+</blockquote>
+<p><strong>Locale对象表示特定的地理、政治或文化区域</strong>。需要Locale来执行其任务的操作称为Locale敏感操作，并使用Locale来为用户定制信息。例如，显示数字是一种语言环境敏感的操作——应该根据用户所在国家、地区或文化的习惯和惯例对数字进行格式化。</p>
+<h2 id="4、层次性-Message-Source"><a href="#4、层次性-Message-Source" class="headerlink" title="4、层次性 Message Source"></a>4、层次性 Message Source</h2><blockquote>
+<p>spring里面的很多设计都是具有层次性的，例如上下文</p>
+</blockquote>
+<h2 id="5、Java国际化标准实现"><a href="#5、Java国际化标准实现" class="headerlink" title="5、Java国际化标准实现"></a>5、Java国际化标准实现</h2><blockquote>
+<p>讨论传统Java对于国际化的标准实现，很多开源软件也会基于这个实现进行扩展</p>
+<p>哪些开源软件呢？</p>
+<p>Spring 也不例外</p>
+</blockquote>
+<h2 id="6、Java文本格式化"><a href="#6、Java文本格式化" class="headerlink" title="6、Java文本格式化"></a>6、Java文本格式化</h2><blockquote>
+<p>Java文本化事实上和spring 的国际化接口有很大的关系，什么关系？</p>
+</blockquote>
+<h2 id="7、Messagesource开箱即用实现"><a href="#7、Messagesource开箱即用实现" class="headerlink" title="7、Messagesource开箱即用实现"></a>7、Messagesource开箱即用实现</h2><blockquote>
+<p>spring framwork 里有哪些实现是马上就可以用的?</p>
+</blockquote>
+<h2 id="8、Messagesource內建实现"><a href="#8、Messagesource內建实现" class="headerlink" title="8、Messagesource內建实现"></a>8、Messagesource內建实现</h2><h2 id="9、课外资料"><a href="#9、课外资料" class="headerlink" title="9、课外资料"></a>9、课外资料</h2><blockquote>
+<p>讨论下spring boot中为什么要创建一个 MessageSource这么个Bean</p>
+</blockquote>
+<h2 id="10、面试题精选"><a href="#10、面试题精选" class="headerlink" title="10、面试题精选"></a>10、面试题精选</h2><h1 id="新的认知"><a href="#新的认知" class="headerlink" title="新的认知"></a>新的认知</h1>
       
 
       
@@ -287,7 +359,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/05/27/notebook/20210527-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/06/01/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -301,18 +373,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/05/29/notebook/20210529-%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          notebook/20210529-分布式配置
-        
-      </div>
-    </a>
   
-  
-    <a href="/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">notebook/20210519-异步 async</div>
+    <a href="/2021/06/01/notebook/20210601-propertySourceLocator/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">notebook/20210601-propertySourceLocator</div>
       <i class="icon-circle-right"></i>
     </a>
   
