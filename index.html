@@ -166,6 +166,320 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/137-Java国际化标准实现 ResourceBundle" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/137-Java%E5%9B%BD%E9%99%85%E5%8C%96%E6%A0%87%E5%87%86%E5%AE%9E%E7%8E%B0%20ResourceBundle/">notebook/spring编程核心思想/12章 Spring 国际化/137-Java国际化标准实现 ResourceBundle</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/137-Java%E5%9B%BD%E9%99%85%E5%8C%96%E6%A0%87%E5%87%86%E5%AE%9E%E7%8E%B0%20ResourceBundle/" class="archive-article-date">
+  	<time datetime="2021-06-02T14:26:52.430Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h1 id="核心接口"><a href="#核心接口" class="headerlink" title="核心接口"></a>核心接口</h1><h2 id="抽象实现-java-util-ResourceBundle"><a href="#抽象实现-java-util-ResourceBundle" class="headerlink" title="抽象实现-java.util.ResourceBundle"></a>抽象实现-java.util.ResourceBundle</h2><h3 id="key-value-设计"><a href="#key-value-设计" class="headerlink" title="key-value 设计"></a>key-value 设计</h3><p><strong>key</strong>:文案模板的key</p>
+<p><strong>value</strong>:就是文案模板的内容，这个内容可能就是一个模板，也可能是实际的内容</p>
+<h3 id="层次性设计"><a href="#层次性设计" class="headerlink" title="层次性设计"></a>层次性设计</h3><p>方法：java.util.ResourceBundle#setParent 用来关联双亲，在查找的过程中可以一并进行查询</p>
+<p><strong>那是先找parent的还是先找自身的呢？</strong></p>
+<p>先查找当前的<code>ResourceBundle</code>再查找其关联的parent的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Object <span class="title">getObject</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line">    Object obj = handleGetObject(key);</span><br><span class="line">    <span class="keyword">if</span> (obj == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">            obj = parent.getObject(key);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (obj == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> MissingResourceException(<span class="string">"Can't find resource for bundle "</span></span><br><span class="line">                                               +<span class="keyword">this</span>.getClass().getName()</span><br><span class="line">                                               +<span class="string">", key "</span>+key,</span><br><span class="line">                                               <span class="keyword">this</span>.getClass().getName(),</span><br><span class="line">                                               key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="缓存设计"><a href="#缓存设计" class="headerlink" title="缓存设计"></a>缓存设计</h3><p>在启动中对我们的资源进行缓存，我们可以发现它内部的两种实现</p>
+<ul>
+<li><p>一种是硬编码实现，没有缓存可言，那么相当于用到的都是一些类似于像常量一样的东西</p>
+</li>
+<li><p>一种是properties实现，资源加载是需要一定的开销的，加载之后将其缓存起来</p>
+<p>缓存key:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CacheKey cacheKey &#x3D; new CacheKey(baseName, locale, loader);</span><br></pre></td></tr></table></figure>
+
+<p>为啥需要一个Loader？</p>
+<p>因为properties它是基于ClassLoader来进行加载的，每个classLoader有自己加载的范围。</p>
+</li>
+</ul>
+<h3 id="字符编码控制-java-util-ResourceBundle-Control-since-1-6"><a href="#字符编码控制-java-util-ResourceBundle-Control-since-1-6" class="headerlink" title="字符编码控制-java.util.ResourceBundle.Control @since 1.6"></a>字符编码控制-java.util.ResourceBundle.Control @since 1.6</h3><p>不适合直接去使用，需要实现一个Control</p>
+<p>不想去实现可以使用ResourceBundleControlProvider ，但这个就不用去实现了吗？？</p>
+<h3 id="Control-SPI-扩展-java-util-spi-ResourceBundleControlProvider-since1-8"><a href="#Control-SPI-扩展-java-util-spi-ResourceBundleControlProvider-since1-8" class="headerlink" title="Control SPI 扩展-java.util.spi.ResourceBundleControlProvider @since1.8"></a>Control SPI 扩展-java.util.spi.ResourceBundleControlProvider @since1.8</h3><p>这个spi会告诉你去读哪个basename</p>
+<p>不同的basename,使用不同的方式去控制</p>
+<p>newBundle 方法,没有传字符编码，所以在实现过程中需要将字符编码传进去</p>
+<p>或者在传递propertySource时就干脆制定编码</p>
+<h2 id="properties-资源实现-java-util-PropertyResourceBundle"><a href="#properties-资源实现-java-util-PropertyResourceBundle" class="headerlink" title="properties 资源实现-java.util.PropertyResourceBundle"></a>properties 资源实现-java.util.PropertyResourceBundle</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PropertyResourceBundle</span> <span class="params">(Reader reader)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">    properties.load(reader);</span><br><span class="line">    lookup = <span class="keyword">new</span> HashMap(properties);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Implements java.util.ResourceBundle.handleGetObject; inherits javadoc specification.</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">handleGetObject</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> lookup.get(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用properties文件取保存文案编码和文案内容</p>
+<p>注意：<code>PropertyResourceBundle</code> 它的默认编码是<code>ISO-8859-1</code>,为拉丁字符或者说ASCII码来进行服务的</p>
+<h2 id="例举实现-java-util-ListResourceBundle"><a href="#例举实现-java-util-ListResourceBundle" class="headerlink" title="例举实现-java.util.ListResourceBundle"></a>例举实现-java.util.ListResourceBundle</h2><p>实现：一个二维数组，第一元素是key,第二个元素为key对应的模板</p>
+<p>命名方式：</p>
+<blockquote>
+<p>近乎于硬编码的方式进行实现</p>
+</blockquote>
+<h1 id="收获"><a href="#收获" class="headerlink" title="收获"></a>收获</h1><p>MessageSource是Spring的国际化接口</p>
+<p>ResourceBundle是Java的国际化接口，MessageSourceResourceBundle 依赖于Java的标准进行了实现</p>
+<p>当Java文本化和Java国际化结合起来就是我们要讨论的Spring国际化接口的实现</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/137-Java%E5%9B%BD%E9%99%85%E5%8C%96%E6%A0%87%E5%87%86%E5%AE%9E%E7%8E%B0%20ResourceBundle/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/136 层次性MessageSource" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/136%20%E5%B1%82%E6%AC%A1%E6%80%A7MessageSource/">notebook/spring编程核心思想/12章 Spring 国际化/136 层次性MessageSource</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/136%20%E5%B1%82%E6%AC%A1%E6%80%A7MessageSource/" class="archive-article-date">
+  	<time datetime="2021-06-02T13:18:42.660Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<p>系统之美</p>
+<p>系统的三个基本特性：适应力，自组织，层次性。其中就有层次性。</p>
+<h2 id="如何理解层次性？"><a href="#如何理解层次性？" class="headerlink" title="如何理解层次性？"></a>如何理解层次性？</h2><p>复杂系统的基本特征之一。</p>
+<h2 id="Spring-层次性接口回顾"><a href="#Spring-层次性接口回顾" class="headerlink" title="Spring 层次性接口回顾"></a>Spring 层次性接口回顾</h2><h3 id="o-s-context-ApplicationContext"><a href="#o-s-context-ApplicationContext" class="headerlink" title="o.s.context.ApplicationContext"></a>o.s.context.ApplicationContext</h3><ul>
+<li><p>org.springframework.context.ApplicationContext#getParent</p>
+</li>
+<li><p>org.springframework.context.ConfigurableApplicationContext</p>
+</li>
+<li><p>org.springframework.context.ConfigurableApplicationContext#setParent</p>
+</li>
+</ul>
+<h3 id="o-s-beans-factory-HierarchicalBeanFactory"><a href="#o-s-beans-factory-HierarchicalBeanFactory" class="headerlink" title="o.s.beans.factory.HierarchicalBeanFactory"></a>o.s.beans.factory.HierarchicalBeanFactory</h3><p>org.springframework.beans.factory.HierarchicalBeanFactory#getParentBeanFactory</p>
+<p>org.springframework.beans.factory.config.ConfigurableBeanFactory#setParentBeanFactory</p>
+<ul>
+<li>containsLocalBean 判断当前IOC容器（BeanFactory）是否有这个Bean</li>
+<li>containsBean  会搜索层次性的BeanFactory</li>
+</ul>
+<h3 id="o-s-beans-factory-config-BeanDefinition"><a href="#o-s-beans-factory-config-BeanDefinition" class="headerlink" title="o.s.beans.factory.config.BeanDefinition"></a>o.s.beans.factory.config.BeanDefinition</h3><p>BeanDefinition是可以合并的，那么它必然就会有一个parent，但是其不像前面的接口返回一个<code>BeanDefinition</code>实例，而是返回它关联的BeanDefinition的一个名称，即getParentName</p>
+<p>为什么呢？</p>
+<p>因为早期BeanDefinition的实现是基于xml或Properties文件，从文本关系里去分析，是很难得到它的一个parent，而是得到patent的一个指引。Parent BeanDefinition的名称</p>
+<h3 id="层次性国际化接口o-s-c-HierarchicalMessageSource"><a href="#层次性国际化接口o-s-c-HierarchicalMessageSource" class="headerlink" title="层次性国际化接口o.s.c.HierarchicalMessageSource"></a>层次性国际化接口o.s.c.HierarchicalMessageSource</h3><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210602220208433.png" alt="image-20210602220208433"></p>
+<p>按照正常spring的命名规则他应该有一个</p>
+<p>HierarchicalMessageSource仅提供getParentMessageSourcef方法</p>
+<p>而在ConfigurableMessageSource中提供setParentMessageSource方法</p>
+<h2 id="收获-Spring命名哲学"><a href="#收获-Spring命名哲学" class="headerlink" title="收获-Spring命名哲学"></a>收获-Spring命名哲学</h2><p>ConfigurableXXX,会有一些set方法，提供可配置的能力</p>
+<p>而HierarchicalXX,提供getParentXX，提供获取双亲信息的能力</p>
+<h2 id="层次性设计"><a href="#层次性设计" class="headerlink" title="层次性设计"></a>层次性设计</h2><p>层次性设计并非Spring的原创，我们所谓的ClassLoader默认就具有层次性，于此同时再Java标准的国际化接口里ResourceBoundle里面也有。</p>
+<h3 id="如何理解层次性？-1"><a href="#如何理解层次性？-1" class="headerlink" title="如何理解层次性？"></a>如何理解层次性？</h3><p>遗传与变异，可以继承双亲的一些属性。</p>
+<h3 id="层次性设计的好处"><a href="#层次性设计的好处" class="headerlink" title="层次性设计的好处"></a>层次性设计的好处</h3><p>当你当前找不到的时候，或者看你的实现，是先找parent还是先找child都行。搜索范围搜索路径更广了，更有弹性。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/136%20%E5%B1%82%E6%AC%A1%E6%80%A7MessageSource/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/135-Spring 国际化接口" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/135-Spring%20%E5%9B%BD%E9%99%85%E5%8C%96%E6%8E%A5%E5%8F%A3/">notebook/spring编程核心思想/12章 Spring 国际化/135-Spring 国际化接口</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/135-Spring%20%E5%9B%BD%E9%99%85%E5%8C%96%E6%8E%A5%E5%8F%A3/" class="archive-article-date">
+  	<time datetime="2021-06-02T11:28:54.037Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>通过了解Spring 国际化接口，去了解普通文案是如何渲染的</p>
+<h2 id="核心接口"><a href="#核心接口" class="headerlink" title="核心接口"></a>核心接口</h2><h3 id="org-springframework-context-MessageSource"><a href="#org-springframework-context-MessageSource" class="headerlink" title="org.springframework.context.MessageSource"></a><code>org.springframework.context.MessageSource</code></h3><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210602193130015.png" alt="image-20210602193130015"></p>
+<p>该接口是放在context包下，context包在spring context里面是与应用上下文相关的，凡是和应用上下文相关的，通常是一些企业化的场景，因此国际化也不例外。</p>
+<p>收获：spring企业级特性与spring context的关系</p>
+<p>spring context 为提供企业级特性。</p>
+<h2 id="相关接口"><a href="#相关接口" class="headerlink" title="相关接口"></a>相关接口</h2><h3 id="java-util-Locale"><a href="#java-util-Locale" class="headerlink" title="java.util.Locale"></a><code>java.util.Locale</code></h3><p>用来代表代表特定的地理、政治、 或文化区域</p>
+<h3 id="o-s-context-MessageSourceResolvable"><a href="#o-s-context-MessageSourceResolvable" class="headerlink" title="o.s.context.MessageSourceResolvable"></a><code>o.s.context.MessageSourceResolvable</code></h3><p><strong>对前面的参数进行聚合</strong></p>
+<blockquote>
+<p>Interface for objects that are suitable for message resolution in a MessageSource.<br>Spring’s own validation error classes implement this interface</p>
+<p>解析 <code>MessageSource</code>接口中的Message？</p>
+</blockquote>
+<h2 id="主要概念"><a href="#主要概念" class="headerlink" title="主要概念"></a>主要概念</h2><ul>
+<li>文案模板编码 </li>
+<li>文案模板参数<ul>
+<li>占位符-动态参数，参数也有其编码，第一个占位，第二个占位….</li>
+</ul>
+</li>
+<li>区域(<code>Locale</code>)</li>
+</ul>
+<h2 id="他是如何分析api的？"><a href="#他是如何分析api的？" class="headerlink" title="他是如何分析api的？"></a>他是如何分析api的？</h2><p>这是一个所谓的策略接口，去处理消息，这个消息确切来说是文案。</p>
+<p>消息是支持参数化以及国际化的，如何支持？</p>
+<h3 id="国际化如何理解？"><a href="#国际化如何理解？" class="headerlink" title="国际化如何理解？"></a>国际化如何理解？</h3><p>不同的地区、国家产生不同的文案 </p>
+<h3 id="参数化如何理解？"><a href="#参数化如何理解？" class="headerlink" title="参数化如何理解？"></a>参数化如何理解？</h3><p>Spring 提供了两种开箱即用的实现</p>
+<ul>
+<li><p>org.springframework.context.support.ResourceBundleMessageSource</p>
+</li>
+<li><p>org.springframework.context.support.ReloadableResourceBundleMessageSource</p>
+<blockquote>
+<p>可重新加载的这么一个实现？可重新加载要如何理解？</p>
+</blockquote>
+</li>
+</ul>
+<p>从命名可以看出来这两种实现是和<code>ResourceBundle</code>有关的</p>
+<h3 id="ResourceBundle"><a href="#ResourceBundle" class="headerlink" title="ResourceBundle"></a><code>ResourceBundle</code></h3><h4 id="ResourceBundle和Java标准国际化有何联系？"><a href="#ResourceBundle和Java标准国际化有何联系？" class="headerlink" title="ResourceBundle和Java标准国际化有何联系？"></a><code>ResourceBundle</code>和Java标准国际化有何联系？</h4><h4 id="ResourceBundle和Spring-国际化有何联系？"><a href="#ResourceBundle和Spring-国际化有何联系？" class="headerlink" title="ResourceBundle和Spring 国际化有何联系？"></a><code>ResourceBundle</code>和Spring 国际化有何联系？</h4><p>既然这是个接口，那自然可以对接不同的实现,也就是我们消息的来源是动态的？不管你的资源是来自于本地静态文件，还是远程服务，它的接口总会保持这样的语义</p>
+<p>来自数据库？</p>
+<p>来自redis？</p>
+<p>来自本地文件？</p>
+<h2 id="ResourceBundleMessageSource-一探究竟"><a href="#ResourceBundleMessageSource-一探究竟" class="headerlink" title="ResourceBundleMessageSource 一探究竟"></a>ResourceBundleMessageSource 一探究竟</h2><p> 依赖于java.util.ResourceBundle的实现</p>
+<p> 结合 java.text.MessageFormat提供的JDK 标准消息解析</p>
+<h3 id="ResourceBundle-1"><a href="#ResourceBundle-1" class="headerlink" title="ResourceBundle"></a>ResourceBundle</h3><blockquote>
+<p>Resource bundles包含特定于语言环境的对象。当您的程序需要特定于语言环境的资源(例如String)时，您的程序可以从适合当前用户语言环境的资源包中加载它。通过这种方式，您可以编写很大程度上独立于用户语言环境隔离的大部分(如果不是全部的话)资源包中特定于语言环境的信息的程序代码</p>
+</blockquote>
+<p>This allows you to write programs that can:</p>
+<ul>
+<li>be easily localized, or translated, into different languages</li>
+<li>handle multiple locales at once</li>
+<li>be easily modified later to support even more locales</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> ResourceBundle <span class="title">getResourceBundle</span><span class="params">(String basename, Locale locale)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (getCacheMillis() &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="comment">// Fresh ResourceBundle.getBundle call in order to let ResourceBundle</span></span><br><span class="line">			<span class="comment">// do its native caching, at the expense of more extensive lookup steps.</span></span><br><span class="line">			<span class="keyword">return</span> doGetBundle(basename, locale);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">// Cache forever: prefer locale cache over repeated getBundle calls.</span></span><br><span class="line">			Map&lt;Locale, ResourceBundle&gt; localeMap = <span class="keyword">this</span>.cachedResourceBundles.get(basename);</span><br><span class="line">			<span class="keyword">if</span> (localeMap != <span class="keyword">null</span>) &#123;</span><br><span class="line">				ResourceBundle bundle = localeMap.get(locale);</span><br><span class="line">				<span class="keyword">if</span> (bundle != <span class="keyword">null</span>) &#123;</span><br><span class="line">					<span class="keyword">return</span> bundle;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				ResourceBundle bundle = doGetBundle(basename, locale);</span><br><span class="line">				<span class="keyword">if</span> (localeMap == <span class="keyword">null</span>) &#123;</span><br><span class="line">					localeMap = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line">					Map&lt;Locale, ResourceBundle&gt; existing = <span class="keyword">this</span>.cachedResourceBundles.putIfAbsent(basename, localeMap);</span><br><span class="line">					<span class="keyword">if</span> (existing != <span class="keyword">null</span>) &#123;</span><br><span class="line">						localeMap = existing;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				localeMap.put(locale, bundle);</span><br><span class="line">				<span class="keyword">return</span> bundle;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (MissingResourceException ex) &#123;</span><br><span class="line">				<span class="keyword">if</span> (logger.isWarnEnabled()) &#123;</span><br><span class="line">					logger.warn(<span class="string">"ResourceBundle ["</span> + basename + <span class="string">"] not found for MessageSource: "</span> + ex.getMessage());</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// Assume bundle not found</span></span><br><span class="line">				<span class="comment">// -&gt; do NOT throw the exception to allow for checking parent message source.</span></span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从这上面可以看出</p>
+<ul>
+<li>basename— Map&lt;Locale, ResourceBundle&gt;<ul>
+<li>Locale—ResourceBundle</li>
+</ul>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/135-Spring%20%E5%9B%BD%E9%99%85%E5%8C%96%E6%8E%A5%E5%8F%A3/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/134-Spring国际化使用场景" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -173,13 +487,13 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/01/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">notebook/spring编程核心思想/12章 Spring 国际化/134-Spring国际化使用场景</a>
+      <a class="article-title" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">notebook/spring编程核心思想/12章 Spring 国际化/134-Spring国际化使用场景</a>
     </h1>
   
 
         
-        <a href="/2021/06/01/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="archive-article-date">
-  	<time datetime="2021-06-01T14:06:52.271Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-01</time>
+        <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="archive-article-date">
+  	<time datetime="2021-06-02T02:22:09.750Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-02</time>
 </a>
         
       </header>
@@ -189,7 +503,7 @@
         <h1 id="讨论这两大方面"><a href="#讨论这两大方面" class="headerlink" title="讨论这两大方面"></a>讨论这两大方面</h1><h2 id="Spring国际化相关接口以及其相关实现"><a href="#Spring国际化相关接口以及其相关实现" class="headerlink" title="Spring国际化相关接口以及其相关实现"></a>Spring国际化相关接口以及其相关实现</h2><h2 id="Java对于国际化的支持以及相关内容"><a href="#Java对于国际化的支持以及相关内容" class="headerlink" title="Java对于国际化的支持以及相关内容"></a>Java对于国际化的支持以及相关内容</h2><h1 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h1><h2 id="1、Spring-国际化"><a href="#1、Spring-国际化" class="headerlink" title="1、Spring 国际化"></a>1、Spring 国际化</h2><h2 id="2、Spring国际化使用场景"><a href="#2、Spring国际化使用场景" class="headerlink" title="2、Spring国际化使用场景"></a>2、Spring国际化使用场景</h2><ul>
 <li><p>普通国际化文案</p>
 <blockquote>
-<p>主要利用到spring的国际化的抽象的接口获取文本文案，很少直接去这样做</p>
+<p>主要利用到spring的国际化的抽象的接口获取文本文案，很少直接去这样做，貌似我们就是这样做的</p>
 </blockquote>
 </li>
 <li><p>Bean Validation 检验国际化文案(需要学习)</p>
@@ -286,7 +600,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/01/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">展开全文 >></a>
         </p>
       
 
@@ -786,306 +1100,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/20210517-分布式一致Hash" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/">notebook/20210517-分布式一致Hash</a>
-    </h1>
-  
-
-        
-        <a href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/" class="archive-article-date">
-  	<time datetime="2021-05-18T15:29:20.051Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="训练营第22节稳定性提升课后作业"><a href="#训练营第22节稳定性提升课后作业" class="headerlink" title="训练营第22节稳定性提升课后作业"></a>训练营第22节稳定性提升课后作业</h3><ul>
-<li><p>通过 Java 实现两种（以及）更多的一致性 Hash 算法（可选）实现服务节点动态更新</p>
-</li>
-<li><p>参考<code>org.apache.dubbo.rpc.cluster.loadbalance.ConsistentHashLoadBalance</code></p>
-</li>
-</ul>
-<h3 id="ConsistentHashLoadBalance"><a href="#ConsistentHashLoadBalance" class="headerlink" title="ConsistentHashLoadBalance"></a><code>ConsistentHashLoadBalance</code></h3><p>从名称上来看，一致性hash负载均衡</p>
-<ul>
-<li><p><code>LoadBalance</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SPI</span>(RandomLoadBalance.NAME)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">LoadBalance</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * select one invoker in list.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invokers   invokers.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> url        refer url</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invocation invocation.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> selected invoker.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Adaptive</span>(<span class="string">"loadbalance"</span>)</span><br><span class="line">    &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> <span class="keyword">throws</span> RpcException</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>该接口为负载均衡的核心接口，目前能够获取的信息为从<code>Invoker</code>集合中选出一个<code>Invoker</code>，所以其核心是如何选出该<code>Invoker</code>?</p>
-</li>
-<li><p><code>AbstractLoadBalance</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (CollectionUtils.isEmpty(invokers)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (invokers.size() == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> invokers.get(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> doSelect(invokers, url, invocation);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>该接口实现了<code>LoadBalance</code>的共用逻辑，处理<code>Invoker</code>对象为空和只有一个<code>Invoker</code>对象的情况，其他情况由子类实现<code>doSelect</code>方法去实现</p>
-</li>
-<li><p><code>ConsistentHashSelector&lt;T&gt;</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsistentHashSelector</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> TreeMap&lt;Long, Invoker&lt;T&gt;&gt; virtualInvokers;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> replicaNumber;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> identityHashCode;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[] argumentIndex;</span><br><span class="line"></span><br><span class="line">        ConsistentHashSelector(List&lt;Invoker&lt;T&gt;&gt; invokers, String methodName, <span class="keyword">int</span> identityHashCode) &#123;</span><br><span class="line">            <span class="keyword">this</span>.virtualInvokers = <span class="keyword">new</span> TreeMap&lt;Long, Invoker&lt;T&gt;&gt;();</span><br><span class="line">            <span class="keyword">this</span>.identityHashCode = identityHashCode;</span><br><span class="line">            URL url = invokers.get(<span class="number">0</span>).getUrl();</span><br><span class="line">            <span class="keyword">this</span>.replicaNumber = url.getMethodParameter(methodName, HASH_NODES, <span class="number">160</span>);</span><br><span class="line">            String[] index = COMMA_SPLIT_PATTERN.split(url.getMethodParameter(methodName, HASH_ARGUMENTS, <span class="string">"0"</span>));</span><br><span class="line">            argumentIndex = <span class="keyword">new</span> <span class="keyword">int</span>[index.length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index.length; i++) &#123;</span><br><span class="line">                argumentIndex[i] = Integer.parseInt(index[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> (Invoker&lt;T&gt; invoker : invokers) &#123;</span><br><span class="line">                String address = invoker.getUrl().getAddress();</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; replicaNumber / <span class="number">4</span>; i++) &#123;</span><br><span class="line">                    <span class="keyword">byte</span>[] digest = Bytes.getMD5(address + i);</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> h = <span class="number">0</span>; h &lt; <span class="number">4</span>; h++) &#123;</span><br><span class="line">                        <span class="keyword">long</span> m = hash(digest, h);</span><br><span class="line">                        virtualInvokers.put(m, invoker);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Invoker&lt;T&gt; <span class="title">select</span><span class="params">(Invocation invocation)</span> </span>&#123;</span><br><span class="line">            String key = toKey(invocation.getArguments());</span><br><span class="line">            <span class="keyword">byte</span>[] digest = Bytes.getMD5(key);</span><br><span class="line">            <span class="keyword">return</span> selectForKey(hash(digest, <span class="number">0</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> String <span class="title">toKey</span><span class="params">(Object[] args)</span> </span>&#123;</span><br><span class="line">            StringBuilder buf = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i : argumentIndex) &#123;</span><br><span class="line">                <span class="keyword">if</span> (i &gt;= <span class="number">0</span> &amp;&amp; i &lt; args.length) &#123;</span><br><span class="line">                    buf.append(args[i]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> buf.toString();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> Invoker&lt;T&gt; <span class="title">selectForKey</span><span class="params">(<span class="keyword">long</span> hash)</span> </span>&#123;</span><br><span class="line">            Map.Entry&lt;Long, Invoker&lt;T&gt;&gt; entry = virtualInvokers.ceilingEntry(hash);</span><br><span class="line">            <span class="keyword">if</span> (entry == <span class="keyword">null</span>) &#123;</span><br><span class="line">                entry = virtualInvokers.firstEntry();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> entry.getValue();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">hash</span><span class="params">(<span class="keyword">byte</span>[] digest, <span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> (((<span class="keyword">long</span>) (digest[<span class="number">3</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">24</span>)</span><br><span class="line">                    | ((<span class="keyword">long</span>) (digest[<span class="number">2</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">16</span>)</span><br><span class="line">                    | ((<span class="keyword">long</span>) (digest[<span class="number">1</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">8</span>)</span><br><span class="line">                    | (digest[number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>))</span><br><span class="line">                    &amp; <span class="number">0xFFFFFFFFL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>该类为<code>ConsistentHashLoadBalance</code> 的内部类，其实现了一致性hash的核心逻辑</p>
-<ol>
-<li>获取<code>Invocation</code>的参数生成一个字符类型的key</li>
-<li>生成该key的MD5字节数组</li>
-<li>对该字节数组进行<code>hash</code> 获取一个long型的hash值</li>
-<li>根据该hash值从<code>virtualInvokers</code>里拿到与之对应的<code>Invoker</code>对象</li>
-</ol>
-</li>
-<li><p>ConsistentHashSelector 实例对象的生成逻辑</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.replicaNumber = url.getMethodParameter(methodName, HASH_NODES, <span class="number">160</span>);</span><br></pre></td></tr></table></figure>
-
-<p>副本数量赋值为 url方法参数？这是个什么意思</p>
-</li>
-</ul>
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="hashcode"><a href="#hashcode" class="headerlink" title="hashcode()"></a>hashcode()</h3><ul>
-<li><p>hashcode()</p>
-<p>Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by java.util.HashMap.</p>
-<p>从上述信息可以获知，hashCode方法将会返回一个int型的hash code值，这会对<code>hash table</code>很有益,看看<code>HashMap</code> 在哪里用到了<code>HashCode</code>方法也就是可以通过hashCode 来区分对象是否是同一个。使得对象均匀的分布在散列表里头</p>
-</li>
-</ul>
-<h3 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h3><ul>
-<li>扩容，普通hash的扩容可能会影响所有元素的移动</li>
-</ul>
-<h3 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h3><p><strong>背景</strong></p>
-<p>在分布式系统中，节点的宕机、某个节点加入或者移出集群是常事。对于分布式存储而言，假设存储集群中有10台机子，如果采用Hash方式对数据分片(即将数据根据哈希函数映射到某台机器上存储)，哈希函数应该是这样的：hash(file) % 10。根据上面的介绍，扩容是非常不利的，如果要添加一台机器，很多已经存储到机器上的文件都需要重新分配移动，如果文件很大，这种移动就造成网络的负载。</p>
-<p>在一致性哈希中，机器节点变成了<code>hash表</code>的桶，桶的变化引发的重新hash，而普通hash的重新hash是由元素的增加导致的重新哈希<code>reHash</code></p>
-<p>不管是普通哈希，还是一致性哈希，最核心的诉求是<strong>减少数据的移动</strong>，这种移动包括内存中的移动，或者是数据在机器节点中的移动。一致性哈希，其实就是<strong>把哈希函数可映射空间即普通哈希中桶的数目固定下来了</strong></p>
-<p>势必需要引入一个中间的东东，通过这个中间人维护外部与内部的映射关系。</p>
-<p><strong>解决</strong></p>
-<p>引入一个环，划分区间，这样节点的减少和增加只会影响到部分数据.相比于普通哈希方式，<strong>一致性哈希的好处就是：当添加新机器或者删除机器时，不会影响到全部数据的存储，而只是影响到这台机器上所存储的数据(落在这台机器所负责的环上的数据)。</strong></p>
-<p><img src="https://raw.githubusercontent.com/coy0725/Figure-bed/typora/img/715283-20160811153507027-302498592.png" alt="img"></p>
-<h2 id="功能目标"><a href="#功能目标" class="headerlink" title="功能目标"></a>功能目标</h2><h2 id="设计实现"><a href="#设计实现" class="headerlink" title="设计实现"></a>设计实现</h2><p>这些算法实现移位操作有迹可循吗？？？</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://www.cnblogs.com/hapjin/p/5760463.html" target="_blank" rel="noopener">分布式hash算法</a></p>
-<p><a href="https://blog.csdn.net/cywosp/article/details/23397179" target="_blank" rel="noopener">五分钟理解一致性哈希算法(consistent hashing)</a></p>
-<p><a href="https://www.acodersjourney.com/system-design-interview-consistent-hashing/" target="_blank" rel="noopener">system-design-interview-consistent-hashing</a></p>
-<p><a href="https://www.codeproject.com/Articles/56138/Consistent-hashing" target="_blank" rel="noopener">Consistent hashing</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-mybatis-缓存" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/">mybatis-缓存</a>
-    </h1>
-  
-
-        
-        <a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2021-05-16T03:44:04.627Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>mybatis缓存</p>
-<p>装饰器模式</p>
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><h3 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h3><ul>
-<li>JVM中最普遍的引用，我们常用的赋值操作就是强引用</li>
-</ul>
-<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><ul>
-<li>当JVM内存不足时，GCオ会回收那些只被软引用指向的对象</li>
-<li>特别适合做缓存，因为缓存中的数据可以从数据库中恢复0<br>所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象</li>
-<li>当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉。</li>
-</ul>
-<p>实现类</p>
-<p><code>SoftReference</code></p>
-<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-spring-guide Redis 消息服务构建" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">spring-guide Redis 消息服务构建</a>
-    </h1>
-  
-
-        
-        <a href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/" class="archive-article-date">
-  	<time datetime="2020-03-09T13:52:53.476Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Redis 消息服务构建</p>
-<p>需要做哪些工作呢？</p>
-<ol>
-<li>需要启动一个redis服务实例</li>
-<li>redis和springboot的整合</li>
-</ol>
-<p>会涉及哪些概念？</p>
-<p>消息生产者，消息接收者，主题</p>
-<p>消息接收者怎么定义呢？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Receiver</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(Receiver<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> AtomicInteger counter = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receiveMessage</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        LOGGER.info(<span class="string">"Received &lt;"</span> + message + <span class="string">"&gt;"</span>);</span><br><span class="line">        counter.incrementAndGet();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> counter.get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接收方是一个POJO，它定义了接收消息的方法。当您将接收方注册为消息侦听器时，您可以随意命名消息处理方法</p>
-<p>注册监听者和发送消息</p>
-<ul>
-<li>监听者注册到哪？<ul>
-<li>message listener</li>
-</ul>
-</li>
-<li>使用谁发送消息<ul>
-<li>Redis template</li>
-</ul>
-</li>
-</ul>
-<p>Spring Data Redis提供了使用Redis发送和接收消息所需的所有组件。具体来说，您需要配置</p>
-<ul>
-<li>A connection factory</li>
-<li>A message listener container</li>
-<li>A Redis template</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessagingRedisApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(MessagingRedisApplication<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">RedisMessageListenerContainer <span class="title">container</span><span class="params">(RedisConnectionFactory connectionFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">			MessageListenerAdapter listenerAdapter)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		RedisMessageListenerContainer container = <span class="keyword">new</span> RedisMessageListenerContainer();</span><br><span class="line">        <span class="comment">//设置消息监听连接工厂</span></span><br><span class="line">		container.setConnectionFactory(connectionFactory);</span><br><span class="line">        <span class="comment">//设置消息监听者 监控哪个主题</span></span><br><span class="line">		container.addMessageListener(listenerAdapter, <span class="keyword">new</span> PatternTopic(<span class="string">"chat"</span>));</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> container;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//redis的消息接收者需要接收消息，也需要监听主题，使用对象适配器完成此项工作，适配器模式，需要指定接收消息之后调用哪个方法</span></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">MessageListenerAdapter <span class="title">listenerAdapter</span><span class="params">(Receiver receiver)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> MessageListenerAdapter(receiver, <span class="string">"receiveMessage"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">Receiver <span class="title">receiver</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> Receiver();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">StringRedisTemplate <span class="title">template</span><span class="params">(RedisConnectionFactory connectionFactory)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> StringRedisTemplate(connectionFactory);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">		ApplicationContext ctx = SpringApplication.run(MessagingRedisApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line"></span><br><span class="line">		StringRedisTemplate template = ctx.getBean(StringRedisTemplate<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">		Receiver receiver = ctx.getBean(Receiver<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span> (receiver.getCount() == <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">			LOGGER.info(<span class="string">"Sending message..."</span>);</span><br><span class="line">			template.convertAndSend(<span class="string">"chat"</span>, <span class="string">"Hello from Redis!"</span>);</span><br><span class="line">			Thread.sleep(<span class="number">500L</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		System.exit(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public MessageListenerAdapter(Object delegate, String defaultListenerMethod) &#123;    this(delegate);    this.setDefaultListenerMethod(defaultListenerMethod);&#125;</span><br></pre></td></tr></table></figure>
-
-<p>redis containner监听方法代码如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">private void lazyListen() &#123;</span><br><span class="line">        boolean debug &#x3D; this.logger.isDebugEnabled();</span><br><span class="line">        boolean started &#x3D; false;</span><br><span class="line">        if (this.isRunning() &amp;&amp; !this.listening) &#123;</span><br><span class="line">            synchronized(this.monitor) &#123;</span><br><span class="line">                if (!this.listening &amp;&amp; (this.channelMapping.size() &gt; 0 || this.patternMapping.size() &gt; 0)) &#123;</span><br><span class="line">                &#x2F;&#x2F;执行器 执行任务</span><br><span class="line">                    this.subscriptionExecutor.execute(this.subscriptionTask);</span><br><span class="line">                    this.listening &#x3D; true;</span><br><span class="line">                    started &#x3D; true;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (debug) &#123;</span><br><span class="line">                if (started) &#123;</span><br><span class="line">                    this.logger.debug(&quot;Started listening for Redis messages&quot;);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    this.logger.debug(&quot;Postpone listening for Redis messages until actual listeners are added&quot;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用到了哪些技术？</p>
-<ul>
-<li>redis</li>
-<li>对象适配器模式</li>
-<li>观察者模式</li>
-<li>代理模式</li>
-<li>消息</li>
-</ul>
-<p><img src="https://raw.githubusercontent.com/coy0725/Figure-bed/typora/img/image-20200309204028440.png" alt="image-20200309204028440"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">展开全文 >></a>
         </p>
       
 

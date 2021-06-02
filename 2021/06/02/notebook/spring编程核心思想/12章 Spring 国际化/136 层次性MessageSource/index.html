@@ -8,19 +8,21 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>notebook/20210601-propertySourceLocator | Hexo</title>
+  <title>notebook/spring编程核心思想/12章 Spring 国际化/136 层次性MessageSource | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="背景小马哥训练营第26节 分布式配置 作业基于文件系统为spring cloud 提供PropertySourceLocator实现  配置文件命名规则（META-INF&#x2F;config&#x2F;default.properties 或者 META-INF&#x2F;config&#x2F;default.yaml）  可选：实现文件修改通知">
+  <meta name="description" content="[toc] 系统之美 系统的三个基本特性：适应力，自组织，层次性。其中就有层次性。 如何理解层次性？复杂系统的基本特征之一。 Spring 层次性接口回顾o.s.context.ApplicationContext org.springframework.context.ApplicationContext#getParent  org.springframework.context.Config">
 <meta property="og:type" content="article">
-<meta property="og:title" content="notebook&#x2F;20210601-propertySourceLocator">
-<meta property="og:url" content="http://yoursite.com/2021/06/01/notebook/20210601-propertySourceLocator/index.html">
+<meta property="og:title" content="notebook&#x2F;spring编程核心思想&#x2F;12章 Spring 国际化&#x2F;136 层次性MessageSource">
+<meta property="og:url" content="http://yoursite.com/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/136%20%E5%B1%82%E6%AC%A1%E6%80%A7MessageSource/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="背景小马哥训练营第26节 分布式配置 作业基于文件系统为spring cloud 提供PropertySourceLocator实现  配置文件命名规则（META-INF&#x2F;config&#x2F;default.properties 或者 META-INF&#x2F;config&#x2F;default.yaml）  可选：实现文件修改通知">
+<meta property="og:description" content="[toc] 系统之美 系统的三个基本特性：适应力，自组织，层次性。其中就有层次性。 如何理解层次性？复杂系统的基本特征之一。 Spring 层次性接口回顾o.s.context.ApplicationContext org.springframework.context.ApplicationContext#getParent  org.springframework.context.Config">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-06-01T13:47:05.546Z">
-<meta property="article:modified_time" content="2021-06-01T14:07:07.187Z">
+<meta property="og:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210602220208433.png">
+<meta property="article:published_time" content="2021-06-02T13:18:42.660Z">
+<meta property="article:modified_time" content="2021-06-02T14:22:01.998Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210602220208433.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -168,34 +170,56 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-notebook/20210601-propertySourceLocator" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/136 层次性MessageSource" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      notebook/20210601-propertySourceLocator
+      notebook/spring编程核心思想/12章 Spring 国际化/136 层次性MessageSource
     </h1>
   
 
         
-        <a href="/2021/06/01/notebook/20210601-propertySourceLocator/" class="archive-article-date">
-  	<time datetime="2021-06-01T13:47:05.546Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-01</time>
+        <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/136%20%E5%B1%82%E6%AC%A1%E6%80%A7MessageSource/" class="archive-article-date">
+  	<time datetime="2021-06-02T13:18:42.660Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-02</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>小马哥训练营第26节 分布式配置</p>
-<h1 id="作业"><a href="#作业" class="headerlink" title="作业"></a>作业</h1><p>基于文件系统为spring cloud 提供PropertySourceLocator实现</p>
-<ul>
-<li><p>配置文件命名规则（META-INF/config/default.properties 或者 META-INF/config/default.yaml）</p>
+        <p>[toc]</p>
+<p>系统之美</p>
+<p>系统的三个基本特性：适应力，自组织，层次性。其中就有层次性。</p>
+<h2 id="如何理解层次性？"><a href="#如何理解层次性？" class="headerlink" title="如何理解层次性？"></a>如何理解层次性？</h2><p>复杂系统的基本特征之一。</p>
+<h2 id="Spring-层次性接口回顾"><a href="#Spring-层次性接口回顾" class="headerlink" title="Spring 层次性接口回顾"></a>Spring 层次性接口回顾</h2><h3 id="o-s-context-ApplicationContext"><a href="#o-s-context-ApplicationContext" class="headerlink" title="o.s.context.ApplicationContext"></a>o.s.context.ApplicationContext</h3><ul>
+<li><p>org.springframework.context.ApplicationContext#getParent</p>
 </li>
-<li><p>可选：实现文件修改通知</p>
+<li><p>org.springframework.context.ConfigurableApplicationContext</p>
+</li>
+<li><p>org.springframework.context.ConfigurableApplicationContext#setParent</p>
 </li>
 </ul>
+<h3 id="o-s-beans-factory-HierarchicalBeanFactory"><a href="#o-s-beans-factory-HierarchicalBeanFactory" class="headerlink" title="o.s.beans.factory.HierarchicalBeanFactory"></a>o.s.beans.factory.HierarchicalBeanFactory</h3><p>org.springframework.beans.factory.HierarchicalBeanFactory#getParentBeanFactory</p>
+<p>org.springframework.beans.factory.config.ConfigurableBeanFactory#setParentBeanFactory</p>
+<ul>
+<li>containsLocalBean 判断当前IOC容器（BeanFactory）是否有这个Bean</li>
+<li>containsBean  会搜索层次性的BeanFactory</li>
+</ul>
+<h3 id="o-s-beans-factory-config-BeanDefinition"><a href="#o-s-beans-factory-config-BeanDefinition" class="headerlink" title="o.s.beans.factory.config.BeanDefinition"></a>o.s.beans.factory.config.BeanDefinition</h3><p>BeanDefinition是可以合并的，那么它必然就会有一个parent，但是其不像前面的接口返回一个<code>BeanDefinition</code>实例，而是返回它关联的BeanDefinition的一个名称，即getParentName</p>
+<p>为什么呢？</p>
+<p>因为早期BeanDefinition的实现是基于xml或Properties文件，从文本关系里去分析，是很难得到它的一个parent，而是得到patent的一个指引。Parent BeanDefinition的名称</p>
+<h3 id="层次性国际化接口o-s-c-HierarchicalMessageSource"><a href="#层次性国际化接口o-s-c-HierarchicalMessageSource" class="headerlink" title="层次性国际化接口o.s.c.HierarchicalMessageSource"></a>层次性国际化接口o.s.c.HierarchicalMessageSource</h3><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210602220208433.png" alt="image-20210602220208433"></p>
+<p>按照正常spring的命名规则他应该有一个</p>
+<p>HierarchicalMessageSource仅提供getParentMessageSourcef方法</p>
+<p>而在ConfigurableMessageSource中提供setParentMessageSource方法</p>
+<h2 id="收获-Spring命名哲学"><a href="#收获-Spring命名哲学" class="headerlink" title="收获-Spring命名哲学"></a>收获-Spring命名哲学</h2><p>ConfigurableXXX,会有一些set方法，提供可配置的能力</p>
+<p>而HierarchicalXX,提供getParentXX，提供获取双亲信息的能力</p>
+<h2 id="层次性设计"><a href="#层次性设计" class="headerlink" title="层次性设计"></a>层次性设计</h2><p>层次性设计并非Spring的原创，我们所谓的ClassLoader默认就具有层次性，于此同时再Java标准的国际化接口里ResourceBoundle里面也有。</p>
+<h3 id="如何理解层次性？-1"><a href="#如何理解层次性？-1" class="headerlink" title="如何理解层次性？"></a>如何理解层次性？</h3><p>遗传与变异，可以继承双亲的一些属性。</p>
+<h3 id="层次性设计的好处"><a href="#层次性设计的好处" class="headerlink" title="层次性设计的好处"></a>层次性设计的好处</h3><p>当你当前找不到的时候，或者看你的实现，是先找parent还是先找child都行。搜索范围搜索路径更广了，更有弹性。</p>
 
       
 
@@ -275,7 +299,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/06/01/notebook/20210601-propertySourceLocator/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/136%20%E5%B1%82%E6%AC%A1%E6%80%A7MessageSource/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -289,18 +313,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/137-Java%E5%9B%BD%E9%99%85%E5%8C%96%E6%A0%87%E5%87%86%E5%AE%9E%E7%8E%B0%20ResourceBundle/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          notebook/spring编程核心思想/12章 Spring 国际化/134-Spring国际化使用场景
+          notebook/spring编程核心思想/12章 Spring 国际化/137-Java国际化标准实现 ResourceBundle
         
       </div>
     </a>
   
   
-    <a href="/2021/06/01/notebook/%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/job%20describe/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">notebook/面试准备/job describe</div>
+    <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/135-Spring%20%E5%9B%BD%E9%99%85%E5%8C%96%E6%8E%A5%E5%8F%A3/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">notebook/spring编程核心思想/12章 Spring 国际化/135-Spring 国际化接口</div>
       <i class="icon-circle-right"></i>
     </a>
   
