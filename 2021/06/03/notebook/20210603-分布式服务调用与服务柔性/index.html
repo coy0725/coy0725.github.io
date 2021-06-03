@@ -8,13 +8,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Hexo</title>
+  <title>notebook/20210603-分布式服务调用与服务柔性 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/page/2/index.html">
+  <meta name="description" content="[toc] Apache Dubbo 都是分布式的基础 spring cloud openFeign 强依赖与web 核心组件 Feign- openFeign, 灵感      jarsey jax-rs的实现 通过Java接口方式声明目标Rest服务契约，通过调用Java方法来屏蔽调用底层HTTP方法的复杂度。 注解支持  Feign注解 jax-rs注解 JAXRS 2.x  扩展机制是什么">
+<meta property="og:type" content="article">
+<meta property="og:title" content="notebook&#x2F;20210603-分布式服务调用与服务柔性">
+<meta property="og:url" content="http://yoursite.com/2021/06/03/notebook/20210603-%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E4%B8%8E%E6%9C%8D%E5%8A%A1%E6%9F%94%E6%80%A7/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[toc] Apache Dubbo 都是分布式的基础 spring cloud openFeign 强依赖与web 核心组件 Feign- openFeign, 灵感      jarsey jax-rs的实现 通过Java接口方式声明目标Rest服务契约，通过调用Java方法来屏蔽调用底层HTTP方法的复杂度。 注解支持  Feign注解 jax-rs注解 JAXRS 2.x  扩展机制是什么">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-03T12:02:03.829Z">
+<meta property="article:modified_time" content="2021-06-03T15:19:15.056Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
   
@@ -164,100 +168,97 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-notebook/20210519-异步 async" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-notebook/20210603-分布式服务调用与服务柔性" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/">notebook/20210519-异步 async</a>
+    <h1 class="article-title" itemprop="name">
+      notebook/20210603-分布式服务调用与服务柔性
     </h1>
   
 
         
-        <a href="/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/" class="archive-article-date">
-  	<time datetime="2021-05-20T02:12:20.973Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-20</time>
+        <a href="/2021/06/03/notebook/20210603-%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E4%B8%8E%E6%9C%8D%E5%8A%A1%E6%9F%94%E6%80%A7/" class="archive-article-date">
+  	<time datetime="2021-06-03T12:02:03.829Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-03</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="一般异步系统"><a href="#一般异步系统" class="headerlink" title="一般异步系统"></a>一般异步系统</h1><p>从字面意思上来理解，异步是一个形容词，是对某种行为的描述。单从<code>异步 async</code>一词很难理解到底是什么意思。缺少相应的语境和上下文信息。</p>
-<p>如果从一般系统思维的方式去解析的话需要了解以下信息</p>
+        <p>[toc]</p>
+<p>Apache Dubbo</p>
+<p>都是分布式的基础</p>
+<p>spring cloud openFeign</p>
+<p>强依赖与web</p>
+<p>核心组件</p>
+<p>Feign-</p>
+<p>openFeign, 灵感     </p>
+<p>jarsey jax-rs的实现</p>
+<p>通过Java接口方式声明目标Rest服务契约，通过调用Java方法来屏蔽调用底层HTTP方法的复杂度。</p>
+<p>注解支持</p>
 <ul>
-<li>异步行为的参与者</li>
-<li>异步行为的功能或目标</li>
-<li>异步行为参与者之间的关系</li>
+<li>Feign注解</li>
+<li>jax-rs注解</li>
+<li>JAXRS 2.x</li>
 </ul>
-<h2 id="异步相关概念"><a href="#异步相关概念" class="headerlink" title="异步相关概念"></a><code>异步</code>相关概念</h2><ul>
-<li>IO</li>
-<li>RPC服务调用</li>
-<li>servlet异步</li>
-<li>webFlux</li>
+<p>扩展机制是什么？</p>
+<p>整合是如何去实现的？</p>
+<p>序列与反序列化</p>
+<h2 id="序列化支持-Decoder-Encoder"><a href="#序列化支持-Decoder-Encoder" class="headerlink" title="序列化支持-Decoder-Encoder"></a>序列化支持-Decoder-Encoder</h2><ul>
+<li>json<ul>
+<li>Gson</li>
+<li>Jackson</li>
 </ul>
-<h1 id="异步IO模型"><a href="#异步IO模型" class="headerlink" title="异步IO模型"></a>异步IO模型</h1><h2 id="参与者"><a href="#参与者" class="headerlink" title="参与者"></a>参与者</h2><ul>
-<li><p>用户线程</p>
 </li>
-<li><p>系统内核</p>
-</li>
+<li>xml<ul>
+<li>SAX（simple Api for xml）</li>
+<li>JAXB(java xml for bingding)</li>
+<li>SOAP</li>
 </ul>
-<blockquote>
-<p>如何确定异步IO模型中的参与者呢？假设从数据流经的节点来分析的话，参与者有用户缓冲区、内核缓冲区、磁盘</p>
-<p>但从另一方面来讲异步行为的主体应该是用户线程和系统内核</p>
-</blockquote>
-<h2 id="数据流经节点"><a href="#数据流经节点" class="headerlink" title="数据流经节点"></a>数据流经节点</h2><ul>
-<li>用户缓冲区</li>
-<li>内核缓冲区</li>
-<li>物理设备</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用户缓冲区-&gt;内核缓冲区: write系统调用</span><br><span class="line">内核缓冲区--&gt;物理磁盘: 操作系统决定何时写入磁盘</span><br></pre></td></tr></table></figure>
-
-<h2 id="同步与异步-Netty、-Redis、-Zookeeper高并发实战"><a href="#同步与异步-Netty、-Redis、-Zookeeper高并发实战" class="headerlink" title="同步与异步[^  Netty、 Redis、 Zookeeper高并发实战]"></a>同步与异步[^  Netty、 Redis、 Zookeeper高并发实战]</h2><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519154012758.png"  />
-
-<p>从上图可以获取到的信息是，首先要确定观察者。站在用户线程的角度来说，异步是系统内核发起IO请求，同步是指用户空间的线程发起IO请求。</p>
-<p>引入新的概念<code>用户空间</code>和<code>内核空间</code>。系统内核发起IO请求，系统内核与用户线程如何关联，是不是用户线程首先需要声明当系统内核调用时会触发的动作？</p>
-<h2 id="异步IO读流程"><a href="#异步IO读流程" class="headerlink" title="异步IO读流程"></a>异步IO读流程</h2><p>（1）当用户线程发起了read系统调用，立刻就可以开始去做其他的事，用户线程不阻塞。</p>
-<p>（2）内核就开始了IO的第一个阶段：准备数据。等到数据准备好了，内核就会将数据从内核缓冲区复制到用户缓冲区（用户空间的内存）。</p>
-<p>（3）内核会给用户线程发送一个信号（Signal），或者回调用户线程注册的回调接口，告诉用户线程read操作完成了。</p>
-<p>（4）用户线程读取用户缓冲区的数据，完成后续的业务操作。</p>
-<h2 id="异步IO优缺点"><a href="#异步IO优缺点" class="headerlink" title="异步IO优缺点"></a>异步IO优缺点</h2><p><strong>两个阶段都不会阻塞</strong></p>
-<ol>
-<li><p>内核等待数据</p>
-</li>
-<li><p>内核将数据从内核缓冲区复制到用户缓冲区</p>
-</li>
-</ol>
-<p><strong>特点</strong>：在内核等待数据和复制数据的两个阶段，用户线程都不是阻塞的。用户线程需要接收内核的IO操作完成的事件，或者用户线程需要注册一个IO操作完成的回调函数。正因为如此，异步IO有的时候也被称为信号驱动IO。</p>
-<p><strong>缺点</strong>：应用程序仅需要进行事件的注册与接收，其余的工作都留给了操作系统，也就是说，需要底层内核提供支持</p>
-<p>感觉同步和阻塞的语义是有重合的，用户线程在异步IO读的时候是非阻塞的。异步是实现非阻塞的一种手段？</p>
-<h1 id="Servlet非阻塞IO"><a href="#Servlet非阻塞IO" class="headerlink" title="Servlet非阻塞IO"></a>Servlet非阻塞IO</h1><p>Web 容器中的非阻塞请求处理有助于提高对改善 Web 容器可扩展性不断增加的需求，增加 Web 容器可同时处理请求的连接数量。servlet容器的非阻塞IO允许开发人员在数据可用时读取数据或在数据可写时写数据</p>
-<p>组件 </p>
-<ul>
-<li><p><code>ReadListener</code> 监听Read</p>
-</li>
-<li><p><code>AsyncContext</code>  异步上下文</p>
 </li>
 </ul>
-<h2 id="spring-的-reactive-实现"><a href="#spring-的-reactive-实现" class="headerlink" title="spring 的 reactive 实现"></a>spring 的 reactive 实现</h2><p>所以如何利用非阻塞IO的api来进行编程呢?</p>
-<p>那就看下spring的实现吧</p>
-<p><code>ServletServerHttpRequest</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestBodyPublisherReadListener</span> <span class="keyword">implements</span> <span class="title">ReadListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDataAvailable</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">				RequestBodyPublisher.<span class="keyword">this</span>.onDataAvailable();</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAllDataRead</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">				RequestBodyPublisher.<span class="keyword">this</span>.onAllDataRead();</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable throwable)</span> </span>&#123;</span><br><span class="line">				RequestBodyPublisher.<span class="keyword">this</span>.onError(throwable);</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>RequestBodyPublisherReadListener</code> 将任务委托给了<code>RequestBodyPublisher</code></p>
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519223344340.png" alt="image-20210519223344340"></p>
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519223629933.png" alt="image-20210519223629933"></p>
-<p>实现了reactive Stream流的Publisher接口。</p>
-<p>有点复杂，整不明白。</p>
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519224356662.png" alt="image-20210519224356662"></p>
-<p>枚举这样玩，是真的秀。</p>
-<p>Publisher实现的抽象基类，bridge between event-listener read APIs and Reactive Streams </p>
+<h2 id="Http-客户端支持"><a href="#Http-客户端支持" class="headerlink" title="Http 客户端支持"></a>Http 客户端支持</h2><ul>
+<li>jdk http client</li>
+<li>OkHttp</li>
+<li>java 11 Http 2</li>
+</ul>
+<h2 id="负载均衡-client"><a href="#负载均衡-client" class="headerlink" title="负载均衡-client"></a>负载均衡-client</h2><ul>
+<li>Ribbon</li>
+</ul>
+<p>接口在迁移过程中，</p>
+<p>A</p>
+<p>B 应用名称不一样</p>
+<h3 id="方法参数类型转换器-ConversionService"><a href="#方法参数类型转换器-ConversionService" class="headerlink" title="方法参数类型转换器-ConversionService"></a>方法参数类型转换器-ConversionService</h3><p>参数类型</p>
+<h4 id="HTTP-消息序列化与反序列化"><a href="#HTTP-消息序列化与反序列化" class="headerlink" title="HTTP 消息序列化与反序列化"></a>HTTP 消息序列化与反序列化</h4><p>HttpMessageConverter</p>
+<p>解决构造器注入</p>
+<p>负载均衡的实现</p>
 
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -266,16 +267,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/06/03/notebook/20210603-%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E4%B8%8E%E6%9C%8D%E5%8A%A1%E6%9F%94%E6%80%A7/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/137-Java%E5%9B%BD%E9%99%85%E5%8C%96%E6%A0%87%E5%87%86%E5%AE%9E%E7%8E%B0%20ResourceBundle/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">notebook/spring编程核心思想/12章 Spring 国际化/137-Java国际化标准实现 ResourceBundle</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -295,770 +355,14 @@
 
 
 
-
-  
-    <article id="post-notebook/20210517-分布式一致Hash" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/">notebook/20210517-分布式一致Hash</a>
-    </h1>
-  
-
-        
-        <a href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/" class="archive-article-date">
-  	<time datetime="2021-05-18T15:29:20.051Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="训练营第22节稳定性提升课后作业"><a href="#训练营第22节稳定性提升课后作业" class="headerlink" title="训练营第22节稳定性提升课后作业"></a>训练营第22节稳定性提升课后作业</h3><ul>
-<li><p>通过 Java 实现两种（以及）更多的一致性 Hash 算法（可选）实现服务节点动态更新</p>
-</li>
-<li><p>参考<code>org.apache.dubbo.rpc.cluster.loadbalance.ConsistentHashLoadBalance</code></p>
-</li>
-</ul>
-<h3 id="ConsistentHashLoadBalance"><a href="#ConsistentHashLoadBalance" class="headerlink" title="ConsistentHashLoadBalance"></a><code>ConsistentHashLoadBalance</code></h3><p>从名称上来看，一致性hash负载均衡</p>
-<ul>
-<li><p><code>LoadBalance</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SPI</span>(RandomLoadBalance.NAME)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">LoadBalance</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * select one invoker in list.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invokers   invokers.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> url        refer url</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> invocation invocation.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> selected invoker.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Adaptive</span>(<span class="string">"loadbalance"</span>)</span><br><span class="line">    &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> <span class="keyword">throws</span> RpcException</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>该接口为负载均衡的核心接口，目前能够获取的信息为从<code>Invoker</code>集合中选出一个<code>Invoker</code>，所以其核心是如何选出该<code>Invoker</code>?</p>
-</li>
-<li><p><code>AbstractLoadBalance</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;T&gt; <span class="function">Invoker&lt;T&gt; <span class="title">select</span><span class="params">(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (CollectionUtils.isEmpty(invokers)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (invokers.size() == <span class="number">1</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> invokers.get(<span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> doSelect(invokers, url, invocation);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>该接口实现了<code>LoadBalance</code>的共用逻辑，处理<code>Invoker</code>对象为空和只有一个<code>Invoker</code>对象的情况，其他情况由子类实现<code>doSelect</code>方法去实现</p>
-</li>
-<li><p><code>ConsistentHashSelector&lt;T&gt;</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsistentHashSelector</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> TreeMap&lt;Long, Invoker&lt;T&gt;&gt; virtualInvokers;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> replicaNumber;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> identityHashCode;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[] argumentIndex;</span><br><span class="line"></span><br><span class="line">        ConsistentHashSelector(List&lt;Invoker&lt;T&gt;&gt; invokers, String methodName, <span class="keyword">int</span> identityHashCode) &#123;</span><br><span class="line">            <span class="keyword">this</span>.virtualInvokers = <span class="keyword">new</span> TreeMap&lt;Long, Invoker&lt;T&gt;&gt;();</span><br><span class="line">            <span class="keyword">this</span>.identityHashCode = identityHashCode;</span><br><span class="line">            URL url = invokers.get(<span class="number">0</span>).getUrl();</span><br><span class="line">            <span class="keyword">this</span>.replicaNumber = url.getMethodParameter(methodName, HASH_NODES, <span class="number">160</span>);</span><br><span class="line">            String[] index = COMMA_SPLIT_PATTERN.split(url.getMethodParameter(methodName, HASH_ARGUMENTS, <span class="string">"0"</span>));</span><br><span class="line">            argumentIndex = <span class="keyword">new</span> <span class="keyword">int</span>[index.length];</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; index.length; i++) &#123;</span><br><span class="line">                argumentIndex[i] = Integer.parseInt(index[i]);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> (Invoker&lt;T&gt; invoker : invokers) &#123;</span><br><span class="line">                String address = invoker.getUrl().getAddress();</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; replicaNumber / <span class="number">4</span>; i++) &#123;</span><br><span class="line">                    <span class="keyword">byte</span>[] digest = Bytes.getMD5(address + i);</span><br><span class="line">                    <span class="keyword">for</span> (<span class="keyword">int</span> h = <span class="number">0</span>; h &lt; <span class="number">4</span>; h++) &#123;</span><br><span class="line">                        <span class="keyword">long</span> m = hash(digest, h);</span><br><span class="line">                        virtualInvokers.put(m, invoker);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Invoker&lt;T&gt; <span class="title">select</span><span class="params">(Invocation invocation)</span> </span>&#123;</span><br><span class="line">            String key = toKey(invocation.getArguments());</span><br><span class="line">            <span class="keyword">byte</span>[] digest = Bytes.getMD5(key);</span><br><span class="line">            <span class="keyword">return</span> selectForKey(hash(digest, <span class="number">0</span>));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> String <span class="title">toKey</span><span class="params">(Object[] args)</span> </span>&#123;</span><br><span class="line">            StringBuilder buf = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i : argumentIndex) &#123;</span><br><span class="line">                <span class="keyword">if</span> (i &gt;= <span class="number">0</span> &amp;&amp; i &lt; args.length) &#123;</span><br><span class="line">                    buf.append(args[i]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> buf.toString();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> Invoker&lt;T&gt; <span class="title">selectForKey</span><span class="params">(<span class="keyword">long</span> hash)</span> </span>&#123;</span><br><span class="line">            Map.Entry&lt;Long, Invoker&lt;T&gt;&gt; entry = virtualInvokers.ceilingEntry(hash);</span><br><span class="line">            <span class="keyword">if</span> (entry == <span class="keyword">null</span>) &#123;</span><br><span class="line">                entry = virtualInvokers.firstEntry();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> entry.getValue();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">hash</span><span class="params">(<span class="keyword">byte</span>[] digest, <span class="keyword">int</span> number)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> (((<span class="keyword">long</span>) (digest[<span class="number">3</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">24</span>)</span><br><span class="line">                    | ((<span class="keyword">long</span>) (digest[<span class="number">2</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">16</span>)</span><br><span class="line">                    | ((<span class="keyword">long</span>) (digest[<span class="number">1</span> + number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>) &lt;&lt; <span class="number">8</span>)</span><br><span class="line">                    | (digest[number * <span class="number">4</span>] &amp; <span class="number">0xFF</span>))</span><br><span class="line">                    &amp; <span class="number">0xFFFFFFFFL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>该类为<code>ConsistentHashLoadBalance</code> 的内部类，其实现了一致性hash的核心逻辑</p>
-<ol>
-<li>获取<code>Invocation</code>的参数生成一个字符类型的key</li>
-<li>生成该key的MD5字节数组</li>
-<li>对该字节数组进行<code>hash</code> 获取一个long型的hash值</li>
-<li>根据该hash值从<code>virtualInvokers</code>里拿到与之对应的<code>Invoker</code>对象</li>
-</ol>
-</li>
-<li><p>ConsistentHashSelector 实例对象的生成逻辑</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.replicaNumber = url.getMethodParameter(methodName, HASH_NODES, <span class="number">160</span>);</span><br></pre></td></tr></table></figure>
-
-<p>副本数量赋值为 url方法参数？这是个什么意思</p>
-</li>
-</ul>
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="hashcode"><a href="#hashcode" class="headerlink" title="hashcode()"></a>hashcode()</h3><ul>
-<li><p>hashcode()</p>
-<p>Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by java.util.HashMap.</p>
-<p>从上述信息可以获知，hashCode方法将会返回一个int型的hash code值，这会对<code>hash table</code>很有益,看看<code>HashMap</code> 在哪里用到了<code>HashCode</code>方法也就是可以通过hashCode 来区分对象是否是同一个。使得对象均匀的分布在散列表里头</p>
-</li>
-</ul>
-<h3 id="哈希"><a href="#哈希" class="headerlink" title="哈希"></a>哈希</h3><ul>
-<li>扩容，普通hash的扩容可能会影响所有元素的移动</li>
-</ul>
-<h3 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h3><p><strong>背景</strong></p>
-<p>在分布式系统中，节点的宕机、某个节点加入或者移出集群是常事。对于分布式存储而言，假设存储集群中有10台机子，如果采用Hash方式对数据分片(即将数据根据哈希函数映射到某台机器上存储)，哈希函数应该是这样的：hash(file) % 10。根据上面的介绍，扩容是非常不利的，如果要添加一台机器，很多已经存储到机器上的文件都需要重新分配移动，如果文件很大，这种移动就造成网络的负载。</p>
-<p>在一致性哈希中，机器节点变成了<code>hash表</code>的桶，桶的变化引发的重新hash，而普通hash的重新hash是由元素的增加导致的重新哈希<code>reHash</code></p>
-<p>不管是普通哈希，还是一致性哈希，最核心的诉求是<strong>减少数据的移动</strong>，这种移动包括内存中的移动，或者是数据在机器节点中的移动。一致性哈希，其实就是<strong>把哈希函数可映射空间即普通哈希中桶的数目固定下来了</strong></p>
-<p>势必需要引入一个中间的东东，通过这个中间人维护外部与内部的映射关系。</p>
-<p><strong>解决</strong></p>
-<p>引入一个环，划分区间，这样节点的减少和增加只会影响到部分数据.相比于普通哈希方式，<strong>一致性哈希的好处就是：当添加新机器或者删除机器时，不会影响到全部数据的存储，而只是影响到这台机器上所存储的数据(落在这台机器所负责的环上的数据)。</strong></p>
-<p><img src="https://raw.githubusercontent.com/coy0725/Figure-bed/typora/img/715283-20160811153507027-302498592.png" alt="img"></p>
-<h2 id="功能目标"><a href="#功能目标" class="headerlink" title="功能目标"></a>功能目标</h2><h2 id="设计实现"><a href="#设计实现" class="headerlink" title="设计实现"></a>设计实现</h2><p>这些算法实现移位操作有迹可循吗？？？</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a href="https://www.cnblogs.com/hapjin/p/5760463.html" target="_blank" rel="noopener">分布式hash算法</a></p>
-<p><a href="https://blog.csdn.net/cywosp/article/details/23397179" target="_blank" rel="noopener">五分钟理解一致性哈希算法(consistent hashing)</a></p>
-<p><a href="https://www.acodersjourney.com/system-design-interview-consistent-hashing/" target="_blank" rel="noopener">system-design-interview-consistent-hashing</a></p>
-<p><a href="https://www.codeproject.com/Articles/56138/Consistent-hashing" target="_blank" rel="noopener">Consistent hashing</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/18/notebook/20210517-%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4Hash/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-mybatis-缓存" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/">mybatis-缓存</a>
-    </h1>
-  
-
-        
-        <a href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/" class="archive-article-date">
-  	<time datetime="2021-05-16T03:44:04.627Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-16</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>mybatis缓存</p>
-<p>装饰器模式</p>
-<h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><h3 id="强引用"><a href="#强引用" class="headerlink" title="强引用"></a>强引用</h3><ul>
-<li>JVM中最普遍的引用，我们常用的赋值操作就是强引用</li>
-</ul>
-<h3 id="软引用"><a href="#软引用" class="headerlink" title="软引用"></a>软引用</h3><ul>
-<li>当JVM内存不足时，GCオ会回收那些只被软引用指向的对象</li>
-<li>特别适合做缓存，因为缓存中的数据可以从数据库中恢复0<br>所以即使因为JVM内存不足而被回收掉，也可以通过数据库恢复缓存中的对象</li>
-<li>当拿到一个软引用的时候，我们需要先判断其get（）方法返回值是否为null,如果为null 则表示之前已被回收掉。</li>
-</ul>
-<p>实现类</p>
-<p><code>SoftReference</code></p>
-<h3 id="弱引用"><a href="#弱引用" class="headerlink" title="弱引用"></a>弱引用</h3>
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/16/mybatis-%E7%BC%93%E5%AD%98/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-spring-guide Redis 消息服务构建" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">spring-guide Redis 消息服务构建</a>
-    </h1>
-  
-
-        
-        <a href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/" class="archive-article-date">
-  	<time datetime="2020-03-09T13:52:53.476Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Redis 消息服务构建</p>
-<p>需要做哪些工作呢？</p>
-<ol>
-<li>需要启动一个redis服务实例</li>
-<li>redis和springboot的整合</li>
-</ol>
-<p>会涉及哪些概念？</p>
-<p>消息生产者，消息接收者，主题</p>
-<p>消息接收者怎么定义呢？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Receiver</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(Receiver<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> AtomicInteger counter = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">receiveMessage</span><span class="params">(String message)</span> </span>&#123;</span><br><span class="line">        LOGGER.info(<span class="string">"Received &lt;"</span> + message + <span class="string">"&gt;"</span>);</span><br><span class="line">        counter.incrementAndGet();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> counter.get();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接收方是一个POJO，它定义了接收消息的方法。当您将接收方注册为消息侦听器时，您可以随意命名消息处理方法</p>
-<p>注册监听者和发送消息</p>
-<ul>
-<li>监听者注册到哪？<ul>
-<li>message listener</li>
-</ul>
-</li>
-<li>使用谁发送消息<ul>
-<li>Redis template</li>
-</ul>
-</li>
-</ul>
-<p>Spring Data Redis提供了使用Redis发送和接收消息所需的所有组件。具体来说，您需要配置</p>
-<ul>
-<li>A connection factory</li>
-<li>A message listener container</li>
-<li>A Redis template</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootApplication</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MessagingRedisApplication</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Logger LOGGER = LoggerFactory.getLogger(MessagingRedisApplication<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">RedisMessageListenerContainer <span class="title">container</span><span class="params">(RedisConnectionFactory connectionFactory,</span></span></span><br><span class="line"><span class="function"><span class="params">			MessageListenerAdapter listenerAdapter)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		RedisMessageListenerContainer container = <span class="keyword">new</span> RedisMessageListenerContainer();</span><br><span class="line">        <span class="comment">//设置消息监听连接工厂</span></span><br><span class="line">		container.setConnectionFactory(connectionFactory);</span><br><span class="line">        <span class="comment">//设置消息监听者 监控哪个主题</span></span><br><span class="line">		container.addMessageListener(listenerAdapter, <span class="keyword">new</span> PatternTopic(<span class="string">"chat"</span>));</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> container;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//redis的消息接收者需要接收消息，也需要监听主题，使用对象适配器完成此项工作，适配器模式，需要指定接收消息之后调用哪个方法</span></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">MessageListenerAdapter <span class="title">listenerAdapter</span><span class="params">(Receiver receiver)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> MessageListenerAdapter(receiver, <span class="string">"receiveMessage"</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">Receiver <span class="title">receiver</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> Receiver();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Bean</span></span><br><span class="line">	<span class="function">StringRedisTemplate <span class="title">template</span><span class="params">(RedisConnectionFactory connectionFactory)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> StringRedisTemplate(connectionFactory);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line"></span><br><span class="line">		ApplicationContext ctx = SpringApplication.run(MessagingRedisApplication<span class="class">.<span class="keyword">class</span>, <span class="title">args</span>)</span>;</span><br><span class="line"></span><br><span class="line">		StringRedisTemplate template = ctx.getBean(StringRedisTemplate<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">		Receiver receiver = ctx.getBean(Receiver<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">while</span> (receiver.getCount() == <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">			LOGGER.info(<span class="string">"Sending message..."</span>);</span><br><span class="line">			template.convertAndSend(<span class="string">"chat"</span>, <span class="string">"Hello from Redis!"</span>);</span><br><span class="line">			Thread.sleep(<span class="number">500L</span>);</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		System.exit(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public MessageListenerAdapter(Object delegate, String defaultListenerMethod) &#123;    this(delegate);    this.setDefaultListenerMethod(defaultListenerMethod);&#125;</span><br></pre></td></tr></table></figure>
-
-<p>redis containner监听方法代码如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">private void lazyListen() &#123;</span><br><span class="line">        boolean debug &#x3D; this.logger.isDebugEnabled();</span><br><span class="line">        boolean started &#x3D; false;</span><br><span class="line">        if (this.isRunning() &amp;&amp; !this.listening) &#123;</span><br><span class="line">            synchronized(this.monitor) &#123;</span><br><span class="line">                if (!this.listening &amp;&amp; (this.channelMapping.size() &gt; 0 || this.patternMapping.size() &gt; 0)) &#123;</span><br><span class="line">                &#x2F;&#x2F;执行器 执行任务</span><br><span class="line">                    this.subscriptionExecutor.execute(this.subscriptionTask);</span><br><span class="line">                    this.listening &#x3D; true;</span><br><span class="line">                    started &#x3D; true;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (debug) &#123;</span><br><span class="line">                if (started) &#123;</span><br><span class="line">                    this.logger.debug(&quot;Started listening for Redis messages&quot;);</span><br><span class="line">                &#125; else &#123;</span><br><span class="line">                    this.logger.debug(&quot;Postpone listening for Redis messages until actual listeners are added&quot;);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用到了哪些技术？</p>
-<ul>
-<li>redis</li>
-<li>对象适配器模式</li>
-<li>观察者模式</li>
-<li>代理模式</li>
-<li>消息</li>
-</ul>
-<p><img src="https://raw.githubusercontent.com/coy0725/Figure-bed/typora/img/image-20200309204028440.png" alt="image-20200309204028440"></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/03/09/spring-guide%20Redis%20%E6%B6%88%E6%81%AF%E6%9C%8D%E5%8A%A1%E6%9E%84%E5%BB%BA/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-spring guide之文件上传下载" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/09/spring%20guide%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD/">spring guide之文件上传下载</a>
-    </h1>
-  
-
-        
-        <a href="/2020/03/09/spring%20guide%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD/" class="archive-article-date">
-  	<time datetime="2020-03-09T11:08:04.375Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-09</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="学习文件上传"><a href="#学习文件上传" class="headerlink" title="学习文件上传"></a>学习文件上传</h1><p>我的思考路径</p>
-<h2 id="文件上传服务"><a href="#文件上传服务" class="headerlink" title="文件上传服务"></a>文件上传服务</h2><h3 id="1、前端上传文件"><a href="#1、前端上传文件" class="headerlink" title="1、前端上传文件"></a>1、前端上传文件</h3><ol>
-<li>前端页面，有一个输入框，点击之后，选择文件，将文件传给使用post方式传给后台接口</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;form method&#x3D;&quot;POST&quot; enctype&#x3D;&quot;multipart&#x2F;form-data&quot; action&#x3D;&quot;&#x2F;&quot;&gt;</span><br><span class="line">        &lt;table&gt;</span><br><span class="line">            &lt;tr&gt;</span><br><span class="line">                &lt;td&gt;File to upload:&lt;&#x2F;td&gt;</span><br><span class="line">                &lt;td&gt;&lt;input type&#x3D;&quot;file&quot; name&#x3D;&quot;file&quot; &#x2F;&gt;&lt;&#x2F;td&gt;</span><br><span class="line">            &lt;&#x2F;tr&gt;</span><br><span class="line">            &lt;tr&gt;</span><br><span class="line">                &lt;td&gt;确认上传&lt;&#x2F;td&gt;</span><br><span class="line">                &lt;td&gt;&lt;input type&#x3D;&quot;submit&quot; value&#x3D;&quot;Upload&quot;&#x2F;&gt;&lt;&#x2F;td&gt;</span><br><span class="line">            &lt;&#x2F;tr&gt;</span><br><span class="line">        &lt;&#x2F;table&gt;</span><br><span class="line">    &lt;&#x2F;form&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
-
-<p>​    <strong>知识点</strong></p>
-<ul>
-<li><p>表单组件<code>enctype=&quot;multipart/form-data&quot;</code>，<code>method=&quot;POST&quot;</code></p>
-</li>
-<li><p>input框  <code>type=&quot;file&quot; name=&quot;file&quot;</code></p>
-</li>
-</ul>
-<p>扩展</p>
-<p>input框有哪几种类型？</p>
-<p>答案23种<a href="https://blog.csdn.net/qq_36171618/article/details/80802588" target="_blank" rel="noopener">参考链接</a></p>
-<h3 id="2、controller层调用文件存储服务处理前端文件上传请求"><a href="#2、controller层调用文件存储服务处理前端文件上传请求" class="headerlink" title="2、controller层调用文件存储服务处理前端文件上传请求"></a>2、controller层调用文件存储服务处理前端文件上传请求</h3><ol start="2">
-<li>上传的数据类型是<code>multipart/form-data</code>，应该如何接受数据呢？文件保存接口怎么写？</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PostMapping</span>(<span class="string">"/"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">handleFileUpload</span><span class="params">(@RequestParam(<span class="string">"file"</span>)</span> MultipartFile file,</span></span><br><span class="line"><span class="function">                                   RedirectAttributes redirectAttributes) </span>&#123;</span><br><span class="line"></span><br><span class="line">        storageService.store(file);</span><br><span class="line">        redirectAttributes.addFlashAttribute(<span class="string">"message"</span>,</span><br><span class="line">                <span class="string">"You successfully uploaded "</span> + file.getOriginalFilename() + <span class="string">"!"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="string">"redirect:/"</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>知识点</p>
-<ul>
-<li>使用<code>MultipartFile</code>类获取文件</li>
-<li>@RequestParam(“file”)获取key为file的参数值，于前端页面定义的<code>name</code>字段匹配</li>
-</ul>
-<h3 id="3、文件存储服务将数据持久化"><a href="#3、文件存储服务将数据持久化" class="headerlink" title="3、文件存储服务将数据持久化"></a>3、文件存储服务将数据持久化</h3><ol start="3">
-<li><p>如何保存文件到本地磁盘呢？猜测大概需要哪些类，File，Path</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">store</span><span class="params">(MultipartFile file)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> (file.isEmpty()) &#123;</span><br><span class="line">				<span class="keyword">throw</span> <span class="keyword">new</span> StorageException(<span class="string">"Failed to store empty file "</span> + file.getOriginalFilename());</span><br><span class="line">			&#125;</span><br><span class="line">			Files.copy(file.getInputStream(), <span class="keyword">this</span>.rootLocation.resolve(file.getOriginalFilename()));</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> StorageException(<span class="string">"Failed to store file "</span> + file.getOriginalFilename(), e);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>知识点</strong></p>
-<p>Files类的copy方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">public static long copy(InputStream in, Path target, CopyOption... options)</span><br></pre></td></tr></table></figure>
-
-<p>MultipartFile类的    </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String getOriginalFilename();</span><br><span class="line">返回客户端系统原始的文件名，之前拼接过一次</span><br></pre></td></tr></table></figure>
-
-<p>Path类的resolve方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">path rootLocation&#x3D;&quot;D:\Pictures\upload&quot;</span><br><span class="line">假设原文件名为a.jpg,则拼接之后为&quot;D:\Pictures\upload\a.jpg&quot;</span><br></pre></td></tr></table></figure>
-
-<p>Paths类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">返回一个系统路径变量</span><br><span class="line">this.rootLocation &#x3D; Paths.get(properties.getLocation());</span><br></pre></td></tr></table></figure>
-
-<p>到此文件就保存到了系统磁盘上</p>
-</li>
-</ol>
-<h2 id="文件下载服务"><a href="#文件下载服务" class="headerlink" title="文件下载服务"></a>文件下载服务</h2><h3 id="1、前端页面显示文件列表，点击文件，选择文件夹进行保存"><a href="#1、前端页面显示文件列表，点击文件，选择文件夹进行保存" class="headerlink" title="1、前端页面显示文件列表，点击文件，选择文件夹进行保存"></a>1、前端页面显示文件列表，点击文件，选择文件夹进行保存</h3><p><img src="https://raw.githubusercontent.com/coy0725/Figure-bed/typora/img/image-20200309171405772.png" alt="image-20200309171405772"></p>
-<p>也就是点击文件链接，会首先获取文件，然后在将文件进行保存。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;div&gt;</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">        &lt;li th:each&#x3D;&quot;file : $&#123;files&#125;&quot;&gt;</span><br><span class="line">            &lt;a th:href&#x3D;&quot;$&#123;file&#125;&quot; th:text&#x3D;&quot;$&#123;file&#125;&quot;&#x2F;&gt;</span><br><span class="line">        &lt;&#x2F;li&gt;</span><br><span class="line">    &lt;&#x2F;ul&gt;</span><br><span class="line">&lt;&#x2F;div&gt;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、Controller层接收请求根据文件名，获取文件"><a href="#2、Controller层接收请求根据文件名，获取文件" class="headerlink" title="2、Controller层接收请求根据文件名，获取文件"></a>2、Controller层接收请求根据文件名，获取文件</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span>(<span class="string">"/files/&#123;filename:.+&#125;"</span>)</span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> ResponseEntity&lt;Resource&gt; <span class="title">serveFile</span><span class="params">(@PathVariable String filename)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        Resource file = storageService.loadAsResource(filename);</span><br><span class="line">        <span class="keyword">return</span> ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,</span><br><span class="line">                <span class="string">"attachment; filename=\""</span> + file.getFilename() + <span class="string">"\""</span>).body(file);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>疑惑</p>
-<p>返回的响应体是文件资源，怎么就会选择保存路径呢？</p>
-<p>请求头内容描述</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">header(HttpHeaders.CONTENT_DISPOSITION,</span><br><span class="line">                &quot;attachment; filename&#x3D;\&quot;&quot; + file.getFilename() + &quot;\&quot;&quot;)</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://blog.csdn.net/sinat_38364990/article/details/70867357?depth_1-utm_source=distribute.pc_relevant.none-task&utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">http上传/下载文件时，Content-Disposition的使用</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(&quot;&#x2F;files&#x2F;&#123;filename:.+&#125;&quot;)为什么是“&#123;filename:.+&#125;”??</span><br><span class="line">跳转路径怎么和前端页面请求的地址不大一样</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-、将文件加载为Resource返回"><a href="#3-、将文件加载为Resource返回" class="headerlink" title="3 、将文件加载为Resource返回"></a>3 、将文件加载为Resource返回</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Resource <span class="title">loadAsResource</span><span class="params">(String filename)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//获取文件路径</span></span><br><span class="line">			Path file = load(filename);</span><br><span class="line">            使用UrlResource加载文件</span><br><span class="line">			Resource resource = <span class="keyword">new</span> UrlResource(file.toUri());</span><br><span class="line">			<span class="keyword">if</span>(resource.exists() || resource.isReadable()) &#123;</span><br><span class="line">				<span class="keyword">return</span> resource;</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-
-<p>知识点</p>
-<ul>
-<li>Resource接口</li>
-</ul>
-<p><a href="https://github.com/spring-guides/gs-uploading-files.git" target="_blank" rel="noopener">项目地址</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/03/09/spring%20guide%E4%B9%8B%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E4%B8%8B%E8%BD%BD/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-kafka-windows demo" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/05/kafka-windows%20demo/">kafka-windows demo</a>
-    </h1>
-  
-
-        
-        <a href="/2020/03/05/kafka-windows%20demo/" class="archive-article-date">
-  	<time datetime="2020-03-05T02:09:58.856Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="kafka下载"><a href="#kafka下载" class="headerlink" title="kafka下载"></a>kafka下载</h2><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>将文件夹解压即可，注意不要解压到目录名有空格的文件夹中，会找不到运行的类。</p>
-<h2 id="kafka简单使用，"><a href="#kafka简单使用，" class="headerlink" title="kafka简单使用，"></a>kafka简单使用，</h2><p>在解压后的kakfa主目录中使用命令行运行以下命令行参数</p>
-<ol>
-<li>启动zookeeper<br><code>bin\windows\zookeeper-server-start.bat config\zookeeper.properties</code></li>
-<li>启动kafka<br><code>bin\windows\kafka-server-start.bat config\server.properties</code></li>
-<li>创建topic demo<br><code>bin\windows\kafka-topics.bat --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic demo</code></li>
-<li>查看topic列表<br><code>bin\windows\kafka-topics.bat --list --bootstrap-server localhost:9092</code></li>
-<li>启动生产者 producer<br><code>bin\windows\kafka-console-producer.bat --broker-list localhost:9092 --topic demo</code></li>
-<li>启动消费者 customer<br><code>bin\windows\kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic demo --from-beginning</code></li>
-</ol>
-<h2 id="kafka配置"><a href="#kafka配置" class="headerlink" title="kafka配置"></a>kafka配置</h2><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#kafka相关配置</span></span><br><span class="line"><span class="meta">spring.kafka.bootstrap-servers</span>=<span class="string">&#123;kafka实例ip地址&#125;:9092</span></span><br><span class="line"><span class="comment">#设置一个默认组</span></span><br><span class="line"><span class="meta">spring.kafka.consumer.group-id</span>=<span class="string">defaultGroup</span></span><br><span class="line"><span class="comment">#key-value序列化反序列化</span></span><br><span class="line"><span class="meta">spring.kafka.consumer.key-deserializer</span>=<span class="string">org.apache.kafka.common.serialization.StringDeserializer</span></span><br><span class="line"><span class="meta">spring.kafka.consumer.value-deserializer</span>=<span class="string">org.apache.kafka.common.serialization.StringDeserializer</span></span><br><span class="line"><span class="meta">spring.kafka.producer.key-serializer</span>=<span class="string">org.apache.kafka.common.serialization.StringSerializer</span></span><br><span class="line"><span class="meta">spring.kafka.producer.value-serializer</span>=<span class="string">org.apache.kafka.common.serialization.StringSerializer</span></span><br><span class="line"><span class="meta">spring.kafka.producer.batch-size</span>=<span class="string">65536</span></span><br><span class="line"><span class="meta">spring.kafka.producer.buffer-memory</span>=<span class="string">524288</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p>参考连接<br>kafka 在windows 平台的搭建和简单实用<br><a href="https://blog.csdn.net/woshixiazaizhe/article/details/80610432" target="_blank" rel="noopener">https://blog.csdn.net/woshixiazaizhe/article/details/80610432</a><br>spring boot + kafka 使用详细步骤<br><a href="https://blog.csdn.net/lcj_star/article/details/77337640?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task" target="_blank" rel="noopener">https://blog.csdn.net/lcj_star/article/details/77337640?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task</a><br>Spring Boot + Kafka的使用<br><a href="https://blog.csdn.net/Black1499/article/details/90474929" target="_blank" rel="noopener">https://blog.csdn.net/Black1499/article/details/90474929</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/03/05/kafka-windows%20demo/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hexo-博客搭建" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/02/hexo-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">hexo 博客搭建</a>
-    </h1>
-  
-
-        
-        <a href="/2020/03/02/hexo-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/" class="archive-article-date">
-  	<time datetime="2020-03-02T02:23:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="搭建个人博客"><a href="#搭建个人博客" class="headerlink" title="搭建个人博客"></a>搭建个人博客</h1><h3 id="一-安装node-js"><a href="#一-安装node-js" class="headerlink" title="一 安装node.js"></a>一 安装<code>node.js</code></h3><h4 id="模块组成"><a href="#模块组成" class="headerlink" title="模块组成"></a><strong>模块组成</strong></h4><ul>
-<li><code>node.js</code></li>
-<li><code>npm</code>包管理工具</li>
-</ul>
-<h4 id="检查是否安装成功"><a href="#检查是否安装成功" class="headerlink" title="检查是否安装成功"></a><strong>检查是否安装成功</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\coy&gt; node -v</span><br><span class="line">v12.16.1</span><br><span class="line">PS C:\Users\coy&gt; npm -v</span><br><span class="line">6.13.4</span><br><span class="line">PS C:\Users\coy&gt;</span><br></pre></td></tr></table></figure>
-
-<h4 id="下载连接"><a href="#下载连接" class="headerlink" title="下载连接"></a><strong>下载连接</strong></h4><blockquote>
-<p><a href="https://nodejs.org/zh-cn/" target="_blank" rel="noopener">https://nodejs.org/zh-cn/</a></p>
-</blockquote>
-<h3 id="二-安装hexo"><a href="#二-安装hexo" class="headerlink" title="二 安装hexo"></a>二 安装hexo</h3><h4 id="安装淘宝镜像源"><a href="#安装淘宝镜像源" class="headerlink" title="安装淘宝镜像源"></a>安装淘宝镜像源</h4><p>安装命令</p>
-<p><code>npm install -g cnpm --registry=https://registry.npm.taobao.org</code></p>
-<p>结果</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Windows\system32&gt; npm install -g cnpm --registry&#x3D;https:&#x2F;&#x2F;registry.npm.taobao.org</span><br><span class="line">C:\Users\coy\AppData\Roaming\npm\cnpm -&gt; C:\Users\coy\AppData\Roaming\npm\node_modules\cnpm\bin\cnpm</span><br><span class="line">+ cnpm@6.1.1</span><br><span class="line">added 686 packages from 950 contributors in 51.668s</span><br></pre></td></tr></table></figure>
-
-<p><strong>cnpm -v</strong></p>
-<ul>
-<li><p>cmd中正常运行</p>
-</li>
-<li><p>powershell 运行失败</p>
-<p><strong>命令</strong>：<code>cnpm install -g hexo-cli</code></p>
-<p><strong>安装结果</strong></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ cnpm install -g hexo-cli</span><br><span class="line">Downloading hexo-cli to C:\Users\coy\AppData\Roaming\npm\node_modules\hexo-cli_tmp</span><br><span class="line">Copying C:\Users\coy\AppData\Roaming\npm\node_modules\hexo-cli_tmp\_hexo-cli@3.1.0@hexo-cli to C:\Users\coy\AppData\Roaming\npm\node_modules\hexo-cli</span><br><span class="line">Installing hexo-cli&#39;s dependencies to C:\Users\coy\AppData\Roaming\npm\node_modules\hexo-cli&#x2F;node_modules</span><br></pre></td></tr></table></figure>
-
-<p><strong>模块安装位置</strong>：<code>C:\Users\coy\AppData\Roaming\npm\node_modules\hexo-cli</code></p>
-</li>
-</ul>
-<h4 id=""><a href="#" class="headerlink" title=""></a></h4><h4 id="初始化blog"><a href="#初始化blog" class="headerlink" title="初始化blog"></a><strong>初始化blog</strong></h4><ul>
-<li>创建一个文件夹来作为<code>blog</code>的主程序存放地址 <code>mkdir blog cd blog</code></li>
-<li><code>hexo init</code></li>
-</ul>
-<h4 id="git-bash"><a href="#git-bash" class="headerlink" title="git bash"></a><strong>git bash</strong></h4><h4 id="PowerShell"><a href="#PowerShell" class="headerlink" title="PowerShell"></a><strong>PowerShell</strong></h4><blockquote>
-<p><a href="">使用管理员方式运行powershell的几种方式</a></p>
-<ul>
-<li>用户模式下输入 <code>Start-Process powershell -Verb runAs</code></li>
-</ul>
-</blockquote>
-<p>参考连接](<a href="https://www.bilibili.com/video/av44544186?t=1365" target="_blank" rel="noopener">https://www.bilibili.com/video/av44544186?t=1365</a>)</p>
-<h3 id="三-部署到GitHub上"><a href="#三-部署到GitHub上" class="headerlink" title="三 部署到GitHub上"></a>三 部署到GitHub上</h3><ol>
-<li><p>创建GitHub仓库，命名为：<code>{username}.github.io</code></p>
-</li>
-<li><p>修改 _config.yml文件</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># Deployment</span><br><span class="line">## Docs: https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;deployment.html</span><br><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:coy0725&#x2F;coy0725.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="3">
-<li><p>部署到远程仓库 hexo d</p>
-</li>
-<li><p>访问 <a href="https://coy0725.github.io/" target="_blank" rel="noopener">https://coy0725.github.io/</a></p>
-</li>
-</ol>
-<h3 id="自定义博客"><a href="#自定义博客" class="headerlink" title="自定义博客"></a>自定义博客</h3><h4 id="修改主题"><a href="#修改主题" class="headerlink" title="修改主题"></a>修改主题</h4><ol>
-<li><p>下载主题  <code>git clone git@github.com:litten/hexo-theme-yilia.git themes/yilia</code></p>
-</li>
-<li><p>修改 <code>_config.yml</code>文件</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## Plugins: https://hexo.io/plugins/</span></span><br><span class="line"><span class="comment">## Themes: https://hexo.io/themes/</span></span><br><span class="line"><span class="attr">theme:</span> <span class="string">yilia</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>清楚 重新生成并推送到远端</p>
-<ol>
-<li><code>hexo clean</code></li>
-<li><code>hexo generate</code></li>
-<li><code>hexo deploy</code></li>
-</ol>
-</li>
-</ol>
-<h4 id="增加分类和标签"><a href="#增加分类和标签" class="headerlink" title="增加分类和标签"></a>增加分类和标签</h4><ol>
-<li><p>新建相关页面</p>
-<p><code>hexo new page &quot;about&quot;</code></p>
-</li>
-<li><p>配置主题<code>menu</code>属性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">menu:</span><br><span class="line">  主页: &#x2F;</span><br><span class="line">  标签: &#x2F;tags</span><br><span class="line">  分类: &#x2F;categories</span><br><span class="line">  归档: &#x2F;archives</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="3">
-<li><p>设置页面的<code>type</code>属性</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">title: about</span><br><span class="line">date: 2019-06-25 19:16:17</span><br><span class="line">type: &quot;tags&quot;</span><br></pre></td></tr></table></figure>
-
-
-
-</li>
-</ol>
-<ol start="4">
-<li><p>重新生成和发布</p>
-<p><code>hexo generate</code></p>
-<p><code>hexo deploy</code></p>
-</li>
-</ol>
-<h1 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h1><p><a href="https://blog.csdn.net/sinat_37781304/article/details/82729029?utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7EBlogCommendFromMachineLearnPai2%7Edefault-1.control" target="_blank" rel="noopener">hexo </a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/03/02/hexo-%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-hello-world" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/03/02/hello-world/">Hello World</a>
-    </h1>
-  
-
-        
-        <a href="/2020/03/02/hello-world/" class="archive-article-date">
-  	<time datetime="2020-03-02T01:51:58.680Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-03-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/03/02/hello-world/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -1083,8 +387,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,

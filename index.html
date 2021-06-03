@@ -166,6 +166,115 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-notebook/20210603-分布式服务调用与服务柔性" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/03/notebook/20210603-%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E4%B8%8E%E6%9C%8D%E5%8A%A1%E6%9F%94%E6%80%A7/">notebook/20210603-分布式服务调用与服务柔性</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/03/notebook/20210603-%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E4%B8%8E%E6%9C%8D%E5%8A%A1%E6%9F%94%E6%80%A7/" class="archive-article-date">
+  	<time datetime="2021-06-03T12:02:03.829Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-03</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<p>Apache Dubbo</p>
+<p>都是分布式的基础</p>
+<p>spring cloud openFeign</p>
+<p>强依赖与web</p>
+<p>核心组件</p>
+<p>Feign-</p>
+<p>openFeign, 灵感     </p>
+<p>jarsey jax-rs的实现</p>
+<p>通过Java接口方式声明目标Rest服务契约，通过调用Java方法来屏蔽调用底层HTTP方法的复杂度。</p>
+<p>注解支持</p>
+<ul>
+<li>Feign注解</li>
+<li>jax-rs注解</li>
+<li>JAXRS 2.x</li>
+</ul>
+<p>扩展机制是什么？</p>
+<p>整合是如何去实现的？</p>
+<p>序列与反序列化</p>
+<h2 id="序列化支持-Decoder-Encoder"><a href="#序列化支持-Decoder-Encoder" class="headerlink" title="序列化支持-Decoder-Encoder"></a>序列化支持-Decoder-Encoder</h2><ul>
+<li>json<ul>
+<li>Gson</li>
+<li>Jackson</li>
+</ul>
+</li>
+<li>xml<ul>
+<li>SAX（simple Api for xml）</li>
+<li>JAXB(java xml for bingding)</li>
+<li>SOAP</li>
+</ul>
+</li>
+</ul>
+<h2 id="Http-客户端支持"><a href="#Http-客户端支持" class="headerlink" title="Http 客户端支持"></a>Http 客户端支持</h2><ul>
+<li>jdk http client</li>
+<li>OkHttp</li>
+<li>java 11 Http 2</li>
+</ul>
+<h2 id="负载均衡-client"><a href="#负载均衡-client" class="headerlink" title="负载均衡-client"></a>负载均衡-client</h2><ul>
+<li>Ribbon</li>
+</ul>
+<p>接口在迁移过程中，</p>
+<p>A</p>
+<p>B 应用名称不一样</p>
+<h3 id="方法参数类型转换器-ConversionService"><a href="#方法参数类型转换器-ConversionService" class="headerlink" title="方法参数类型转换器-ConversionService"></a>方法参数类型转换器-ConversionService</h3><p>参数类型</p>
+<h4 id="HTTP-消息序列化与反序列化"><a href="#HTTP-消息序列化与反序列化" class="headerlink" title="HTTP 消息序列化与反序列化"></a>HTTP 消息序列化与反序列化</h4><p>HttpMessageConverter</p>
+<p>解决构造器注入</p>
+<p>负载均衡的实现</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/03/notebook/20210603-%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E4%B8%8E%E6%9C%8D%E5%8A%A1%E6%9F%94%E6%80%A7/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/137-Java国际化标准实现 ResourceBundle" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -187,6 +296,60 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>[toc]</p>
+<h1 id="一般系统分析"><a href="#一般系统分析" class="headerlink" title="一般系统分析"></a>一般系统分析</h1><h2 id="功能、目标"><a href="#功能、目标" class="headerlink" title="功能、目标"></a>功能、目标</h2><p>相关资源的国际化显示</p>
+<h2 id="参与者"><a href="#参与者" class="headerlink" title="参与者"></a>参与者</h2><ul>
+<li>国际化资源本身<ul>
+<li>properties文件</li>
+<li>资源的编码方式</li>
+<li>普通的 key value 形式</li>
+<li>value中存在属性占位符，支持参数替换</li>
+</ul>
+</li>
+<li>国际化资源provider<ul>
+<li>MessageSource</li>
+<li>ResouceBundler</li>
+</ul>
+</li>
+<li>国际化资源consumer<ul>
+<li>异常多语言</li>
+<li>BeanValidation 校验的国际化文案</li>
+<li>web页面渲染</li>
+</ul>
+</li>
+</ul>
+<h2 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h2><p>国际化资源提供方如何和使用方进行交互？</p>
+<p>message = f(key,Locale,args)</p>
+<p>根据key+Locale定位到具体的某个消息模板，根据args 参数对模板占位符进行填充</p>
+<p>所以消息是和地区相关还是和语言相关?</p>
+<h2 id="如何进行API-设计？"><a href="#如何进行API-设计？" class="headerlink" title="如何进行API 设计？"></a>如何进行API 设计？</h2><p>资源与消息</p>
+<p>资源可以是各种介质的，如</p>
+<ul>
+<li>properties</li>
+<li>file</li>
+<li>Stream</li>
+<li>socket</li>
+</ul>
+<p>消息是什么形式的呢？</p>
+<ul>
+<li>String 类型的</li>
+</ul>
+<p>Spring 设计的API</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">String <span class="title">getMessage</span><span class="params">(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>与我想象中有一点点差异，其考虑了在相应code没有配置国际化消息模板情况下可以制定默认返回的消息形式。默认消息是有属性占位符的，也会进行渲染吗？</p>
+<h3 id="这个地方解答了我的疑惑，答案当然是会进行渲染"><a href="#这个地方解答了我的疑惑，答案当然是会进行渲染" class="headerlink" title="这个地方解答了我的疑惑，答案当然是会进行渲染"></a>这个地方解答了我的疑惑，答案当然是会进行渲染</h3><p>org.springframework.context.support.DelegatingMessageSource#getMessage</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getMessage</span><span class="params">(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.parentMessageSource != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.parentMessageSource.getMessage(code, args, defaultMessage, locale);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (defaultMessage != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> renderDefaultMessage(defaultMessage, args, locale);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="消息模板是如何进行渲染的呢？"><a href="#消息模板是如何进行渲染的呢？" class="headerlink" title="消息模板是如何进行渲染的呢？"></a>消息模板是如何进行渲染的呢？</h3><h4 id="MessageFormat"><a href="#MessageFormat" class="headerlink" title="MessageFormat"></a>MessageFormat</h4><blockquote>
+<p>MessageFormat provides a means to produce concatenated messages in a language-neutral way. Use this to construct messages displayed for end users.<br>MessageFormat takes a set of objects, formats them, then inserts the formatted strings into the pattern at the appropriate places</p>
+</blockquote>
+<p>核心代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">protected String formatMessage(String msg, @Nullable Object[] args, Locale locale) &#123;</span><br><span class="line"></span><br><span class="line">		messageFormat &#x3D; createMessageFormat(msg, locale);</span><br><span class="line">		synchronized (messageFormat) &#123;</span><br><span class="line">			return messageFormat.format(resolveArguments(args, locale));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>java.text.MessageFormat#MessageFormat(java.lang.String, java.util.Locale)</p>
+<p>java.text.Format#format(java.lang.Object)</p>
 <h1 id="核心接口"><a href="#核心接口" class="headerlink" title="核心接口"></a>核心接口</h1><h2 id="抽象实现-java-util-ResourceBundle"><a href="#抽象实现-java-util-ResourceBundle" class="headerlink" title="抽象实现-java.util.ResourceBundle"></a>抽象实现-java.util.ResourceBundle</h2><h3 id="key-value-设计"><a href="#key-value-设计" class="headerlink" title="key-value 设计"></a>key-value 设计</h3><p><strong>key</strong>:文案模板的key</p>
 <p><strong>value</strong>:就是文案模板的内容，这个内容可能就是一个模板，也可能是实际的内容</p>
 <h3 id="层次性设计"><a href="#层次性设计" class="headerlink" title="层次性设计"></a>层次性设计</h3><p>方法：java.util.ResourceBundle#setParent 用来关联双亲，在查找的过程中可以一并进行查询</p>
@@ -313,11 +476,30 @@
 <p>按照正常spring的命名规则他应该有一个</p>
 <p>HierarchicalMessageSource仅提供getParentMessageSourcef方法</p>
 <p>而在ConfigurableMessageSource中提供setParentMessageSource方法</p>
-<h2 id="收获-Spring命名哲学"><a href="#收获-Spring命名哲学" class="headerlink" title="收获-Spring命名哲学"></a>收获-Spring命名哲学</h2><p>ConfigurableXXX,会有一些set方法，提供可配置的能力</p>
+<h2 id="收获"><a href="#收获" class="headerlink" title="收获"></a>收获</h2><h3 id="Spring命名哲学"><a href="#Spring命名哲学" class="headerlink" title="Spring命名哲学"></a>Spring命名哲学</h3><p>ConfigurableXXX,会有一些set方法，提供可配置的能力</p>
 <p>而HierarchicalXX,提供getParentXX，提供获取双亲信息的能力</p>
 <h2 id="层次性设计"><a href="#层次性设计" class="headerlink" title="层次性设计"></a>层次性设计</h2><p>层次性设计并非Spring的原创，我们所谓的ClassLoader默认就具有层次性，于此同时再Java标准的国际化接口里ResourceBoundle里面也有。</p>
 <h3 id="如何理解层次性？-1"><a href="#如何理解层次性？-1" class="headerlink" title="如何理解层次性？"></a>如何理解层次性？</h3><p>遗传与变异，可以继承双亲的一些属性。</p>
 <h3 id="层次性设计的好处"><a href="#层次性设计的好处" class="headerlink" title="层次性设计的好处"></a>层次性设计的好处</h3><p>当你当前找不到的时候，或者看你的实现，是先找parent还是先找child都行。搜索范围搜索路径更广了，更有弹性。</p>
+<p>像上级求援。</p>
+<p>用户名 sea-gaia</p>
+<h1 id="层次性MessageSource实现"><a href="#层次性MessageSource实现" class="headerlink" title="层次性MessageSource实现"></a>层次性MessageSource实现</h1><h2 id="AbstractApplicationContext-initMessageSource"><a href="#AbstractApplicationContext-initMessageSource" class="headerlink" title="AbstractApplicationContext#initMessageSource"></a>AbstractApplicationContext#initMessageSource</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initMessageSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		ConfigurableListableBeanFactory beanFactory = getBeanFactory();</span><br><span class="line">		<span class="keyword">if</span> (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) &#123;</span><br><span class="line">			<span class="keyword">this</span>.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME, MessageSource<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">			<span class="comment">// Make MessageSource aware of parent MessageSource.</span></span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.parent != <span class="keyword">null</span> &amp;&amp; <span class="keyword">this</span>.messageSource <span class="keyword">instanceof</span> HierarchicalMessageSource) &#123;</span><br><span class="line">				HierarchicalMessageSource hms = (HierarchicalMessageSource) <span class="keyword">this</span>.messageSource;</span><br><span class="line">				<span class="keyword">if</span> (hms.getParentMessageSource() == <span class="keyword">null</span>) &#123;</span><br><span class="line">					<span class="comment">// Only set parent context as parent MessageSource if no parent MessageSource</span></span><br><span class="line">					<span class="comment">// registered already.</span></span><br><span class="line">					hms.setParentMessageSource(getInternalParentMessageSource());</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">				logger.trace(<span class="string">"Using MessageSource ["</span> + <span class="keyword">this</span>.messageSource + <span class="string">"]"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">// Use empty MessageSource to be able to accept getMessage calls.</span></span><br><span class="line">			DelegatingMessageSource dms = <span class="keyword">new</span> DelegatingMessageSource();</span><br><span class="line">			dms.setParentMessageSource(getInternalParentMessageSource());</span><br><span class="line">			<span class="keyword">this</span>.messageSource = dms;</span><br><span class="line">			beanFactory.registerSingleton(MESSAGE_SOURCE_BEAN_NAME, <span class="keyword">this</span>.messageSource);</span><br><span class="line">			<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">				logger.trace(<span class="string">"No '"</span> + MESSAGE_SOURCE_BEAN_NAME + <span class="string">"' bean, using ["</span> + <span class="keyword">this</span>.messageSource + <span class="string">"]"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用过程</p>
+<ul>
+<li>org.springframework.context.support.AbstractApplicationContext#refresh<ul>
+<li>org.springframework.context.support.AbstractApplicationContext#initMessageSource<ul>
+<li>dms.setParentMessageSource(getInternalParentMessageSource());</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>如果在当前上下文找不到MessageSource Bean，会创建一个DelegatingMessageSource Bean，尝试去父上下文找MessageSource Bean ,将其设置为他的parentMessageSource 递归往上寻找</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> MessageSource <span class="title">getInternalParentMessageSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> (getParent() <span class="keyword">instanceof</span> AbstractApplicationContext ?</span><br><span class="line">         ((AbstractApplicationContext) getParent()).messageSource : getParent());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
 
       
 
@@ -420,6 +602,7 @@
 <p>来自本地文件？</p>
 <h2 id="ResourceBundleMessageSource-一探究竟"><a href="#ResourceBundleMessageSource-一探究竟" class="headerlink" title="ResourceBundleMessageSource 一探究竟"></a>ResourceBundleMessageSource 一探究竟</h2><p> 依赖于java.util.ResourceBundle的实现</p>
 <p> 结合 java.text.MessageFormat提供的JDK 标准消息解析</p>
+<p>也就是spring的国际化接口实现依赖与Java标准国际化接口和Java的消息解析</p>
 <h3 id="ResourceBundle-1"><a href="#ResourceBundle-1" class="headerlink" title="ResourceBundle"></a>ResourceBundle</h3><blockquote>
 <p>Resource bundles包含特定于语言环境的对象。当您的程序需要特定于语言环境的资源(例如String)时，您的程序可以从适合当前用户语言环境的资源包中加载它。通过这种方式，您可以编写很大程度上独立于用户语言环境隔离的大部分(如果不是全部的话)资源包中特定于语言环境的信息的程序代码</p>
 </blockquote>
@@ -585,6 +768,17 @@
 <h2 id="7、Messagesource开箱即用实现"><a href="#7、Messagesource开箱即用实现" class="headerlink" title="7、Messagesource开箱即用实现"></a>7、Messagesource开箱即用实现</h2><blockquote>
 <p>spring framwork 里有哪些实现是马上就可以用的?</p>
 </blockquote>
+<h3 id="如何理解MessageSource的开箱即用？"><a href="#如何理解MessageSource的开箱即用？" class="headerlink" title="如何理解MessageSource的开箱即用？"></a>如何理解MessageSource的开箱即用？</h3><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210603173215414.png" alt="image-20210603173215414"></p>
+<p>org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration</p>
+<p>相关知识：spring boot自动装配</p>
+<p>可以获知的信息是spring boot 会帮我们自动配置</p>
+<ul>
+<li><p>MessageSourceProperties–外部化配置</p>
+</li>
+<li><p>MessageSource—ResourceBundleMessageSource</p>
+</li>
+</ul>
+<p>条件装配</p>
 <h2 id="8、Messagesource內建实现"><a href="#8、Messagesource內建实现" class="headerlink" title="8、Messagesource內建实现"></a>8、Messagesource內建实现</h2><h2 id="9、课外资料"><a href="#9、课外资料" class="headerlink" title="9、课外资料"></a>9、课外资料</h2><blockquote>
 <p>讨论下spring boot中为什么要创建一个 MessageSource这么个Bean</p>
 </blockquote>
@@ -969,137 +1163,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/05/27/notebook/20210527-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/20210519-异步 async" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/">notebook/20210519-异步 async</a>
-    </h1>
-  
-
-        
-        <a href="/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/" class="archive-article-date">
-  	<time datetime="2021-05-20T02:12:20.973Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-20</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="一般异步系统"><a href="#一般异步系统" class="headerlink" title="一般异步系统"></a>一般异步系统</h1><p>从字面意思上来理解，异步是一个形容词，是对某种行为的描述。单从<code>异步 async</code>一词很难理解到底是什么意思。缺少相应的语境和上下文信息。</p>
-<p>如果从一般系统思维的方式去解析的话需要了解以下信息</p>
-<ul>
-<li>异步行为的参与者</li>
-<li>异步行为的功能或目标</li>
-<li>异步行为参与者之间的关系</li>
-</ul>
-<h2 id="异步相关概念"><a href="#异步相关概念" class="headerlink" title="异步相关概念"></a><code>异步</code>相关概念</h2><ul>
-<li>IO</li>
-<li>RPC服务调用</li>
-<li>servlet异步</li>
-<li>webFlux</li>
-</ul>
-<h1 id="异步IO模型"><a href="#异步IO模型" class="headerlink" title="异步IO模型"></a>异步IO模型</h1><h2 id="参与者"><a href="#参与者" class="headerlink" title="参与者"></a>参与者</h2><ul>
-<li><p>用户线程</p>
-</li>
-<li><p>系统内核</p>
-</li>
-</ul>
-<blockquote>
-<p>如何确定异步IO模型中的参与者呢？假设从数据流经的节点来分析的话，参与者有用户缓冲区、内核缓冲区、磁盘</p>
-<p>但从另一方面来讲异步行为的主体应该是用户线程和系统内核</p>
-</blockquote>
-<h2 id="数据流经节点"><a href="#数据流经节点" class="headerlink" title="数据流经节点"></a>数据流经节点</h2><ul>
-<li>用户缓冲区</li>
-<li>内核缓冲区</li>
-<li>物理设备</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用户缓冲区-&gt;内核缓冲区: write系统调用</span><br><span class="line">内核缓冲区--&gt;物理磁盘: 操作系统决定何时写入磁盘</span><br></pre></td></tr></table></figure>
-
-<h2 id="同步与异步-Netty、-Redis、-Zookeeper高并发实战"><a href="#同步与异步-Netty、-Redis、-Zookeeper高并发实战" class="headerlink" title="同步与异步[^  Netty、 Redis、 Zookeeper高并发实战]"></a>同步与异步[^  Netty、 Redis、 Zookeeper高并发实战]</h2><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519154012758.png"  />
-
-<p>从上图可以获取到的信息是，首先要确定观察者。站在用户线程的角度来说，异步是系统内核发起IO请求，同步是指用户空间的线程发起IO请求。</p>
-<p>引入新的概念<code>用户空间</code>和<code>内核空间</code>。系统内核发起IO请求，系统内核与用户线程如何关联，是不是用户线程首先需要声明当系统内核调用时会触发的动作？</p>
-<h2 id="异步IO读流程"><a href="#异步IO读流程" class="headerlink" title="异步IO读流程"></a>异步IO读流程</h2><p>（1）当用户线程发起了read系统调用，立刻就可以开始去做其他的事，用户线程不阻塞。</p>
-<p>（2）内核就开始了IO的第一个阶段：准备数据。等到数据准备好了，内核就会将数据从内核缓冲区复制到用户缓冲区（用户空间的内存）。</p>
-<p>（3）内核会给用户线程发送一个信号（Signal），或者回调用户线程注册的回调接口，告诉用户线程read操作完成了。</p>
-<p>（4）用户线程读取用户缓冲区的数据，完成后续的业务操作。</p>
-<h2 id="异步IO优缺点"><a href="#异步IO优缺点" class="headerlink" title="异步IO优缺点"></a>异步IO优缺点</h2><p><strong>两个阶段都不会阻塞</strong></p>
-<ol>
-<li><p>内核等待数据</p>
-</li>
-<li><p>内核将数据从内核缓冲区复制到用户缓冲区</p>
-</li>
-</ol>
-<p><strong>特点</strong>：在内核等待数据和复制数据的两个阶段，用户线程都不是阻塞的。用户线程需要接收内核的IO操作完成的事件，或者用户线程需要注册一个IO操作完成的回调函数。正因为如此，异步IO有的时候也被称为信号驱动IO。</p>
-<p><strong>缺点</strong>：应用程序仅需要进行事件的注册与接收，其余的工作都留给了操作系统，也就是说，需要底层内核提供支持</p>
-<p>感觉同步和阻塞的语义是有重合的，用户线程在异步IO读的时候是非阻塞的。异步是实现非阻塞的一种手段？</p>
-<h1 id="Servlet非阻塞IO"><a href="#Servlet非阻塞IO" class="headerlink" title="Servlet非阻塞IO"></a>Servlet非阻塞IO</h1><p>Web 容器中的非阻塞请求处理有助于提高对改善 Web 容器可扩展性不断增加的需求，增加 Web 容器可同时处理请求的连接数量。servlet容器的非阻塞IO允许开发人员在数据可用时读取数据或在数据可写时写数据</p>
-<p>组件 </p>
-<ul>
-<li><p><code>ReadListener</code> 监听Read</p>
-</li>
-<li><p><code>AsyncContext</code>  异步上下文</p>
-</li>
-</ul>
-<h2 id="spring-的-reactive-实现"><a href="#spring-的-reactive-实现" class="headerlink" title="spring 的 reactive 实现"></a>spring 的 reactive 实现</h2><p>所以如何利用非阻塞IO的api来进行编程呢?</p>
-<p>那就看下spring的实现吧</p>
-<p><code>ServletServerHttpRequest</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">RequestBodyPublisherReadListener</span> <span class="keyword">implements</span> <span class="title">ReadListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onDataAvailable</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">				RequestBodyPublisher.<span class="keyword">this</span>.onDataAvailable();</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAllDataRead</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">				RequestBodyPublisher.<span class="keyword">this</span>.onAllDataRead();</span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onError</span><span class="params">(Throwable throwable)</span> </span>&#123;</span><br><span class="line">				RequestBodyPublisher.<span class="keyword">this</span>.onError(throwable);</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>RequestBodyPublisherReadListener</code> 将任务委托给了<code>RequestBodyPublisher</code></p>
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519223344340.png" alt="image-20210519223344340"></p>
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519223629933.png" alt="image-20210519223629933"></p>
-<p>实现了reactive Stream流的Publisher接口。</p>
-<p>有点复杂，整不明白。</p>
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210519224356662.png" alt="image-20210519224356662"></p>
-<p>枚举这样玩，是真的秀。</p>
-<p>Publisher实现的抽象基类，bridge between event-listener read APIs and Reactive Streams </p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/20/notebook/20210519-%E5%BC%82%E6%AD%A5%20async/">展开全文 >></a>
         </p>
       
 

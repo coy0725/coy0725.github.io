@@ -19,7 +19,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210602220208433.png">
 <meta property="article:published_time" content="2021-06-02T13:18:42.660Z">
-<meta property="article:modified_time" content="2021-06-02T14:22:01.998Z">
+<meta property="article:modified_time" content="2021-06-03T16:23:05.408Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210602220208433.png">
@@ -215,11 +215,30 @@
 <p>按照正常spring的命名规则他应该有一个</p>
 <p>HierarchicalMessageSource仅提供getParentMessageSourcef方法</p>
 <p>而在ConfigurableMessageSource中提供setParentMessageSource方法</p>
-<h2 id="收获-Spring命名哲学"><a href="#收获-Spring命名哲学" class="headerlink" title="收获-Spring命名哲学"></a>收获-Spring命名哲学</h2><p>ConfigurableXXX,会有一些set方法，提供可配置的能力</p>
+<h2 id="收获"><a href="#收获" class="headerlink" title="收获"></a>收获</h2><h3 id="Spring命名哲学"><a href="#Spring命名哲学" class="headerlink" title="Spring命名哲学"></a>Spring命名哲学</h3><p>ConfigurableXXX,会有一些set方法，提供可配置的能力</p>
 <p>而HierarchicalXX,提供getParentXX，提供获取双亲信息的能力</p>
 <h2 id="层次性设计"><a href="#层次性设计" class="headerlink" title="层次性设计"></a>层次性设计</h2><p>层次性设计并非Spring的原创，我们所谓的ClassLoader默认就具有层次性，于此同时再Java标准的国际化接口里ResourceBoundle里面也有。</p>
 <h3 id="如何理解层次性？-1"><a href="#如何理解层次性？-1" class="headerlink" title="如何理解层次性？"></a>如何理解层次性？</h3><p>遗传与变异，可以继承双亲的一些属性。</p>
 <h3 id="层次性设计的好处"><a href="#层次性设计的好处" class="headerlink" title="层次性设计的好处"></a>层次性设计的好处</h3><p>当你当前找不到的时候，或者看你的实现，是先找parent还是先找child都行。搜索范围搜索路径更广了，更有弹性。</p>
+<p>像上级求援。</p>
+<p>用户名 sea-gaia</p>
+<h1 id="层次性MessageSource实现"><a href="#层次性MessageSource实现" class="headerlink" title="层次性MessageSource实现"></a>层次性MessageSource实现</h1><h2 id="AbstractApplicationContext-initMessageSource"><a href="#AbstractApplicationContext-initMessageSource" class="headerlink" title="AbstractApplicationContext#initMessageSource"></a>AbstractApplicationContext#initMessageSource</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initMessageSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		ConfigurableListableBeanFactory beanFactory = getBeanFactory();</span><br><span class="line">		<span class="keyword">if</span> (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) &#123;</span><br><span class="line">			<span class="keyword">this</span>.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME, MessageSource<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">			<span class="comment">// Make MessageSource aware of parent MessageSource.</span></span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.parent != <span class="keyword">null</span> &amp;&amp; <span class="keyword">this</span>.messageSource <span class="keyword">instanceof</span> HierarchicalMessageSource) &#123;</span><br><span class="line">				HierarchicalMessageSource hms = (HierarchicalMessageSource) <span class="keyword">this</span>.messageSource;</span><br><span class="line">				<span class="keyword">if</span> (hms.getParentMessageSource() == <span class="keyword">null</span>) &#123;</span><br><span class="line">					<span class="comment">// Only set parent context as parent MessageSource if no parent MessageSource</span></span><br><span class="line">					<span class="comment">// registered already.</span></span><br><span class="line">					hms.setParentMessageSource(getInternalParentMessageSource());</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">				logger.trace(<span class="string">"Using MessageSource ["</span> + <span class="keyword">this</span>.messageSource + <span class="string">"]"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">// Use empty MessageSource to be able to accept getMessage calls.</span></span><br><span class="line">			DelegatingMessageSource dms = <span class="keyword">new</span> DelegatingMessageSource();</span><br><span class="line">			dms.setParentMessageSource(getInternalParentMessageSource());</span><br><span class="line">			<span class="keyword">this</span>.messageSource = dms;</span><br><span class="line">			beanFactory.registerSingleton(MESSAGE_SOURCE_BEAN_NAME, <span class="keyword">this</span>.messageSource);</span><br><span class="line">			<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">				logger.trace(<span class="string">"No '"</span> + MESSAGE_SOURCE_BEAN_NAME + <span class="string">"' bean, using ["</span> + <span class="keyword">this</span>.messageSource + <span class="string">"]"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用过程</p>
+<ul>
+<li>org.springframework.context.support.AbstractApplicationContext#refresh<ul>
+<li>org.springframework.context.support.AbstractApplicationContext#initMessageSource<ul>
+<li>dms.setParentMessageSource(getInternalParentMessageSource());</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>如果在当前上下文找不到MessageSource Bean，会创建一个DelegatingMessageSource Bean，尝试去父上下文找MessageSource Bean ,将其设置为他的parentMessageSource 递归往上寻找</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> MessageSource <span class="title">getInternalParentMessageSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> (getParent() <span class="keyword">instanceof</span> AbstractApplicationContext ?</span><br><span class="line">         ((AbstractApplicationContext) getParent()).messageSource : getParent());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
 
       
 
