@@ -166,20 +166,20 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-notebook/20210603-分布式服务调用与服务柔性" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-notebook/spring编程核心思想/13章 Spring 校验Validation/145-Errors 设计" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/03/notebook/20210603-%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E4%B8%8E%E6%9C%8D%E5%8A%A1%E6%9F%94%E6%80%A7/">notebook/20210603-分布式服务调用与服务柔性</a>
+      <a class="article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/145-Errors%20%E8%AE%BE%E8%AE%A1/">notebook/spring编程核心思想/13章 Spring 校验Validation/145-Errors 设计</a>
     </h1>
   
 
         
-        <a href="/2021/06/03/notebook/20210603-%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E4%B8%8E%E6%9C%8D%E5%8A%A1%E6%9F%94%E6%80%A7/" class="archive-article-date">
-  	<time datetime="2021-06-03T12:02:03.829Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-03</time>
+        <a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/145-Errors%20%E8%AE%BE%E8%AE%A1/" class="archive-article-date">
+  	<time datetime="2021-06-07T14:57:49.011Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
 </a>
         
       </header>
@@ -187,52 +187,35 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>[toc]</p>
-<p>Apache Dubbo</p>
-<p>都是分布式的基础</p>
-<p>spring cloud openFeign</p>
-<p>强依赖与web</p>
-<p>核心组件</p>
-<p>Feign-</p>
-<p>openFeign, 灵感     </p>
-<p>jarsey jax-rs的实现</p>
-<p>通过Java接口方式声明目标Rest服务契约，通过调用Java方法来屏蔽调用底层HTTP方法的复杂度。</p>
-<p>注解支持</p>
-<ul>
-<li>Feign注解</li>
-<li>jax-rs注解</li>
-<li>JAXRS 2.x</li>
-</ul>
-<p>扩展机制是什么？</p>
-<p>整合是如何去实现的？</p>
-<p>序列与反序列化</p>
-<h2 id="序列化支持-Decoder-Encoder"><a href="#序列化支持-Decoder-Encoder" class="headerlink" title="序列化支持-Decoder-Encoder"></a>序列化支持-Decoder-Encoder</h2><ul>
-<li>json<ul>
-<li>Gson</li>
-<li>Jackson</li>
-</ul>
+<h2 id="接口职责"><a href="#接口职责" class="headerlink" title="接口职责"></a>接口职责</h2><p>Errors接口主要做数据绑定和校验错误收集接口</p>
+<p>它这个和Java Bean以及属性是有强关联性的，这就是为什么说它事实上仅在Bean的范围里面来进行操作，并不是非常抽象。</p>
+<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><h3 id="reject-方法（重载）：收集错误文案"><a href="#reject-方法（重载）：收集错误文案" class="headerlink" title="reject 方法（重载）：收集错误文案"></a>reject 方法（重载）：收集错误文案</h3><h3 id="reject-Value方法（重载）：收集对象字段中的错误文案"><a href="#reject-Value方法（重载）：收集对象字段中的错误文案" class="headerlink" title="reject Value方法（重载）：收集对象字段中的错误文案"></a>reject Value方法（重载）：收集对象字段中的错误文案</h3><p>Erros对象会绑定一个 Root Object，涉及到一些字段，嵌套字段，嵌套路径</p>
+<p>没有返回值，错误挤压到内部，</p>
+<p>对象错误：全局性错误，对象为空</p>
+<p>字段多无：字段违反相应约束</p>
+<p> 相关组件：BeanPropertyBindingResult和数据绑定关联</p>
+<h2 id="配置组件"><a href="#配置组件" class="headerlink" title="配置组件"></a>配置组件</h2><h3 id="Java-Bean错误描述：org-springframework-validation-ObjectError"><a href="#Java-Bean错误描述：org-springframework-validation-ObjectError" class="headerlink" title="Java Bean错误描述：org.springframework.validation.ObjectError"></a>Java Bean错误描述：<code>org.springframework.validation.ObjectError</code></h3><h3 id="Java-Bean属性错误描述：org-springframework-validation-FieldError"><a href="#Java-Bean属性错误描述：org-springframework-validation-FieldError" class="headerlink" title="Java Bean属性错误描述：org.springframework.validation.FieldError"></a>Java Bean属性错误描述：<code>org.springframework.validation.FieldError</code></h3><p>这里的属性指的是它的对象字段，而不是静态字段</p>
+<h2 id="Errors-文案来源"><a href="#Errors-文案来源" class="headerlink" title="Errors 文案来源"></a>Errors 文案来源</h2><ul>
+<li><p>选择Errors实现（如：org.springframework.validation.BeanPropertyBindingResult）</p>
 </li>
-<li>xml<ul>
-<li>SAX（simple Api for xml）</li>
-<li>JAXB(java xml for bingding)</li>
-<li>SOAP</li>
-</ul>
+<li><p>调用reject或rejectValue方法</p>
+</li>
+<li><p>获取Errors对象中ObjectError或FieldError</p>
+</li>
+<li><p>将ObjectError或FieldError中的code和args,关联MessageSource实现（如ResourceBundleMessageSource）</p>
+<p>coy：对这个比较感兴趣</p>
+<p>这个如何和<code>MessageSource</code>进行打通？答案在<code>MessageSourceResolvable</code>接口</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210607235825375.png" alt="image-20210607235825375"></p>
 </li>
 </ul>
-<h2 id="Http-客户端支持"><a href="#Http-客户端支持" class="headerlink" title="Http 客户端支持"></a>Http 客户端支持</h2><ul>
-<li>jdk http client</li>
-<li>OkHttp</li>
-<li>java 11 Http 2</li>
-</ul>
-<h2 id="负载均衡-client"><a href="#负载均衡-client" class="headerlink" title="负载均衡-client"></a>负载均衡-client</h2><ul>
-<li>Ribbon</li>
-</ul>
-<p>接口在迁移过程中，</p>
-<p>A</p>
-<p>B 应用名称不一样</p>
-<h3 id="方法参数类型转换器-ConversionService"><a href="#方法参数类型转换器-ConversionService" class="headerlink" title="方法参数类型转换器-ConversionService"></a>方法参数类型转换器-ConversionService</h3><p>参数类型</p>
-<h4 id="HTTP-消息序列化与反序列化"><a href="#HTTP-消息序列化与反序列化" class="headerlink" title="HTTP 消息序列化与反序列化"></a>HTTP 消息序列化与反序列化</h4><p>HttpMessageConverter</p>
-<p>解决构造器注入</p>
-<p>负载均衡的实现</p>
+<p>MessageSource接口与MessageSourceResolver</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">String <span class="title">getMessage</span><span class="params">(MessageSourceResolvable resolvable, Locale locale)</span> <span class="keyword">throws</span> NoSuchMessageException</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210608001008296.png" alt="image-20210608001008296"></p>
+<h2 id="ErrorsMessageDemo"><a href="#ErrorsMessageDemo" class="headerlink" title="ErrorsMessageDemo"></a>ErrorsMessageDemo</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Licensed to the Apache Software Foundation (ASF) under one or more</span></span><br><span class="line"><span class="comment"> * contributor license agreements.  See the NOTICE file distributed with</span></span><br><span class="line"><span class="comment"> * this work for additional information regarding copyright ownership.</span></span><br><span class="line"><span class="comment"> * The ASF licenses this file to You under the Apache License, Version 2.0</span></span><br><span class="line"><span class="comment"> * (the "License"); you may not use this file except in compliance with</span></span><br><span class="line"><span class="comment"> * the License.  You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *     http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment"> * distributed under the License is distributed on an "AS IS" BASIS,</span></span><br><span class="line"><span class="comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment"> * See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment"> * limitations under the License.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">package</span> org.geekbang.thinking.in.spring.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.geekbang.thinking.in.spring.ioc.overview.domain.User;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.MessageSource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.StaticMessageSource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.Errors;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.FieldError;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.ObjectError;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Locale;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 错误文案示例</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> &lt;a href="mailto:mercyblitz@gmail.com"&gt;Mercy&lt;/a&gt;</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> Errors</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ErrorsMessageDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 0. 创建 User 对象</span></span><br><span class="line">        User user = <span class="keyword">new</span> User();</span><br><span class="line">        user.setName(<span class="string">"小马哥"</span>);</span><br><span class="line">        <span class="comment">// 1. 选择 Errors - BeanPropertyBindingResult</span></span><br><span class="line">        Errors errors = <span class="keyword">new</span> BeanPropertyBindingResult(user, <span class="string">"user"</span>);</span><br><span class="line">        <span class="comment">// 2. 调用 reject 或 rejectValue</span></span><br><span class="line">        <span class="comment">// reject 生成 ObjectError</span></span><br><span class="line">        <span class="comment">// reject 生成 FieldError</span></span><br><span class="line">        errors.reject(<span class="string">"user.properties.not.null"</span>);</span><br><span class="line">        <span class="comment">// user.name = user.getName()</span></span><br><span class="line">        errors.rejectValue(<span class="string">"name"</span>, <span class="string">"name.required"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 获取 Errors 中 ObjectError 和 FieldError</span></span><br><span class="line">        <span class="comment">// FieldError is ObjectError</span></span><br><span class="line">        List&lt;ObjectError&gt; globalErrors = errors.getGlobalErrors();</span><br><span class="line">        List&lt;FieldError&gt; fieldErrors = errors.getFieldErrors();</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 通过 ObjectError 和 FieldError 中的 code 和 args 来关联 MessageSource 实现</span></span><br><span class="line">        MessageSource messageSource = createMessageSource();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (ObjectError error : allErrors) &#123;</span><br><span class="line">            String message = messageSource.getMessage(error.getCode(), error.getArguments(), Locale.getDefault());</span><br><span class="line">            System.out.println(message);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> MessageSource <span class="title">createMessageSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StaticMessageSource messageSource = <span class="keyword">new</span> StaticMessageSource();</span><br><span class="line">        messageSource.addMessage(<span class="string">"user.properties.not.null"</span>, Locale.getDefault(), <span class="string">"User 所有属性不能为空"</span>);</span><br><span class="line">        messageSource.addMessage(<span class="string">"id.required"</span>, Locale.getDefault(), <span class="string">"the id of User must not be null."</span>);</span><br><span class="line">        messageSource.addMessage(<span class="string">"name.required"</span>, Locale.getDefault(), <span class="string">"the name of User must not be null."</span>);</span><br><span class="line">        <span class="keyword">return</span> messageSource;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
 
@@ -245,7 +228,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/03/notebook/20210603-%E5%88%86%E5%B8%83%E5%BC%8F%E6%9C%8D%E5%8A%A1%E8%B0%83%E7%94%A8%E4%B8%8E%E6%9C%8D%E5%8A%A1%E6%9F%94%E6%80%A7/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/145-Errors%20%E8%AE%BE%E8%AE%A1/">展开全文 >></a>
         </p>
       
 
@@ -275,20 +258,110 @@
 
 
   
-    <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/137-Java国际化标准实现 ResourceBundle" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-notebook/spring编程核心思想/13章 Spring 校验Validation/144-Validator 设计" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/137-Java%E5%9B%BD%E9%99%85%E5%8C%96%E6%A0%87%E5%87%86%E5%AE%9E%E7%8E%B0%20ResourceBundle/">notebook/spring编程核心思想/12章 Spring 国际化/137-Java国际化标准实现 ResourceBundle</a>
+      <a class="article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/144-Validator%20%E8%AE%BE%E8%AE%A1/">notebook/spring编程核心思想/13章 Spring 校验Validation/144-Validator 设计</a>
     </h1>
   
 
         
-        <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/137-Java%E5%9B%BD%E9%99%85%E5%8C%96%E6%A0%87%E5%87%86%E5%AE%9E%E7%8E%B0%20ResourceBundle/" class="archive-article-date">
-  	<time datetime="2021-06-02T14:26:52.430Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-02</time>
+        <a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/144-Validator%20%E8%AE%BE%E8%AE%A1/" class="archive-article-date">
+  	<time datetime="2021-06-07T14:43:52.462Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Validator</p>
+<p>[toc]</p>
+<h2 id="接口职责"><a href="#接口职责" class="headerlink" title="接口职责"></a>接口职责</h2><p>Spring内部校验器接口，通过编程的方式校验目标对象</p>
+<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><ul>
+<li><p>校验目标类能否校验</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(Class&lt;?&gt; clazz)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>注意：使用场景十分狭隘，为什么？</p>
+<p>它是针对某一个Bean或者某个类的对象来进行操作</p>
+</li>
+<li><p>校验目标对象，并将校验失败的内容输出至Errors对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">validate</span><span class="params">(Object target, Errors errors)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>也就是Errors有两个职责</p>
+<ul>
+<li>组织我们的错误</li>
+<li>存储我们我们相关的错误（国际化文案 ）</li>
+</ul>
+<p>coy:校验失败的内容如何国际化?</p>
+</li>
+</ul>
+<h2 id="配置组件"><a href="#配置组件" class="headerlink" title="配置组件"></a>配置组件</h2><ul>
+<li>错误收集器-org.springframework.validation.Errors</li>
+<li>Validator工作类-org.springframework.validation.ValidationUtils</li>
+</ul>
+<h2 id="自定义实现"><a href="#自定义实现" class="headerlink" title="自定义实现"></a>自定义实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserLoginValidator</span> <span class="keyword">implements</span> <span class="title">Validator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MINIMUM_PASSWORD_LENGTH = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(Class clazz)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> UserLogin<span class="class">.<span class="keyword">class</span>.<span class="title">isAssignableFrom</span>(<span class="title">clazz</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">validate</span><span class="params">(Object target, Errors errors)</span> </span>&#123;</span><br><span class="line">       ValidationUtils.rejectIfEmptyOrWhitespace(errors, <span class="string">"userName"</span>, <span class="string">"field.required"</span>);</span><br><span class="line">       ValidationUtils.rejectIfEmptyOrWhitespace(errors, <span class="string">"password"</span>, <span class="string">"field.required"</span>);</span><br><span class="line">       UserLogin login = (UserLogin) target;</span><br><span class="line">       <span class="keyword">if</span> (login.getPassword() != <span class="keyword">null</span></span><br><span class="line">             &amp;&amp; login.getPassword().trim().length() &lt; MINIMUM_PASSWORD_LENGTH) &#123;</span><br><span class="line">          errors.rejectValue(<span class="string">"password"</span>, <span class="string">"field.min.length"</span>,</span><br><span class="line">                <span class="keyword">new</span> Object[]&#123;Integer.valueOf(MINIMUM_PASSWORD_LENGTH)&#125;,</span><br><span class="line">                <span class="string">"The password must be at least ["</span> + MINIMUM_PASSWORD_LENGTH + <span class="string">"] characters in length."</span>);</span><br><span class="line">       &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>程序式而非声明式，比较落后</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/144-Validator%20%E8%AE%BE%E8%AE%A1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/spring编程核心思想/13章 Spring 校验Validation/143-Spring validator校验使用场景" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/143-Spring%20validator%E6%A0%A1%E9%AA%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">notebook/spring编程核心思想/13章 Spring 校验Validation/143-Spring validator校验使用场景</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/143-Spring%20validator%E6%A0%A1%E9%AA%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="archive-article-date">
+  	<time datetime="2021-06-07T14:32:06.518Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
 </a>
         
       </header>
@@ -296,99 +369,29 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>[toc]</p>
-<h1 id="一般系统分析"><a href="#一般系统分析" class="headerlink" title="一般系统分析"></a>一般系统分析</h1><h2 id="功能、目标"><a href="#功能、目标" class="headerlink" title="功能、目标"></a>功能、目标</h2><p>相关资源的国际化显示</p>
-<h2 id="参与者"><a href="#参与者" class="headerlink" title="参与者"></a>参与者</h2><ul>
-<li>国际化资源本身<ul>
-<li>properties文件</li>
-<li>资源的编码方式</li>
-<li>普通的 key value 形式</li>
-<li>value中存在属性占位符，支持参数替换</li>
-</ul>
-</li>
-<li>国际化资源provider<ul>
-<li>MessageSource</li>
-<li>ResouceBundler</li>
-</ul>
-</li>
-<li>国际化资源consumer<ul>
-<li>异常多语言</li>
-<li>BeanValidation 校验的国际化文案</li>
-<li>web页面渲染</li>
-</ul>
-</li>
-</ul>
-<h2 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h2><p>国际化资源提供方如何和使用方进行交互？</p>
-<p>message = f(key,Locale,args)</p>
-<p>根据key+Locale定位到具体的某个消息模板，根据args 参数对模板占位符进行填充</p>
-<p>所以消息是和地区相关还是和语言相关?</p>
-<h2 id="如何进行API-设计？"><a href="#如何进行API-设计？" class="headerlink" title="如何进行API 设计？"></a>如何进行API 设计？</h2><p>资源与消息</p>
-<p>资源可以是各种介质的，如</p>
-<ul>
-<li>properties</li>
-<li>file</li>
-<li>Stream</li>
-<li>socket</li>
-</ul>
-<p>消息是什么形式的呢？</p>
-<ul>
-<li>String 类型的</li>
-</ul>
-<p>Spring 设计的API</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">String <span class="title">getMessage</span><span class="params">(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p>与我想象中有一点点差异，其考虑了在相应code没有配置国际化消息模板情况下可以制定默认返回的消息形式。默认消息是有属性占位符的，也会进行渲染吗？</p>
-<h3 id="这个地方解答了我的疑惑，答案当然是会进行渲染"><a href="#这个地方解答了我的疑惑，答案当然是会进行渲染" class="headerlink" title="这个地方解答了我的疑惑，答案当然是会进行渲染"></a>这个地方解答了我的疑惑，答案当然是会进行渲染</h3><p>org.springframework.context.support.DelegatingMessageSource#getMessage</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">getMessage</span><span class="params">(String code, @Nullable Object[] args, @Nullable String defaultMessage, Locale locale)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="keyword">this</span>.parentMessageSource != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.parentMessageSource.getMessage(code, args, defaultMessage, locale);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> <span class="keyword">if</span> (defaultMessage != <span class="keyword">null</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> renderDefaultMessage(defaultMessage, args, locale);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="消息模板是如何进行渲染的呢？"><a href="#消息模板是如何进行渲染的呢？" class="headerlink" title="消息模板是如何进行渲染的呢？"></a>消息模板是如何进行渲染的呢？</h3><h4 id="MessageFormat"><a href="#MessageFormat" class="headerlink" title="MessageFormat"></a>MessageFormat</h4><blockquote>
-<p>MessageFormat provides a means to produce concatenated messages in a language-neutral way. Use this to construct messages displayed for end users.<br>MessageFormat takes a set of objects, formats them, then inserts the formatted strings into the pattern at the appropriate places</p>
-</blockquote>
-<p>核心代码</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">protected String formatMessage(String msg, @Nullable Object[] args, Locale locale) &#123;</span><br><span class="line"></span><br><span class="line">		messageFormat &#x3D; createMessageFormat(msg, locale);</span><br><span class="line">		synchronized (messageFormat) &#123;</span><br><span class="line">			return messageFormat.format(resolveArguments(args, locale));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>java.text.MessageFormat#MessageFormat(java.lang.String, java.util.Locale)</p>
-<p>java.text.Format#format(java.lang.Object)</p>
-<h1 id="核心接口"><a href="#核心接口" class="headerlink" title="核心接口"></a>核心接口</h1><h2 id="抽象实现-java-util-ResourceBundle"><a href="#抽象实现-java-util-ResourceBundle" class="headerlink" title="抽象实现-java.util.ResourceBundle"></a>抽象实现-java.util.ResourceBundle</h2><h3 id="key-value-设计"><a href="#key-value-设计" class="headerlink" title="key-value 设计"></a>key-value 设计</h3><p><strong>key</strong>:文案模板的key</p>
-<p><strong>value</strong>:就是文案模板的内容，这个内容可能就是一个模板，也可能是实际的内容</p>
-<h3 id="层次性设计"><a href="#层次性设计" class="headerlink" title="层次性设计"></a>层次性设计</h3><p>方法：java.util.ResourceBundle#setParent 用来关联双亲，在查找的过程中可以一并进行查询</p>
-<p><strong>那是先找parent的还是先找自身的呢？</strong></p>
-<p>先查找当前的<code>ResourceBundle</code>再查找其关联的parent的</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Object <span class="title">getObject</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line">    Object obj = handleGetObject(key);</span><br><span class="line">    <span class="keyword">if</span> (obj == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</span><br><span class="line">            obj = parent.getObject(key);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (obj == <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> MissingResourceException(<span class="string">"Can't find resource for bundle "</span></span><br><span class="line">                                               +<span class="keyword">this</span>.getClass().getName()</span><br><span class="line">                                               +<span class="string">", key "</span>+key,</span><br><span class="line">                                               <span class="keyword">this</span>.getClass().getName(),</span><br><span class="line">                                               key);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="缓存设计"><a href="#缓存设计" class="headerlink" title="缓存设计"></a>缓存设计</h3><p>在启动中对我们的资源进行缓存，我们可以发现它内部的两种实现</p>
-<ul>
-<li><p>一种是硬编码实现，没有缓存可言，那么相当于用到的都是一些类似于像常量一样的东西</p>
-</li>
-<li><p>一种是properties实现，资源加载是需要一定的开销的，加载之后将其缓存起来</p>
-<p>缓存key:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CacheKey cacheKey &#x3D; new CacheKey(baseName, locale, loader);</span><br></pre></td></tr></table></figure>
-
-<p>为啥需要一个Loader？</p>
-<p>因为properties它是基于ClassLoader来进行加载的，每个classLoader有自己加载的范围。</p>
-</li>
-</ul>
-<h3 id="字符编码控制-java-util-ResourceBundle-Control-since-1-6"><a href="#字符编码控制-java-util-ResourceBundle-Control-since-1-6" class="headerlink" title="字符编码控制-java.util.ResourceBundle.Control @since 1.6"></a>字符编码控制-java.util.ResourceBundle.Control @since 1.6</h3><p>不适合直接去使用，需要实现一个Control</p>
-<p>不想去实现可以使用ResourceBundleControlProvider ，但这个就不用去实现了吗？？</p>
-<h3 id="Control-SPI-扩展-java-util-spi-ResourceBundleControlProvider-since1-8"><a href="#Control-SPI-扩展-java-util-spi-ResourceBundleControlProvider-since1-8" class="headerlink" title="Control SPI 扩展-java.util.spi.ResourceBundleControlProvider @since1.8"></a>Control SPI 扩展-java.util.spi.ResourceBundleControlProvider @since1.8</h3><p>这个spi会告诉你去读哪个basename</p>
-<p>不同的basename,使用不同的方式去控制</p>
-<p>newBundle 方法,没有传字符编码，所以在实现过程中需要将字符编码传进去</p>
-<p>或者在传递propertySource时就干脆制定编码</p>
-<h2 id="properties-资源实现-java-util-PropertyResourceBundle"><a href="#properties-资源实现-java-util-PropertyResourceBundle" class="headerlink" title="properties 资源实现-java.util.PropertyResourceBundle"></a>properties 资源实现-java.util.PropertyResourceBundle</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">PropertyResourceBundle</span> <span class="params">(Reader reader)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">    Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">    properties.load(reader);</span><br><span class="line">    lookup = <span class="keyword">new</span> HashMap(properties);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Implements java.util.ResourceBundle.handleGetObject; inherits javadoc specification.</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">handleGetObject</span><span class="params">(String key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (key == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> lookup.get(key);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用properties文件取保存文案编码和文案内容</p>
-<p>注意：<code>PropertyResourceBundle</code> 它的默认编码是<code>ISO-8859-1</code>,为拉丁字符或者说ASCII码来进行服务的</p>
-<h2 id="例举实现-java-util-ListResourceBundle"><a href="#例举实现-java-util-ListResourceBundle" class="headerlink" title="例举实现-java.util.ListResourceBundle"></a>例举实现-java.util.ListResourceBundle</h2><p>实现：一个二维数组，第一元素是key,第二个元素为key对应的模板</p>
-<p>命名方式：</p>
-<blockquote>
-<p>近乎于硬编码的方式进行实现</p>
-</blockquote>
-<h1 id="收获"><a href="#收获" class="headerlink" title="收获"></a>收获</h1><p>MessageSource是Spring的国际化接口</p>
-<p>ResourceBundle是Java的国际化接口，MessageSourceResourceBundle 依赖于Java的标准进行了实现</p>
-<p>当Java文本化和Java国际化结合起来就是我们要讨论的Spring国际化接口的实现</p>
+<h2 id="Spring校验相关内容"><a href="#Spring校验相关内容" class="headerlink" title="Spring校验相关内容"></a>Spring校验相关内容</h2><ol>
+<li>Spring校验使用场景</li>
+<li>Validator接口设计</li>
+<li>Errors接口设计</li>
+<li>Errors文案来源</li>
+<li>自定义 Validator</li>
+<li>Validator的救赎</li>
+<li>面试题精选</li>
+</ol>
+<p>接口设计</p>
+<p>无论是validator 或者是error接口都不是十分优秀，有一些过度设计的嫌疑</p>
+<p>设计复杂，不大容易理解</p>
+<p>coy:</p>
+<p>何出此言？</p>
+<p>validator 的救赎</p>
+<p>hibernate validator，如果没有这个框架，无论是spring boot还是spring cloud，他们后续的一些关于spring的校验，事实上基本上失败，</p>
+<h2 id="Spring校验使用场景"><a href="#Spring校验使用场景" class="headerlink" title="Spring校验使用场景"></a>Spring校验使用场景</h2><h3 id="常规校验（Validator）"><a href="#常规校验（Validator）" class="headerlink" title="常规校验（Validator）"></a>常规校验（Validator）</h3><p>用途很少，通常来说Spring的校验和Bean的数据绑定以及Bean上的一些数据上的校验是一种强绑定的方式。</p>
+<p>何为强绑定？</p>
+<p>在接口设计时会提到这一点</p>
+<h3 id="数据绑定（DataBinder）"><a href="#数据绑定（DataBinder）" class="headerlink" title="数据绑定（DataBinder）"></a>数据绑定（DataBinder）</h3><p> 例如外部化配置源与普通POJO的绑定 ，比如他可能有层次性，多级对象的嵌套这种情况也会有的。 </p>
+<h3 id="spring-web-参数绑定"><a href="#spring-web-参数绑定" class="headerlink" title="spring web 参数绑定"></a>spring web 参数绑定</h3><p>主要针对Servlet引擎进行实现，请求参数 字符类型，转为其他类型需要做一些校验。 </p>
+<h3 id="Spring-web-mvc-webFlux-处理方法参数校验"><a href="#Spring-web-mvc-webFlux-处理方法参数校验" class="headerlink" title="Spring web mvc/webFlux 处理方法参数校验"></a>Spring web mvc/webFlux 处理方法参数校验</h3><p>通常我们会在spring mvc一些处理方法上面增加一些注解的方式来进行二次校验，不需要人为干预</p>
+<p>绑定Bean Validation对参数进行校验（字段长度等）</p>
 
       
 
@@ -401,7 +404,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/137-Java%E5%9B%BD%E9%99%85%E5%8C%96%E6%A0%87%E5%87%86%E5%AE%9E%E7%8E%B0%20ResourceBundle/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/143-Spring%20validator%E6%A0%A1%E9%AA%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">展开全文 >></a>
         </p>
       
 
@@ -431,20 +434,150 @@
 
 
   
-    <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/136 层次性MessageSource" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-notebook/JVM/20210606-姗" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/136%20%E5%B1%82%E6%AC%A1%E6%80%A7MessageSource/">notebook/spring编程核心思想/12章 Spring 国际化/136 层次性MessageSource</a>
+      <a class="article-title" href="/2021/06/06/notebook/JVM/20210606-%E5%A7%97/">notebook/JVM/20210606-姗</a>
     </h1>
   
 
         
-        <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/136%20%E5%B1%82%E6%AC%A1%E6%80%A7MessageSource/" class="archive-article-date">
-  	<time datetime="2021-06-02T13:18:42.660Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-02</time>
+        <a href="/2021/06/06/notebook/JVM/20210606-%E5%A7%97/" class="archive-article-date">
+  	<time datetime="2021-06-06T14:45:28.414Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>一些想说的</p>
+<p>为什么每次出去玩都要吵架？</p>
+<p>想去哪玩，定好时间地点然后去玩不就好了吗</p>
+<p>你想要什么？</p>
+<p>我能给你什么？</p>
+<p>我想说的几点</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/06/notebook/JVM/20210606-%E5%A7%97/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/JVM/20210606-GC" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/06/notebook/JVM/20210606-GC/">notebook/JVM/20210606-GC</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/06/notebook/JVM/20210606-GC/" class="archive-article-date">
+  	<time datetime="2021-06-06T13:24:11.696Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/06/notebook/JVM/20210606-GC/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/JVM/20210606-初涉jvm" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/06/notebook/JVM/20210606-%E5%88%9D%E6%B6%89jvm/">notebook/JVM/20210606-初涉jvm</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/06/notebook/JVM/20210606-%E5%88%9D%E6%B6%89jvm/" class="archive-article-date">
+  	<time datetime="2021-06-06T13:23:46.728Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
 </a>
         
       </header>
@@ -452,54 +585,29 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>[toc]</p>
-<p>系统之美</p>
-<p>系统的三个基本特性：适应力，自组织，层次性。其中就有层次性。</p>
-<h2 id="如何理解层次性？"><a href="#如何理解层次性？" class="headerlink" title="如何理解层次性？"></a>如何理解层次性？</h2><p>复杂系统的基本特征之一。</p>
-<h2 id="Spring-层次性接口回顾"><a href="#Spring-层次性接口回顾" class="headerlink" title="Spring 层次性接口回顾"></a>Spring 层次性接口回顾</h2><h3 id="o-s-context-ApplicationContext"><a href="#o-s-context-ApplicationContext" class="headerlink" title="o.s.context.ApplicationContext"></a>o.s.context.ApplicationContext</h3><ul>
-<li><p>org.springframework.context.ApplicationContext#getParent</p>
-</li>
-<li><p>org.springframework.context.ConfigurableApplicationContext</p>
-</li>
-<li><p>org.springframework.context.ConfigurableApplicationContext#setParent</p>
-</li>
-</ul>
-<h3 id="o-s-beans-factory-HierarchicalBeanFactory"><a href="#o-s-beans-factory-HierarchicalBeanFactory" class="headerlink" title="o.s.beans.factory.HierarchicalBeanFactory"></a>o.s.beans.factory.HierarchicalBeanFactory</h3><p>org.springframework.beans.factory.HierarchicalBeanFactory#getParentBeanFactory</p>
-<p>org.springframework.beans.factory.config.ConfigurableBeanFactory#setParentBeanFactory</p>
+<h1 id="以下哪个扮演的角色更重要？"><a href="#以下哪个扮演的角色更重要？" class="headerlink" title="以下哪个扮演的角色更重要？"></a>以下哪个扮演的角色更重要？</h1><h2 id="叫什么？"><a href="#叫什么？" class="headerlink" title="叫什么？"></a>叫什么？</h2><p>助记符，起概括总结作用</p>
+<p>水</p>
 <ul>
-<li>containsLocalBean 判断当前IOC容器（BeanFactory）是否有这个Bean</li>
-<li>containsBean  会搜索层次性的BeanFactory</li>
+<li>中文-水</li>
+<li>英文-water</li>
+<li>化学式-H2O</li>
 </ul>
-<h3 id="o-s-beans-factory-config-BeanDefinition"><a href="#o-s-beans-factory-config-BeanDefinition" class="headerlink" title="o.s.beans.factory.config.BeanDefinition"></a>o.s.beans.factory.config.BeanDefinition</h3><p>BeanDefinition是可以合并的，那么它必然就会有一个parent，但是其不像前面的接口返回一个<code>BeanDefinition</code>实例，而是返回它关联的BeanDefinition的一个名称，即getParentName</p>
-<p>为什么呢？</p>
-<p>因为早期BeanDefinition的实现是基于xml或Properties文件，从文本关系里去分析，是很难得到它的一个parent，而是得到patent的一个指引。Parent BeanDefinition的名称</p>
-<h3 id="层次性国际化接口o-s-c-HierarchicalMessageSource"><a href="#层次性国际化接口o-s-c-HierarchicalMessageSource" class="headerlink" title="层次性国际化接口o.s.c.HierarchicalMessageSource"></a>层次性国际化接口o.s.c.HierarchicalMessageSource</h3><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210602220208433.png" alt="image-20210602220208433"></p>
-<p>按照正常spring的命名规则他应该有一个</p>
-<p>HierarchicalMessageSource仅提供getParentMessageSourcef方法</p>
-<p>而在ConfigurableMessageSource中提供setParentMessageSource方法</p>
-<h2 id="收获"><a href="#收获" class="headerlink" title="收获"></a>收获</h2><h3 id="Spring命名哲学"><a href="#Spring命名哲学" class="headerlink" title="Spring命名哲学"></a>Spring命名哲学</h3><p>ConfigurableXXX,会有一些set方法，提供可配置的能力</p>
-<p>而HierarchicalXX,提供getParentXX，提供获取双亲信息的能力</p>
-<h2 id="层次性设计"><a href="#层次性设计" class="headerlink" title="层次性设计"></a>层次性设计</h2><p>层次性设计并非Spring的原创，我们所谓的ClassLoader默认就具有层次性，于此同时再Java标准的国际化接口里ResourceBoundle里面也有。</p>
-<h3 id="如何理解层次性？-1"><a href="#如何理解层次性？-1" class="headerlink" title="如何理解层次性？"></a>如何理解层次性？</h3><p>遗传与变异，可以继承双亲的一些属性。</p>
-<h3 id="层次性设计的好处"><a href="#层次性设计的好处" class="headerlink" title="层次性设计的好处"></a>层次性设计的好处</h3><p>当你当前找不到的时候，或者看你的实现，是先找parent还是先找child都行。搜索范围搜索路径更广了，更有弹性。</p>
-<p>像上级求援。</p>
-<p>用户名 sea-gaia</p>
-<h1 id="层次性MessageSource实现"><a href="#层次性MessageSource实现" class="headerlink" title="层次性MessageSource实现"></a>层次性MessageSource实现</h1><h2 id="AbstractApplicationContext-initMessageSource"><a href="#AbstractApplicationContext-initMessageSource" class="headerlink" title="AbstractApplicationContext#initMessageSource"></a>AbstractApplicationContext#initMessageSource</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">initMessageSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		ConfigurableListableBeanFactory beanFactory = getBeanFactory();</span><br><span class="line">		<span class="keyword">if</span> (beanFactory.containsLocalBean(MESSAGE_SOURCE_BEAN_NAME)) &#123;</span><br><span class="line">			<span class="keyword">this</span>.messageSource = beanFactory.getBean(MESSAGE_SOURCE_BEAN_NAME, MessageSource<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">			<span class="comment">// Make MessageSource aware of parent MessageSource.</span></span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">this</span>.parent != <span class="keyword">null</span> &amp;&amp; <span class="keyword">this</span>.messageSource <span class="keyword">instanceof</span> HierarchicalMessageSource) &#123;</span><br><span class="line">				HierarchicalMessageSource hms = (HierarchicalMessageSource) <span class="keyword">this</span>.messageSource;</span><br><span class="line">				<span class="keyword">if</span> (hms.getParentMessageSource() == <span class="keyword">null</span>) &#123;</span><br><span class="line">					<span class="comment">// Only set parent context as parent MessageSource if no parent MessageSource</span></span><br><span class="line">					<span class="comment">// registered already.</span></span><br><span class="line">					hms.setParentMessageSource(getInternalParentMessageSource());</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">				logger.trace(<span class="string">"Using MessageSource ["</span> + <span class="keyword">this</span>.messageSource + <span class="string">"]"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">// Use empty MessageSource to be able to accept getMessage calls.</span></span><br><span class="line">			DelegatingMessageSource dms = <span class="keyword">new</span> DelegatingMessageSource();</span><br><span class="line">			dms.setParentMessageSource(getInternalParentMessageSource());</span><br><span class="line">			<span class="keyword">this</span>.messageSource = dms;</span><br><span class="line">			beanFactory.registerSingleton(MESSAGE_SOURCE_BEAN_NAME, <span class="keyword">this</span>.messageSource);</span><br><span class="line">			<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">				logger.trace(<span class="string">"No '"</span> + MESSAGE_SOURCE_BEAN_NAME + <span class="string">"' bean, using ["</span> + <span class="keyword">this</span>.messageSource + <span class="string">"]"</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
-
-<p>调用过程</p>
-<ul>
-<li>org.springframework.context.support.AbstractApplicationContext#refresh<ul>
-<li>org.springframework.context.support.AbstractApplicationContext#initMessageSource<ul>
-<li>dms.setParentMessageSource(getInternalParentMessageSource());</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>如果在当前上下文找不到MessageSource Bean，会创建一个DelegatingMessageSource Bean，尝试去父上下文找MessageSource Bean ,将其设置为他的parentMessageSource 递归往上寻找</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> MessageSource <span class="title">getInternalParentMessageSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> (getParent() <span class="keyword">instanceof</span> AbstractApplicationContext ?</span><br><span class="line">         ((AbstractApplicationContext) getParent()).messageSource : getParent());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
+<p>这么看H2O似乎能够给我们提供更多的信息，其揭示了什么组成了水。</p>
+<h2 id="是什么？"><a href="#是什么？" class="headerlink" title="是什么？"></a>是什么？</h2><p>水是什么？</p>
+<p>水是生命之源，生命的源头。强调的是生命起源于水，但水到底是什么呢？</p>
+<p>水的本质是什么？</p>
+<p>物理-氢原子 氧原子</p>
+<p>化学-化合物</p>
+<h3 id="物理变化与化学变化的区别是什么？"><a href="#物理变化与化学变化的区别是什么？" class="headerlink" title="物理变化与化学变化的区别是什么？"></a>物理变化与化学变化的区别是什么？</h3><p>一加一等不等于二？</p>
+<p>如果等于2那么是物理变化</p>
+<p>如果不等于2那么是化学变化</p>
+<p>氢气和氧气混在一起还是氢气和氧气</p>
+<p>如果发生燃烧了呢？</p>
+<p>整体大于部分之和就是这么个道理</p>
+<h2 id="用来干什么？"><a href="#用来干什么？" class="headerlink" title="用来干什么？"></a>用来干什么？</h2><p>用来做什么必然涉及到除了自己的其他角色，即将与其他元素产生关系。</p>
+<p>jvm</p>
+<p>叫什么？</p>
+<p>Java® Virtual Machine</p>
 
       
 
@@ -512,7 +620,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/136%20%E5%B1%82%E6%AC%A1%E6%80%A7MessageSource/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/06/06/notebook/JVM/20210606-%E5%88%9D%E6%B6%89jvm/">展开全文 >></a>
         </p>
       
 
@@ -542,20 +650,20 @@
 
 
   
-    <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/135-Spring 国际化接口" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-notebook/JUC/JUC基础运用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/135-Spring%20%E5%9B%BD%E9%99%85%E5%8C%96%E6%8E%A5%E5%8F%A3/">notebook/spring编程核心思想/12章 Spring 国际化/135-Spring 国际化接口</a>
+      <a class="article-title" href="/2021/06/06/notebook/JUC/JUC%E5%9F%BA%E7%A1%80%E8%BF%90%E7%94%A8/">notebook/JUC/JUC基础运用</a>
     </h1>
   
 
         
-        <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/135-Spring%20%E5%9B%BD%E9%99%85%E5%8C%96%E6%8E%A5%E5%8F%A3/" class="archive-article-date">
-  	<time datetime="2021-06-02T11:28:54.037Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-02</time>
+        <a href="/2021/06/06/notebook/JUC/JUC%E5%9F%BA%E7%A1%80%E8%BF%90%E7%94%A8/" class="archive-article-date">
+  	<time datetime="2021-06-06T04:02:11.581Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
 </a>
         
       </header>
@@ -563,64 +671,135 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>[toc]</p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>通过了解Spring 国际化接口，去了解普通文案是如何渲染的</p>
-<h2 id="核心接口"><a href="#核心接口" class="headerlink" title="核心接口"></a>核心接口</h2><h3 id="org-springframework-context-MessageSource"><a href="#org-springframework-context-MessageSource" class="headerlink" title="org.springframework.context.MessageSource"></a><code>org.springframework.context.MessageSource</code></h3><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210602193130015.png" alt="image-20210602193130015"></p>
-<p>该接口是放在context包下，context包在spring context里面是与应用上下文相关的，凡是和应用上下文相关的，通常是一些企业化的场景，因此国际化也不例外。</p>
-<p>收获：spring企业级特性与spring context的关系</p>
-<p>spring context 为提供企业级特性。</p>
-<h2 id="相关接口"><a href="#相关接口" class="headerlink" title="相关接口"></a>相关接口</h2><h3 id="java-util-Locale"><a href="#java-util-Locale" class="headerlink" title="java.util.Locale"></a><code>java.util.Locale</code></h3><p>用来代表代表特定的地理、政治、 或文化区域</p>
-<h3 id="o-s-context-MessageSourceResolvable"><a href="#o-s-context-MessageSourceResolvable" class="headerlink" title="o.s.context.MessageSourceResolvable"></a><code>o.s.context.MessageSourceResolvable</code></h3><p><strong>对前面的参数进行聚合</strong></p>
+<h1 id="小马哥-seagmentFault"><a href="#小马哥-seagmentFault" class="headerlink" title="小马哥 seagmentFault"></a>小马哥 seagmentFault</h1><h2 id="基础运用相关内容"><a href="#基础运用相关内容" class="headerlink" title="基础运用相关内容"></a>基础运用相关内容</h2><ol>
+<li><p>Java并发锁</p>
+</li>
+<li><p>Java原子操作</p>
+</li>
+<li><p>Java并发限制</p>
+</li>
+<li><p>Java线程池</p>
+</li>
+<li><p>面试题解析</p>
+</li>
+</ol>
+<h2 id="Java并发锁"><a href="#Java并发锁" class="headerlink" title="Java并发锁"></a>Java并发锁</h2><h3 id="重进入锁-ReentrantLock"><a href="#重进入锁-ReentrantLock" class="headerlink" title="重进入锁-ReentrantLock"></a>重进入锁-ReentrantLock</h3><p>Synchronized关键字的api 实现</p>
 <blockquote>
-<p>Interface for objects that are suitable for message resolution in a MessageSource.<br>Spring’s own validation error classes implement this interface</p>
-<p>解析 <code>MessageSource</code>接口中的Message？</p>
+<p>A reentrant mutual exclusion Lock with the same basic behavior and semantics as the implicit monitor lock accessed using synchronized methods and statements, but with extended capabilities</p>
 </blockquote>
-<h2 id="主要概念"><a href="#主要概念" class="headerlink" title="主要概念"></a>主要概念</h2><ul>
-<li>文案模板编码 </li>
-<li>文案模板参数<ul>
-<li>占位符-动态参数，参数也有其编码，第一个占位，第二个占位….</li>
-</ul>
-</li>
-<li>区域(<code>Locale</code>)</li>
-</ul>
-<h2 id="他是如何分析api的？"><a href="#他是如何分析api的？" class="headerlink" title="他是如何分析api的？"></a>他是如何分析api的？</h2><p>这是一个所谓的策略接口，去处理消息，这个消息确切来说是文案。</p>
-<p>消息是支持参数化以及国际化的，如何支持？</p>
-<h3 id="国际化如何理解？"><a href="#国际化如何理解？" class="headerlink" title="国际化如何理解？"></a>国际化如何理解？</h3><p>不同的地区、国家产生不同的文案 </p>
-<h3 id="参数化如何理解？"><a href="#参数化如何理解？" class="headerlink" title="参数化如何理解？"></a>参数化如何理解？</h3><p>Spring 提供了两种开箱即用的实现</p>
-<ul>
-<li><p>org.springframework.context.support.ResourceBundleMessageSource</p>
-</li>
-<li><p>org.springframework.context.support.ReloadableResourceBundleMessageSource</p>
+<p>如何理解重进入<code>Reentrant</code></p>
+<p>coy:</p>
+<p>可重入，谁可重入？可重入改变了什么？看下其<code>lock</code>方法</p>
 <blockquote>
-<p>可重新加载的这么一个实现？可重新加载要如何理解？</p>
+<p>Acquires the lock if it is not held by another thread and returns immediately, setting the lock hold count to one.<br>If the current thread already holds the lock then the hold count is incremented by one and the method returns immediately.<br>If the lock is held by another thread then the current thread becomes disabled for thread scheduling purposes and lies dormant until the lock has been acquired, at which time the lock hold count is set to one.</p>
 </blockquote>
-</li>
-</ul>
-<p>从命名可以看出来这两种实现是和<code>ResourceBundle</code>有关的</p>
-<h3 id="ResourceBundle"><a href="#ResourceBundle" class="headerlink" title="ResourceBundle"></a><code>ResourceBundle</code></h3><h4 id="ResourceBundle和Java标准国际化有何联系？"><a href="#ResourceBundle和Java标准国际化有何联系？" class="headerlink" title="ResourceBundle和Java标准国际化有何联系？"></a><code>ResourceBundle</code>和Java标准国际化有何联系？</h4><h4 id="ResourceBundle和Spring-国际化有何联系？"><a href="#ResourceBundle和Spring-国际化有何联系？" class="headerlink" title="ResourceBundle和Spring 国际化有何联系？"></a><code>ResourceBundle</code>和Spring 国际化有何联系？</h4><p>既然这是个接口，那自然可以对接不同的实现,也就是我们消息的来源是动态的？不管你的资源是来自于本地静态文件，还是远程服务，它的接口总会保持这样的语义</p>
-<p>来自数据库？</p>
-<p>来自redis？</p>
-<p>来自本地文件？</p>
-<h2 id="ResourceBundleMessageSource-一探究竟"><a href="#ResourceBundleMessageSource-一探究竟" class="headerlink" title="ResourceBundleMessageSource 一探究竟"></a>ResourceBundleMessageSource 一探究竟</h2><p> 依赖于java.util.ResourceBundle的实现</p>
-<p> 结合 java.text.MessageFormat提供的JDK 标准消息解析</p>
-<p>也就是spring的国际化接口实现依赖与Java标准国际化接口和Java的消息解析</p>
-<h3 id="ResourceBundle-1"><a href="#ResourceBundle-1" class="headerlink" title="ResourceBundle"></a>ResourceBundle</h3><blockquote>
-<p>Resource bundles包含特定于语言环境的对象。当您的程序需要特定于语言环境的资源(例如String)时，您的程序可以从适合当前用户语言环境的资源包中加载它。通过这种方式，您可以编写很大程度上独立于用户语言环境隔离的大部分(如果不是全部的话)资源包中特定于语言环境的信息的程序代码</p>
-</blockquote>
-<p>This allows you to write programs that can:</p>
+<p>线程去获取锁lock会出现以下几种情况</p>
 <ul>
-<li>be easily localized, or translated, into different languages</li>
-<li>handle multiple locales at once</li>
-<li>be easily modified later to support even more locales</li>
+<li>锁没有被其他线程占用，将count置为1</li>
+<li>锁已经被当前线程占用了，将count数加1</li>
+<li>锁被其他线程占用，进去阻塞状态，直到获得锁，然后将count置为1</li>
 </ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> ResourceBundle <span class="title">getResourceBundle</span><span class="params">(String basename, Locale locale)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (getCacheMillis() &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="comment">// Fresh ResourceBundle.getBundle call in order to let ResourceBundle</span></span><br><span class="line">			<span class="comment">// do its native caching, at the expense of more extensive lookup steps.</span></span><br><span class="line">			<span class="keyword">return</span> doGetBundle(basename, locale);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">// Cache forever: prefer locale cache over repeated getBundle calls.</span></span><br><span class="line">			Map&lt;Locale, ResourceBundle&gt; localeMap = <span class="keyword">this</span>.cachedResourceBundles.get(basename);</span><br><span class="line">			<span class="keyword">if</span> (localeMap != <span class="keyword">null</span>) &#123;</span><br><span class="line">				ResourceBundle bundle = localeMap.get(locale);</span><br><span class="line">				<span class="keyword">if</span> (bundle != <span class="keyword">null</span>) &#123;</span><br><span class="line">					<span class="keyword">return</span> bundle;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				ResourceBundle bundle = doGetBundle(basename, locale);</span><br><span class="line">				<span class="keyword">if</span> (localeMap == <span class="keyword">null</span>) &#123;</span><br><span class="line">					localeMap = <span class="keyword">new</span> ConcurrentHashMap&lt;&gt;();</span><br><span class="line">					Map&lt;Locale, ResourceBundle&gt; existing = <span class="keyword">this</span>.cachedResourceBundles.putIfAbsent(basename, localeMap);</span><br><span class="line">					<span class="keyword">if</span> (existing != <span class="keyword">null</span>) &#123;</span><br><span class="line">						localeMap = existing;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				localeMap.put(locale, bundle);</span><br><span class="line">				<span class="keyword">return</span> bundle;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">catch</span> (MissingResourceException ex) &#123;</span><br><span class="line">				<span class="keyword">if</span> (logger.isWarnEnabled()) &#123;</span><br><span class="line">					logger.warn(<span class="string">"ResourceBundle ["</span> + basename + <span class="string">"] not found for MessageSource: "</span> + ex.getMessage());</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// Assume bundle not found</span></span><br><span class="line">				<span class="comment">// -&gt; do NOT throw the exception to allow for checking parent message source.</span></span><br><span class="line">				<span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>猜测：可重入的意思指的是拥有锁的线程可以进行重复加锁，增加锁的次数，锁了多少次，就需要解锁多少次</p>
+<blockquote>
+<p>锁：洗衣机</p>
+<p>寝室:线程</p>
+<p>寝室成员：方法</p>
+<p>寝室里所有人都要洗衣服，洗完才能让别的寝室洗</p>
+</blockquote>
+<h4 id="最佳编程实践"><a href="#最佳编程实践" class="headerlink" title="最佳编程实践"></a>最佳编程实践</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    lock.lock();  <span class="comment">// block until condition holds</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// ... method body</span></span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      lock.unlock()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
 
-<p>从这上面可以看出</p>
+
+
+<h3 id="重进入读写锁-ReentrantReadWriteLock"><a href="#重进入读写锁-ReentrantReadWriteLock" class="headerlink" title="重进入读写锁-ReentrantReadWriteLock"></a>重进入读写锁-ReentrantReadWriteLock</h3><p>在重进入锁的基础上，有读锁（共享）和写锁（排他，独占）</p>
+<h3 id="邮票锁-StampedLock"><a href="#邮票锁-StampedLock" class="headerlink" title="邮票锁-StampedLock"></a>邮票锁-StampedLock</h3><p>乐观锁，有版本概念</p>
+<blockquote>
+<p>A capability-based lock with three modes for controlling read/write access. <strong>The state of a StampedLock consists of a version and mode.</strong> Lock acquisition methods return a stamp that represents and controls access with respect to a lock state; “try” versions of these methods may instead return the special value zero to represent failure to acquire access. Lock release and conversion methods require stamps as arguments, and fail if they do not match the state of the lock. The three modes are:</p>
 <ul>
-<li>basename— Map&lt;Locale, ResourceBundle&gt;<ul>
-<li>Locale—ResourceBundle</li>
+<li><p><strong>Writing</strong>. Method writeLock possibly blocks waiting for exclusive access, returning a stamp that can be used in method unlockWrite to release the lock. Untimed and timed versions of tryWriteLock are also provided. When the lock is held in write mode, no read locks may be obtained, and all optimistic read validations will fail.</p>
+</li>
+<li><p><strong>Reading</strong>. Method readLock possibly blocks waiting for non-exclusive access, returning a stamp that can be used in method unlockRead to release the lock. Untimed and timed versions of tryReadLock are also provided.</p>
+</li>
+<li><p><strong>Optimistic Reading</strong>. Method tryOptimisticRead returns a non-zero stamp only if the lock is not currently held in write mode. Method validate returns true if the lock has not been acquired in write mode since obtaining a given stamp. This mode can be thought of as an extremely weak version of a read-lock, that can be broken by a writer at any time. The use of optimistic mode for short read-only code segments often reduces contention and improves throughput. However, its use is inherently fragile. Optimistic read sections should only read fields and hold them in local variables for later use after validation. Fields read while in optimistic mode may be wildly inconsistent, so usage applies only when you are familiar enough with data representations to check consistency and/or repeatedly invoke method validate(). For example, such steps are typically required when first reading an object or array reference, and then accessing one of its fields, elements or methods.</p>
+</li>
+</ul>
+</blockquote>
+<h1 id="Lesson-Concurrency"><a href="#Lesson-Concurrency" class="headerlink" title="Lesson: Concurrency"></a><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html" target="_blank" rel="noopener">Lesson: Concurrency</a></h1><blockquote>
+<p>Computer users take it for granted that their systems can do more than one thing at a time. They assume that they can continue to work in a word processor, while other applications download files, manage the print queue, and stream audio. Even a single application is often expected to do more than one thing at a time. For example, that streaming audio application must simultaneously read the digital audio off the network, decompress it, manage playback, and update its display. Even the word processor should always be ready to respond to keyboard and mouse events, no matter how busy it is reformatting text or updating the display. Software that can do such things is known as <em>concurrent</em> software.</p>
+<p>The Java platform is designed from the ground up to support concurrent programming, with basic concurrency support in the Java programming language and the Java class libraries. Since version 5.0, the Java platform has also included high-level concurrency APIs. This lesson introduces the platform’s basic concurrency support and summarizes some of the high-level APIs in the <code>java.util.concurrent</code> packages.</p>
+</blockquote>
+<p>Java平台为支持并发编程从头设计，使用Java编程语言和Java类库提供基本的并发支持。从版本5.0开始，Java平台也包含了高级并发api。</p>
+<h2 id="High-Level-Concurrency-Objects"><a href="#High-Level-Concurrency-Objects" class="headerlink" title="High Level Concurrency Objects"></a>High Level Concurrency Objects</h2><blockquote>
+<ul>
+<li><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/newlocks.html" target="_blank" rel="noopener">Lock objects</a> support locking idioms that simplify many concurrent applications.</li>
+<li><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/executors.html" target="_blank" rel="noopener">Executors</a> define a high-level API for launching and managing threads. Executor implementations provided by <code>java.util.concurrent</code> provide thread pool management suitable for large-scale applications.</li>
+<li><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/collections.html" target="_blank" rel="noopener">Concurrent collections</a> make it easier to manage large collections of data, and can greatly reduce the need for synchronization.</li>
+<li><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/atomicvars.html" target="_blank" rel="noopener">Atomic variables</a> have features that minimize synchronization and help avoid memory consistency errors.</li>
+<li><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/threadlocalrandom.html" target="_blank" rel="noopener"><code>ThreadLocalRandom</code></a> (in JDK 7) provides efficient generation of pseudo-random numbers from multiple threads</li>
+</ul>
+</blockquote>
+<ul>
+<li>锁对象支持简化许多并发应用程序的锁定习惯用法。</li>
+</ul>
+<p>coy:</p>
+<ol>
+<li>锁的习惯用法是什么？</li>
+<li>如何理解锁？<ol>
+<li>锁代表的是访问控制 Access Control</li>
+</ol>
+</li>
+<li>简化了哪里？</li>
+</ol>
+<p>executor定义了用于启动和管理线程的高级API。concurrent提供的Executor实现提供了适合大型应用程序的线程池管理。</p>
+<p>coy:</p>
+<ol>
+<li><p>从这句话可以看出来<code>Excutor</code>和<code>Thread</code>类是密不可分的，简化和帮助我们更好的使用<code>Thread</code>api.</p>
+</li>
+<li><p>启动和管理，如何理解管理？</p>
+<p>管理与crud? 操作系统管理的是硬件资源，而Excutor是管理Thread。</p>
+<p>核心修饰语：安全，有效，公平</p>
+<p>Excutor是如何实现这些语义的呢？</p>
+<blockquote>
+<p>操作系统管理计算机上软硬件资源。[^操作系统之哲学原理]</p>
+<p>例如，操作系统对CPU、内存、磁盘等的管理，使得不同用户之间或者同一用户的不同程序之间可以安全有序地共享这些硬件资源。那怎么让用户很好地利用这些硬件资源呢？就是分块（parcel out），把硬件分块给应用程序使用。这里关键的原则是有效和公平，这是管理者的必备素质。有效指的是不能浪费资源，公平指的是每个人都有可能享有资源，即不能有不公平的现象。当然真正的公平是没有的事，这很像人类生活的现实。不过追求公平却是我们的本能，在虚拟世界里尽可能公平一点还是非常应该的，至少应该是设计操作系统时的不懈追求。</p>
+<p>根据管理的资源不同，操作系统具体功能如下：</p>
+<p>CPU管理，即如何分配CPU给不同应用和用户。</p>
+<p>内存管理：即如何分配内存给不同应用和用户。</p>
+<p>外存管理：即如何分配外存（磁盘）给不同应用和用户。</p>
+<p>I/O管理：即如何分配输入输出设备给应用和用户。</p>
+<p>除了对上述资源进行管理和抽象外，操作系统作为掌控一切的软件系统，其自身必须是稳定和安全的，即操作系统自己不能出现故障。因此，操作系统的设计还需包括如下两项：健壮性管理：即如何确保操作系统自身的正常运作。安全性管理：即如何防止非法操作和入侵。为完成上面所列的功能，操作系统设计人员构思了许多机制。而所有这些机制均有其渊源，其背后隐含的是人的哲学思维。本书就是要讲解操作系统背后的哲学原理，并依据这些哲学原理阐述操作系统是通过何种机制、以何种方式完成上述列举的各种管理功能的。</p>
+</blockquote>
+<p>一般系统分析</p>
+<ul>
+<li>参与者<ul>
+<li>操作系统</li>
+<li>计算机上的软硬件资源</li>
+<li>用户应用</li>
+</ul>
+</li>
+<li>目标<ul>
+<li>使得不同用户或者统一用户的不同程序之间可以安全有序地共享这些硬件资源</li>
+</ul>
+</li>
+<li>关系<ul>
+<li>共享高效-安全与有序之间的关系</li>
+<li>如果资源是独占的，也就是改变的源头只有一个，那么压根不存在有序和安全的说法，天然就是有序安全的，但不一定是高效</li>
+<li>一元一次方程，二元一次方程 元代表的是变化量</li>
 </ul>
 </li>
 </ul>
+</li>
+</ol>
+<ul>
+<li><p>并发收集使管理大型数据集合变得更容易，并且可以大大减少对同步的需求。</p>
+</li>
+<li><p>原子变量具有最小化同步和避免内存一致性错误的特性。</p>
+</li>
+<li><p>ThreadLocalRandom(在JDK 7中)提供了从多个线程高效生成伪随机数的功能</p>
+</li>
+</ul>
+<p>高级并发api</p>
+<p>低级并发api</p>
+<p>错误: 找不到或无法加载主类 com.coy.java.concurrency.Safelock</p>
 
       
 
@@ -633,7 +812,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/135-Spring%20%E5%9B%BD%E9%99%85%E5%8C%96%E6%8E%A5%E5%8F%A3/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/06/06/notebook/JUC/JUC%E5%9F%BA%E7%A1%80%E8%BF%90%E7%94%A8/">展开全文 >></a>
         </p>
       
 
@@ -663,126 +842,37 @@
 
 
   
-    <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/134-Spring国际化使用场景" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-notebook/JUC/错误 找不到或无法加载主类" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">notebook/spring编程核心思想/12章 Spring 国际化/134-Spring国际化使用场景</a>
+      <a class="article-title" href="/2021/06/06/notebook/JUC/%E9%94%99%E8%AF%AF%20%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB/">notebook/JUC/错误 找不到或无法加载主类</a>
     </h1>
   
 
         
-        <a href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="archive-article-date">
-  	<time datetime="2021-06-02T02:22:09.750Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-02</time>
+        <a href="/2021/06/06/notebook/JUC/%E9%94%99%E8%AF%AF%20%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB/" class="archive-article-date">
+  	<time datetime="2021-06-06T03:38:09.570Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="讨论这两大方面"><a href="#讨论这两大方面" class="headerlink" title="讨论这两大方面"></a>讨论这两大方面</h1><h2 id="Spring国际化相关接口以及其相关实现"><a href="#Spring国际化相关接口以及其相关实现" class="headerlink" title="Spring国际化相关接口以及其相关实现"></a>Spring国际化相关接口以及其相关实现</h2><h2 id="Java对于国际化的支持以及相关内容"><a href="#Java对于国际化的支持以及相关内容" class="headerlink" title="Java对于国际化的支持以及相关内容"></a>Java对于国际化的支持以及相关内容</h2><h1 id="详细内容"><a href="#详细内容" class="headerlink" title="详细内容"></a>详细内容</h1><h2 id="1、Spring-国际化"><a href="#1、Spring-国际化" class="headerlink" title="1、Spring 国际化"></a>1、Spring 国际化</h2><h2 id="2、Spring国际化使用场景"><a href="#2、Spring国际化使用场景" class="headerlink" title="2、Spring国际化使用场景"></a>2、Spring国际化使用场景</h2><ul>
-<li><p>普通国际化文案</p>
-<blockquote>
-<p>主要利用到spring的国际化的抽象的接口获取文本文案，很少直接去这样做，貌似我们就是这样做的</p>
-</blockquote>
-</li>
-<li><p>Bean Validation 检验国际化文案(需要学习)</p>
-<blockquote>
-<p>spring boot 场景中用到的比较多，因为Spring boot会默认加载 Bean Validation，也就是我们所谓的Bean 校验（jsr标准 Bean校验框架）</p>
-<p>spring 和Bean Validation 的一个实现，比如说 <code>Hibernate Validator</code>的api进行整合，与国际化文案交相呼应</p>
-<p>在Bean Validation的标准中，已经规定了国际化的一些文案的一个生产方式，什么方式？</p>
-<p>并且在<code>Hibernate Validator</code>中也有相应实现，不过这个实现spring会加以转换，加以适配，编程符合Spring标准的这么一个实现方案</p>
-<p><code>SmartValidator</code>？</p>
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210602001717942.png" alt="image-20210602001717942"></p>
-</blockquote>
-</li>
-<li><p>web 站点页面渲染（两部分）</p>
-<ul>
-<li>文案</li>
-<li>主题</li>
-</ul>
-<blockquote>
-<p>国际化购物时，你可能通过不同国家或地区的ip进行访问</p>
-<p>不同国家的物流查询，会收到不同的页面渲染，文字或者布局会发生变化（这个倒是没弄）</p>
-</blockquote>
-</li>
-<li><p>web mvc 错误消息提示（正在使用 ，异常多语言）</p>
-<blockquote>
-<p>当你的请求头了带有locate？</p>
-<p>我们使用的不是标准的Locale ，而是自己定义了一个请求头 lang-type，为啥不使用标准的呢?</p>
-</blockquote>
-</li>
-</ul>
-<h2 id="3、Spring国际化接口"><a href="#3、Spring国际化接口" class="headerlink" title="3、Spring国际化接口"></a>3、Spring国际化接口</h2><h3 id="核心包-org-springframework-context-i18n"><a href="#核心包-org-springframework-context-i18n" class="headerlink" title="核心包 org.springframework.context.i18n"></a>核心包 <code>org.springframework.context.i18n</code></h3><p><strong>packageinfo</strong>:</p>
-<p>用于确定当前语言环境的抽象，加上公开线程绑定区域设置的全局持有者</p>
-<h3 id="核心接口"><a href="#核心接口" class="headerlink" title="核心接口"></a>核心接口</h3><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210601223257142.png" alt="image-20210601223257142"></p>
-<h4 id="LocaleContextHolder"><a href="#LocaleContextHolder" class="headerlink" title="LocaleContextHolder"></a>LocaleContextHolder</h4><p><code>LocaleContextHolder</code>与我们项目中<code>LanguageHelper</code>之间有何联系？</p>
-<p><code>LanguageHelper</code>为当前请求线程存储请求所关联的国家属性和语言环境属性,依赖与<code>org.slf4j.MDC</code></p>
-<ul>
-<li>X-Nat-country</li>
-<li>lang-type</li>
-</ul>
-<p>其底层实现依赖于<code>InheritableThreadLocal</code></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BasicMDCAdapter</span> <span class="keyword">implements</span> <span class="title">MDCAdapter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> InheritableThreadLocal&lt;Map&lt;String, String&gt;&gt; inheritableThreadLocal = <span class="keyword">new</span> InheritableThreadLocal&lt;Map&lt;String, String&gt;&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">protected</span> Map&lt;String, String&gt; <span class="title">childValue</span><span class="params">(Map&lt;String, String&gt; parentValue)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">if</span> (parentValue == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> HashMap&lt;String, String&gt;(parentValue);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <p>错误: 找不到或无法加载主类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"E:\Program Files\Java\jdk1.8.0_91\bin\java.exe"</span> <span class="string">"-javaagent:E:\Program Files\JetBrains\IntelliJ IDEA 2019.2.3\lib\idea_rt.jar=2376:E:\Program Files\JetBrains\IntelliJ IDEA 2019.2.3\bin"</span> -Dfile.encoding=UTF-<span class="number">8</span> -classpath <span class="string">"E:\Program Files\Java\jdk1.8.0_91\jre\lib\charsets.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\deploy.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\access-bridge-64.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\cldrdata.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\dnsns.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\jaccess.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\jfxrt.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\localedata.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\nashorn.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\sunec.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\sunjce_provider.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\sunmscapi.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\sunpkcs11.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\zipfs.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\javaws.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\jce.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\jfr.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\jfxswt.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\jsse.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\management-agent.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\plugin.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\resources.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\rt.jar"</span></span><br><span class="line">    com.coy.java.concurrency.Safelock</span><br><span class="line">错误: 找不到或无法加载主类 com.coy.java.concurrency.Safelock</span><br></pre></td></tr></table></figure>
 
-<p><code>LocaleContextHolder</code>为当前请求线程存储请求所关联的<code>LocaleContext</code> 实例</p>
-<h3 id="如何理解InheritableThreadLocal-？"><a href="#如何理解InheritableThreadLocal-？" class="headerlink" title="如何理解InheritableThreadLocal ？"></a>如何理解<code>InheritableThreadLocal</code> ？</h3><p>可以继承的ThreadLocal，ThreadLocal 是线程相关的，所以其想表达的意思是，<code>InheritableThreadLocal</code>实例能被其他线程所共享？</p>
-<blockquote>
-<p>This class extends ThreadLocal to provide inheritance of values from parent thread to child thread: when a child thread is created, the child receives initial values for all inheritable thread-local variables for which the parent has values. Normally the child’s values will be identical to the parent’s; however, the child’s value can be made an arbitrary function of the parent’s by overriding the childValue method in this class.<br>Inheritable thread-local variables are used in preference to ordinary thread-local variables when the per-thread-attribute being maintained in the variable (e.g., User ID, Transaction ID) must be automatically transmitted to any child threads that are created</p>
-</blockquote>
-<p>问：什么时候使用<code>InheritableThreadLocal</code> ?</p>
-<p>答：当在变量中维护的每个线程属性(例如，用户ID，事务ID<strong>)必须自动传输到所创建的任何子线程时</strong>，可继承的线程本地变量<code>InheritableThreadLocal</code> 优先于普通线程本地变量<code>ThreadLocal</code></p>
-<p>子类继承父类的属性和方法，子线程继承父线程的ThreadLocal变量</p>
-<p>demo?</p>
-<p>1、创建一个线程，线程关联一个<code>InheritableThreadLocal</code> </p>
-<p>2、在该线程中创建一个子线程，看子线程有不有父线程中的<code>ThreadLocal</code>变量?</p>
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210601230307822.png" alt="image-20210601230307822"></p>
-<h3 id="LocaleContext"><a href="#LocaleContext" class="headerlink" title="LocaleContext"></a><code>LocaleContext</code></h3><p>用于确定当前语言环境的策略接口,<code>LocaleContext</code>实例通过<code>LocaleContextHolder</code>关联一个线程</p>
-<blockquote>
-<p>Spring 是如何设计策略接口的？</p>
-<p>Context 上下文，策略接口？</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">LocaleContext</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * Return the current Locale, which can be fixed or determined dynamically,</span></span><br><span class="line"><span class="comment">	 * depending on the implementation strategy.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the current Locale, or &#123;<span class="doctag">@code</span> null&#125; if no specific Locale associated</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="function">Locale <span class="title">getLocale</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>可以看到该接口是用来返回一个<code>Locale</code>实例，其决定如何返回<code>Locale</code>实例，策略模式即对行为的抽象</p>
-<h3 id="如何理解国际化？"><a href="#如何理解国际化？" class="headerlink" title="如何理解国际化？"></a>如何理解国际化？</h3><p>顾名思义，国际化的主要内容是各个国家的语言文字不同，提供的互联网服务能给很多个国家使用，主要在于根据当地语言渲染某些文本内容，所以需要拿到确定当前是什么语言环境，英语？中文？日文？</p>
-<h3 id="区域Locale又该如何理解呢？"><a href="#区域Locale又该如何理解呢？" class="headerlink" title="区域Locale又该如何理解呢？"></a>区域Locale又该如何理解呢？</h3><p>先看下Locale 这个类</p>
-<blockquote>
-<p>A Locale object represents a specific geographical, political, or cultural region. An operation that requires a Locale to perform its task is called locale-sensitive and uses the Locale to tailor information for the user. For example, displaying a number is a locale-sensitive operation— the number should be formatted according to the customs and conventions of the user’s native country, region, or culture.</p>
-</blockquote>
-<p><strong>Locale对象表示特定的地理、政治或文化区域</strong>。需要Locale来执行其任务的操作称为Locale敏感操作，并使用Locale来为用户定制信息。例如，显示数字是一种语言环境敏感的操作——应该根据用户所在国家、地区或文化的习惯和惯例对数字进行格式化。</p>
-<h2 id="4、层次性-Message-Source"><a href="#4、层次性-Message-Source" class="headerlink" title="4、层次性 Message Source"></a>4、层次性 Message Source</h2><blockquote>
-<p>spring里面的很多设计都是具有层次性的，例如上下文</p>
-</blockquote>
-<h2 id="5、Java国际化标准实现"><a href="#5、Java国际化标准实现" class="headerlink" title="5、Java国际化标准实现"></a>5、Java国际化标准实现</h2><blockquote>
-<p>讨论传统Java对于国际化的标准实现，很多开源软件也会基于这个实现进行扩展</p>
-<p>哪些开源软件呢？</p>
-<p>Spring 也不例外</p>
-</blockquote>
-<h2 id="6、Java文本格式化"><a href="#6、Java文本格式化" class="headerlink" title="6、Java文本格式化"></a>6、Java文本格式化</h2><blockquote>
-<p>Java文本化事实上和spring 的国际化接口有很大的关系，什么关系？</p>
-</blockquote>
-<h2 id="7、Messagesource开箱即用实现"><a href="#7、Messagesource开箱即用实现" class="headerlink" title="7、Messagesource开箱即用实现"></a>7、Messagesource开箱即用实现</h2><blockquote>
-<p>spring framwork 里有哪些实现是马上就可以用的?</p>
-</blockquote>
-<h3 id="如何理解MessageSource的开箱即用？"><a href="#如何理解MessageSource的开箱即用？" class="headerlink" title="如何理解MessageSource的开箱即用？"></a>如何理解MessageSource的开箱即用？</h3><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210603173215414.png" alt="image-20210603173215414"></p>
-<p>org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration</p>
-<p>相关知识：spring boot自动装配</p>
-<p>可以获知的信息是spring boot 会帮我们自动配置</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210606114023821.png" alt="image-20210606114023821"></p>
+<p>1、删除文件</p>
 <ul>
-<li><p>MessageSourceProperties–外部化配置</p>
-</li>
-<li><p>MessageSource—ResourceBundleMessageSource</p>
-</li>
+<li>main62.iml</li>
+<li>stage-3-lesson-3.iml</li>
 </ul>
-<p>条件装配</p>
-<h2 id="8、Messagesource內建实现"><a href="#8、Messagesource內建实现" class="headerlink" title="8、Messagesource內建实现"></a>8、Messagesource內建实现</h2><h2 id="9、课外资料"><a href="#9、课外资料" class="headerlink" title="9、课外资料"></a>9、课外资料</h2><blockquote>
-<p>讨论下spring boot中为什么要创建一个 MessageSource这么个Bean</p>
-</blockquote>
-<h2 id="10、面试题精选"><a href="#10、面试题精选" class="headerlink" title="10、面试题精选"></a>10、面试题精选</h2><h1 id="新的认知"><a href="#新的认知" class="headerlink" title="新的认知"></a>新的认知</h1>
+<p>2、重新导入模块</p>
+
       
 
       
@@ -794,7 +884,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/02/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/134-Spring%E5%9B%BD%E9%99%85%E5%8C%96%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/06/06/notebook/JUC/%E9%94%99%E8%AF%AF%20%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB/">展开全文 >></a>
         </p>
       
 
@@ -824,250 +914,207 @@
 
 
   
-    <article id="post-notebook/20210601-propertySourceLocator" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-notebook/JUC/1.0 初识JUC" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/01/notebook/20210601-propertySourceLocator/">notebook/20210601-propertySourceLocator</a>
+      <a class="article-title" href="/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/">notebook/JUC/1.0 初识JUC</a>
     </h1>
   
 
         
-        <a href="/2021/06/01/notebook/20210601-propertySourceLocator/" class="archive-article-date">
-  	<time datetime="2021-06-01T13:47:05.546Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-01</time>
+        <a href="/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/" class="archive-article-date">
+  	<time datetime="2021-06-05T15:02:01.513Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>小马哥训练营第26节 分布式配置</p>
-<h1 id="作业"><a href="#作业" class="headerlink" title="作业"></a>作业</h1><p>基于文件系统为spring cloud 提供PropertySourceLocator实现</p>
-<ul>
-<li><p>配置文件命名规则（META-INF/config/default.properties 或者 META-INF/config/default.yaml）</p>
+        <p>[toc]</p>
+<h1 id="一般系统化思考"><a href="#一般系统化思考" class="headerlink" title="一般系统化思考"></a>一般系统化思考</h1><h2 id="参与者是哪些？"><a href="#参与者是哪些？" class="headerlink" title="参与者是哪些？"></a>参与者是哪些？</h2><ul>
+<li>操作系统资源<ul>
+<li>cpu</li>
+<li>IO</li>
+<li>memory</li>
+</ul>
 </li>
-<li><p>可选：实现文件修改通知</p>
+<li>线程</li>
+</ul>
+<h2 id="参与者之间的关系是什么？"><a href="#参与者之间的关系是什么？" class="headerlink" title="参与者之间的关系是什么？"></a>参与者之间的关系是什么？</h2><p>线程与线程间存在竞争资源关系</p>
+<h2 id="目标或功能是什么？"><a href="#目标或功能是什么？" class="headerlink" title="目标或功能是什么？"></a>目标或功能是什么？</h2><p>提升对计算的利用率，压榨最后一滴血</p>
+<h2 id="如果让你来设计，你会如何来控制并发？"><a href="#如果让你来设计，你会如何来控制并发？" class="headerlink" title="如果让你来设计，你会如何来控制并发？"></a>如果让你来设计，你会如何来控制并发？</h2><p>参考操作系统对其抽象进行Java的实现</p>
+<h3 id="相关抽象概念"><a href="#相关抽象概念" class="headerlink" title="相关抽象概念"></a>相关抽象概念</h3><ul>
+<li>信号量 semaphore</li>
+<li>锁  lock</li>
+</ul>
+<h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><p>如何使用信号量来控制并发？</p>
+<p>信号量的数量代表可请求的资源数</p>
+<p>请求一个就减一个，没有了的话就等待 如何保存处于等待状态的线程呢？</p>
+<p>java.util.concurrent.locks.AbstractQueuedSynchronizer#getQueuedThreads</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Collection&lt;Thread&gt; <span class="title">getQueuedThreads</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ArrayList&lt;Thread&gt; list = <span class="keyword">new</span> ArrayList&lt;Thread&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Node p = tail; p != <span class="keyword">null</span>; p = p.prev) &#123;</span><br><span class="line">            Thread t = p.thread;</span><br><span class="line">            <span class="keyword">if</span> (t != <span class="keyword">null</span>)</span><br><span class="line">                list.add(t);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用的是一个数组来进行存储的</p>
+<h4 id="java-util-concurrent-Semaphore-java实现"><a href="#java-util-concurrent-Semaphore-java实现" class="headerlink" title="java.util.concurrent.Semaphore-java实现"></a><code>java.util.concurrent.Semaphore</code>-java实现</h4><p>核心成员</p>
+<ul>
+<li>Sync<ul>
+<li>FairSync</li>
+<li>NonfairSync</li>
+</ul>
 </li>
 </ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/01/notebook/20210601-propertySourceLocator/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/面试准备/job describe" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/01/notebook/%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/job%20describe/">notebook/面试准备/job describe</a>
-    </h1>
-  
-
-        
-        <a href="/2021/06/01/notebook/%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/job%20describe/" class="archive-article-date">
-  	<time datetime="2021-06-01T10:48:17.160Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="职位"><a href="#职位" class="headerlink" title="职位"></a>职位</h2><h3 id="蚂蚁金服"><a href="#蚂蚁金服" class="headerlink" title="蚂蚁金服"></a>蚂蚁金服</h3><p>1、协助业务方梳理业务需求，提供业务规划方案、架构设计方案；<br>2、负责业务系统的规划设计，制定产品的技术发展路线，完成重要业务模块及核心框架的搭建及编码实现；<br>3、发现和解决业务系统的技术问题，保证系统的性能和稳定性；<br>4、协同他人组织跨团队沟通协作，确保系统架构内外设计合理或保障项目质量与进度。<br>岗位要求：<br>1、JAVA基础扎实：熟练掌握数据结构、多线程编程，掌握常用的设计模式；熟悉JVM，包括内存模型、类加载机制以及性能优化；<br>2、三年以上java及WEB应用软件开发经验，一年以上系统设计经验；精通spring mvc、orm框架（ibatis或hibernate），熟悉前端开发（js、html、css）；<br>3、熟悉常见的中间件、分布式解决方案及其原理：分布式缓存、SOA、消息中间件，负载均衡、连接池等；<br>4、具有一定的项目规划和决策能力，善于捕捉业务需求、架构设计中存在的问题，并给出有效的解决措施和方法；<br>5、具有很强的分析复杂问题和解决复杂问题的能力，有强烈的责任心和使命感，良好的沟通表达能力和团队协作能力；<br>6、具有电子商务、保险行业、金融行业经验者优先。</p>
-<h3 id="借呗-Java工程师"><a href="#借呗-Java工程师" class="headerlink" title="借呗 Java工程师"></a>借呗 Java工程师</h3><p>1、发展机会<br>欢迎来到蚂蚁借呗，在这里，你将接触到行业领先的、面向数亿用户的、超大资产规模的、超高并发要求的借呗平台，在充满挑战的实战项目中磨炼自己，提升技术，学习业务。<br>2、对你的期待<br>985、211重点大学，全日制本科及以上学历；<br>java基础扎实，动手能力强，学习能力好，乐观主动；<br>欢迎加入！</p>
-<h3 id="淘宝-高级Java工程师"><a href="#淘宝-高级Java工程师" class="headerlink" title="淘宝 高级Java工程师"></a>淘宝 高级Java工程师</h3><p>职位描述<br>1）负责房产行业系统的设计和开发工作<br>2）独立完成中小型项目的系统分析、设计，并主导完成详细设计和编码的任务，确保项目的进度和质量<br>3）主导技术难题攻关，持续提升核心系统的高处理性能，保证系统的安全、稳定、快速运行<br>4）理解业务，识别需求，参与架构、系统、分析设计等多领域项目的相关技术的实践、应用和研发<br>职位描述<br>1）本科或以上学历，计算机软件或相关专业，3年以上Java开发经验<br>2）熟悉Java/J2EE， 基础扎实，熟练掌握常用Java技术框架，能编写高质量简洁清晰的代码<br>3）对于Java基础技术体系（包括JVM、类装载机制、多线程并发、IO、网络）有一定的掌握和应用经验<br>4）良好的面向对象设计理解，熟悉面向对象设计原则，掌握设计模式及应用场景，熟悉底层中间件、分布式技术（包括缓存、消息系统、热部署等）<br>5）具有比较强的问题分析和处理能力，有比较优秀的动手能力，热衷技术，精益求精，有一定的技术癖<br>6）具有房产相关开发经验或者搜索推荐工程开发经验优先<br>我们鼓励人人践行公益，同学如参与过公益活动，有相关证明，也欢迎附在简历中。参考依据包括但不限于：全国志愿服务信息系统开具的志愿服务证明、“人人3小时”公益平台公益时证书、志愿服务组织（含社会团体、社会服务机构、基金会）授予的志愿服务证明等</p>
-<h3 id="酷家乐-资深后端开发工程师"><a href="#酷家乐-资深后端开发工程师" class="headerlink" title="酷家乐 资深后端开发工程师"></a>酷家乐 资深后端开发工程师</h3><p>1、根据业务需求从事网站或者saas的后台模块设计与实现；<br>2、从事性能调优、架构调整的相关工作，并在在开发和维护过程中确保高性能与稳定性；<br>3、结合需求设计实现安全、稳定、高扩展性、易维护、易用性好的业务系统；<br>4、能够主导项目开发及进行； 不断优化技术实现，研究和制定相关的技术解决方案；排查线上故障，修复服务缺陷<br>5、在团队中完成code review的任务，确保相关代码的有效性和正确性，并能够通过code review提供相关性能以及稳定性的建议；<br>6、识别任务优先级，并能够在开发过程中解决碰到的技术难点；<br>任职资格<br>1、本科以上学历，计算机或相关专业毕业，三年或以上后端项目的开发经验；<br>2、学习能力强，有总结和高度抽象的能力，有架构思维和领域思维，能将业务中的技术方案沉淀成通用能力，熟悉MSA理念<br>3、 熟练掌握web服务端开发知识，熟悉JAVA语言、J2EE相关体系架构 ;熟练掌握Spring、Mybatis等主流框架，RestfulAPI和HTTP协议等<br>4、能写出高质量、高性能、安全可靠的代码<br>5、在发生线上故障的时候，需要具备一定的线上排查和定位问题的能力<br>6、以业务价值和业务结果为导向，以技术驱动业务<br>7、渴望挑战自我，愿意做一些探索、开创性的工作<br>8、沟通能力强，有服务意识、执行力强、责任心强，有较强的团队合作意识<br>9、精通Spring-boot, k8s等开源框架者优先；<br>10、精通Mysql、Redis等通用存储组件优先，有独立开发或主导开发大型互联网应用项目经验的优先。</p>
-<p><a href="https://www.zhipin.com/job_detail/5243800d59573e0e1nFy3dm0E1FW.html?ka=search_list_jname_9_blank&lid=7J2S1Qxr042.search.9&securityId=v46tPvzURoEJY-W1yr9QJMJ7Knjc-xskCSW_s0O5uaKRDlVxZbrfDsJqvJUFO1XgiLoW57nY8PShTHnDvUPxkDMCeX5JY6tEcnb0WVCAmSQ%7E" target="_blank" rel="noopener">网易云 高级Java工程师</a></p>
-<p>职位描述<br>岗位描述：<br>\1. 负责网易云分布式中间件系统的设计、开发、维护和优化工作<br>\2. 参与相关产品的推广和落地工作<br>职位要求<br>岗位要求：<br>\1. 熟练掌握 Java/Go 等主流编程语言，并熟悉相关开发技术和工具；<br>\2. 熟悉Spring，SpringBoot等常用开发框架；<br>\3. 熟悉Java nio, 对JVM底层有一定了解；<br>\3. 逻辑思维能力强，思维敏捷，对新技术有较强的求知欲望；<br>\4. 2年以上工作经验，有大型互联网公司或数据分析系统从业经验者优先；<br>具备以下条件者优先：<br>\1. 有 MQ/Kafka 等消息中间件 使用经验<br>2，有 分布式系统和架构 使用经验<br>\3. 熟悉Docker 、Kubernetes 等容器技术，或者熟悉云原生领域优先</p>
-<p><a href="https://www.zhipin.com/job_detail/b99324d77da34ca90Hd709q5EQ~~.html?ka=search_list_jname_20_blank&lid=7J2S1Qxr042.search.20&securityId=qotRML-RH87BJ-x1_v6mGnIzfar5te5T7gV6AahbTPK5Si48e3e71tqYHgAG1xv_zR86z7FzMrRSRvjOI20CCXo3fNml2aNjrOLjKhe_0IUk" target="_blank" rel="noopener">天猫 高级Java工程师</a></p>
-<p>岗位描述<br>\1. 供应链服务&amp;订单履约平台核心系统研发工作，包括不限于：供应链服务决策和服务表达系统的设计、物流订单数据中心、履约决策中心等；<br>\2. 负责具体物流订单履约业务规则梳理，与产品经理、业务方一起设计并讨论业务场景实现。<br>\3. 负责系统底层核心单点技术的设计与实施，主要由业务规则、存储方案、监控模块等。<br>\4. 对现有系统的不足进行分析，找到目前系统的瓶颈，重构优化和改进系统算法，提高系统<br>\5. 重点项目的设计方案支持与评审，难点攻关<br>岗位要求<br>\1. 了解拥有高并发在线系统设计，理解分布式事务处理常见手段，理解异步消息驱动系统设计。拥有领域模型抽象能力。<br>\2. 扎实的编程基础，精通Java编程语言，如能熟悉一门脚本语言者优先。<br>\3. 高性能数据存储经验；理解数据库事务，有流程引擎设计实施经验者优先。<br>\4. 具有良好的商业敏感度和优秀的数据分析技能。能够开发创新而实际的分析方法以解决复杂的商业问题。<br>\5. 擅长与商业伙伴的交流沟通，具有优秀的报告讲解能力及沟通能力。<br>\6. 能够积极创新，乐于面对挑战，负责敬业。<br>\7. 优秀的团队合作精神；诚实，勤奋，严谨。<br>\8. 对挖掘计算机极限的技术有无限渴望。</p>
-<p><a href="https://www.zhipin.com/job_detail/8c8e72b3e309f9da1nB_3dy-ElJV.html?ka=search_list_jname_22_blank&lid=7J2S1Qxr042.search.22&securityId=PUZzavdyE1_Dc-a1pKm7JnK2onlZ7Wpw9OrhEMtA0yf_IojToOZkpQEMP3hpX7yLciJoySsjEp_TMyvZVOPFTWNi_pPFZy4sHF6eF5DXht663vLp" target="_blank" rel="noopener">挖财 高级java</a></p>
-<p>1、深入发掘和分析业务需求，撰写技术方案和系统设计；<br>2、参与技术方案和系统设计评审；把握复杂系统的设计，确保系统的架构质量；<br>3、系统核心部分代码编写；疑难问题的解决；<br>4、对现存或未来系统进行宏观的思考，规划形成统一的框架、平台或组件；<br>5、为团队引入创新的技术、创新的解决方案，用创新的思路解决问题；<br>6、维护和升级现有产品和系统，快速定位并修复现有系统缺陷。<br>职位要求：<br>1、至少2年以上Java开发经验，编程基础扎实，理解io、多线程、集合、反射等基础框架；<br>2、熟练掌握Java及Web应用的开发，深入了解spring，ibatis，rpc，jvm等机制与代码；<br>3、熟悉分布式系统的设计和应用，熟悉分布式、缓存、消息等机制；<br>4、熟悉Linux开发环境，对生产系统故障排查有实际工作经验；<br>5、具备良好的业务理解、建模和抽象能力；<br>6、具有高度的责任心与自驱力，良好的沟通协作、应急响应与处理问题的能力</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/01/notebook/%E9%9D%A2%E8%AF%95%E5%87%86%E5%A4%87/job%20describe/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/2021-06-01-io模型" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/01/notebook/2021-06-01-io%E6%A8%A1%E5%9E%8B/">notebook/2021-06-01-io模型</a>
-    </h1>
-  
-
-        
-        <a href="/2021/06/01/notebook/2021-06-01-io%E6%A8%A1%E5%9E%8B/" class="archive-article-date">
-  	<time datetime="2021-06-01T02:09:38.625Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>个人理解，以点奶茶为例，同步阻塞应该就是我去店里点奶茶，</p>
-<p>还站在那什么都不做一直问奶茶做没做好，做好了就拿走，同步非阻塞就是我去店里点奶茶，但是我会去做别的事，期间一直问店家奶茶好了没有，好了就拿走，异步阻塞就是我点了杯奶茶，然后就站在那什么也不做也不问（发呆），等店家跟我说奶茶好了我就拿走，异步非阻塞就是我在手机上上点奶茶然后就去做别的事等系统通知我奶茶做好了，io多路复用就是饿了么的那个拼单，大家一起点奶茶，但是只有那个主账号的人会去看奶茶有没有做好，做好了就会通知你们，期间你们做自己的事去就好了</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/01/notebook/2021-06-01-io%E6%A8%A1%E5%9E%8B/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/20210529-分布式配置" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/29/notebook/20210529-%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE/">notebook/20210529-分布式配置</a>
-    </h1>
-  
-
-        
-        <a href="/2021/05/29/notebook/20210529-%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE/" class="archive-article-date">
-  	<time datetime="2021-05-29T11:05:22.195Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-29</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="配置分类"><a href="#配置分类" class="headerlink" title="配置分类"></a>配置分类</h2><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210529190425546.png" alt="image-20210529190425546"></p>
-<p>既属于外部配置，也属于内部配置</p>
-<h2 id="spring-配置"><a href="#spring-配置" class="headerlink" title="spring 配置"></a>spring 配置</h2><p>配置源 -propertySource</p>
-<p>属性处理-PropertyResolver</p>
-<ul>
-<li>属性存储</li>
-<li>属性占位符处理</li>
-</ul>
-<h2 id="spring-cloud-config-架构设计"><a href="#spring-cloud-config-架构设计" class="headerlink" title="spring cloud config 架构设计"></a>spring cloud config 架构设计</h2><p>spring cloud config 是可选组件</p>
-<h2 id="spring-cloud-config-Client"><a href="#spring-cloud-config-Client" class="headerlink" title="spring cloud config Client"></a>spring cloud config Client</h2><h2 id="spring-cloud-config-Server"><a href="#spring-cloud-config-Server" class="headerlink" title="spring cloud config Server"></a>spring cloud config Server</h2><p>内建实现</p>
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210529193122060.png" alt="image-20210529193122060"></p>
-<h2 id="连接模式"><a href="#连接模式" class="headerlink" title="连接模式"></a>连接模式</h2><h3 id="直连模式"><a href="#直连模式" class="headerlink" title="直连模式"></a>直连模式</h3><h3 id="服务发现模式"><a href="#服务发现模式" class="headerlink" title="服务发现模式"></a>服务发现模式</h3><h2 id="配置中心与注册中心"><a href="#配置中心与注册中心" class="headerlink" title="配置中心与注册中心"></a>配置中心与注册中心</h2><h3 id="配置中心"><a href="#配置中心" class="headerlink" title="配置中心"></a>配置中心</h3><p>读多写少 ，退件数据持久化，mysql 主从同步ap模型</p>
-<h3 id="注册中心"><a href="#注册中心" class="headerlink" title="注册中心"></a>注册中心</h3><p>读多写多，注册中心不强依赖与数据持久化，更偏好高可用，最终一致性即可。</p>
-<blockquote>
-<p>服务消费客户端会本地缓存一份订阅服务的列表数据</p>
+<p>如何理解同步？</p>
+<h4 id="Sync"><a href="#Sync" class="headerlink" title="Sync"></a>Sync</h4><blockquote>
+<p>Synchronization implementation for semaphore. Uses AQS state to represent permits. Subclassed into fair and nonfair versions.</p>
 </blockquote>
-<p>阿基米德</p>
-<p>减少euraka压力</p>
+<p>信号量的同步实现，使用AQS状态来表示 permit</p>
+<p>coy:在IO模型中我们提到过同步与异步，同步是用户进程发起主动调用，异步是才做系统主动发起调用。与这里同步的语言相同吗？</p>
+<p>状态：使用成员变量来表示对象的状态，AQS的状态是什么？</p>
+<p>AQS指的是什么？</p>
+<p><code>java.util.concurrent.locks.AbstractQueuedSynchronizer</code></p>
+<p>抽象队列同步器，其在locks包中，使用锁来实现信号量semaphore？</p>
+<p>AQS的状态即：java.util.concurrent.locks.AbstractQueuedSynchronizer#state</p>
+<p>即AQS的state成员变量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The synchronization state.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> state;</span><br></pre></td></tr></table></figure>
+
+<p>可以注意到其是使用volatile修饰的，保证了这个状态在线程间的可见性</p>
+<p>coy：出了可见性，好像还有个两个特性 原子性 和一致性？</p>
+<h4 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h4><ul>
+<li><p>AbstractOwnableSynchronizer</p>
+<blockquote>
+<p>A synchronizer that may be exclusively owned by a thread. This class provides a basis for creating locks and related synchronizers that may entail a notion of ownership. The AbstractOwnableSynchronizer class itself does not manage or use this information. However, subclasses and tools may use appropriately maintained values to help control and monitor access and provide diagnostics.</p>
+<p>一个可能被线程独占的同步器。该类为创建锁和相关同步器提供了基础，这些同步器可能需要所有权的概念。AbstractOwnableSynchronizer类本身并不管理或使用此信息。但是，子类和工具可以使用适当维护的值来帮助控制和监视访问并提供诊断。</p>
+</blockquote>
+<p>coy：</p>
+<p>核心概念</p>
+<ul>
+<li>同步器</li>
+<li>被线程独占，即具有排他性</li>
+</ul>
+</li>
+<li><p>Node</p>
+<p>这个东西是用来干嘛的？</p>
+<blockquote>
+<p>等待队列节点类。</p>
+<p>等待队列是“CLH”(Craig、Landin和Hagersten)锁队列的变体。CLH锁通常用于自旋锁。相反，我们将它们用于阻塞同步器，但使用相同的基本策略，即在线程的前身节点中保存有关线程的一些控制信息。每个节点中的“status”字段跟踪线程是否应该阻塞。当一个节点的前一个节点释放时，它就会收到信号。另外，队列的每个节点充当一个特定通知样式的监视器，它持有一个等待线程。status字段不能控制线程是否被授予锁等。如果一个线程是队列中的第一个线程，那么它可以尝试获取。但是第一个并不能保证成功;它只给了你争辩的权利。因此，当前发布的竞争者线程可能需要重新等待。</p>
+<p>要排队进入一个CLH锁，您可以原子地将它作为新的尾巴拼接进去。要退出队列，只需设置头部字段。</p>
+<p>+——+ prev +—–+ +—–+</p>
+<p>头| | &lt;—- | | &lt;—- | |尾巴</p>
+<p>+——+ +—–+ +—–+</p>
+<p>插入到CLH队列只需要对“tail”进行单个原子操作，因此存在一个简单的原子分界点，即从未排队到已排队。类似地，脱离队列只涉及更新“头”。但是，节点需要更多的工作来确定它们的继任者是谁，部分原因是为了处理可能由于超时和中断而导致的取消。</p>
+<p>“prev”链接(在原来的CLH锁中没有使用)，主要用于处理取消。如果一个节点被取消，它的后继节点(通常)会链接到一个未取消的前身节点。关于自旋锁的类似力学解释，请参阅Scott和Scherer的论文，网址是<a href="http://www.cs.rochester.edu/u/scott/synchronization/" target="_blank" rel="noopener">http://www.cs.rochester.edu/u/scott/synchronization/</a></p>
+<p>我们也使用“next”链接去执行阻塞机制。每个节点的线程id都保存在其自己的节点中，因此，通过遍历下一个链接来确定它是哪个线程，前辈将通知要唤醒的下一个节点。确定后继节点必须避免与新排队的节点竞争，以设置其前一个节点的“下一个”字段。当一个节点的后继节点显示为空时，通过从原子更新的“tail”向后检查来解决这个问题。(换句话说，下一个链接是一个优化，所以我们通常不需要反向扫描。)</p>
+<p>取消为基本算法引入了一些保守性。因为我们必须轮询取消其他节点，所以我们可能会忽略被取消的节点是在我们前面还是后面。这是通过在取消时总是取消后继程序来处理的，允许它们稳定在一个新的前身上，除非我们能够确定一个未取消的前身将承担这个责任。</p>
+<p>CLH队列需要一个虚拟头节点来开始。但我们不是在建设上创造它们，因为如果从来没有竞争，这将是浪费精力。相反，在第一次争用时构造节点并设置头和尾指针。</p>
+<p>等待条件的线程使用相同的节点，但是使用额外的链接。条件只需要链接简单(非并发)链接队列中的节点，因为它们只在独占时才被访问。在等待时，一个节点被插入到条件队列中。收到信号后，节点被转移到主队列。status字段的一个特殊值用于标记节点在哪个队列上。</p>
+<p>感谢Dave Dice、Mark Moir、Victor Luchangco、Bill Scherer和Michael Scott以及JSR-166专家组的成员，感谢他们提供关于本课程设计的有用想法、讨论和批评。</p>
+</blockquote>
+<p>等待队列的节点，每个节点Node关联一个线程，使用status状态来跟踪线程是否应该被阻塞。</p>
+<p>一个节点的前一个节点释放时，其会受到信号</p>
+<p>每个节点还会持有一个等待线程，如何理解？</p>
+<p>coy:也就是维护了线程间的等待关系，和线程是否应该被阻塞？</p>
+</li>
+</ul>
+<ul>
+<li><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210604204334398.png" alt="image-20210604204334398"></p>
+</li>
+</ul>
+<p>waitStatus</p>
+<p>SIGNAL:该节点的后继节点被阻塞(或即将被阻塞)(通过驻留)，因此当前节点在释放或取消后继节点时必须解除驻留。为了避免竞争，acquire方法必须首先表明它们需要一个信号，然后重试原子的acquire，如果失败，则阻塞。</p>
+<p>CANCELLED:该节点由于超时或中断而被取消。节点永远不会离开这种状态。特别是，取消节点的线程永远不会再阻塞。</p>
+<p>CONDITION:该节点当前处于条件队列中。在传输之前，它不会被用作同步队列节点，此时状态将设置为0。(这里这个值的使用与该领域的其他用途无关，但简化了力学。)</p>
+<p>PROPAGATE:应该将releasshared传播到其他节点。这是在doreleasesshared中设置的(仅用于头节点)，以确保传播继续进行，即使其他操作已经介入。0:以上均为零。数值以数字形式排列，以简化使用。非负值意味着节点不需要发送信号。因此，大多数代码不需要检查特定的值，只需要检查符号。对于正常同步节点，该字段初始化为0，对于条件节点，该字段初始化为CONDITION。使用CAS(或者在可能的情况下，使用无条件的易失性写)修改它</p>
+<h3 id="公平同步和非公平同步指的是什么？"><a href="#公平同步和非公平同步指的是什么？" class="headerlink" title="公平同步和非公平同步指的是什么？"></a>公平同步和非公平同步指的是什么？</h3><p><strong>猜想</strong>：讲的是是否能够进行资源的剥夺？</p>
+<p>permit 对应的是信号量的数量，代表该资源的可用数。</p>
+<blockquote>
+<p>permits – the initial number of permits available. This value may be negative, in which case releases must occur before any acquires will be granted</p>
+</blockquote>
+<p>如何理解这段话？permit 可能为负数，在这种情况下 在授予任何获得之前必须进行释放。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Semaphore</span><span class="params">(<span class="keyword">int</span> permits)</span> </span>&#123;</span><br><span class="line">    sync = <span class="keyword">new</span> NonfairSync(permits);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从构造函数上能看出来如果不指定，默认是非公平同步</p>
+<h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><blockquote>
+<p>Synchronization serves to constrain the interleaving of actions performed by multiple threads of control (e.g., on a multicore processor), allowing only correct executions. Over the years, this ongoing project has developed some of the most efficient and widely used algorithms for locking, concurrent data structures, transactional memory, and persistence.</p>
+<p>同步用于约束由多个控制线程(例如，在多核处理器上)执行的动作的交错，只允许正确的执行。多年来，这个正在进行的项目开发了一些最有效和广泛使用的算法，用于锁定、并发数据结构、事务性内存和持久性。</p>
+</blockquote>
+<h4 id="信号量操作"><a href="#信号量操作" class="headerlink" title="信号量操作"></a>信号量操作</h4><ul>
+<li><p>获取信号量</p>
+<ul>
+<li>acquire 等待</li>
+<li>tryAcquire 非等待</li>
+</ul>
+<blockquote>
+<p>两者有什么区别？</p>
+<p>前者会阻塞，后者不会阻塞</p>
+</blockquote>
+</li>
+<li><p>释放信号量</p>
+</li>
+<li><p>查看有多少信号量</p>
+</li>
+</ul>
+<h2 id="相关内容"><a href="#相关内容" class="headerlink" title="相关内容"></a>相关内容</h2><p>并发的好处与代价</p>
+<h3 id="操作系统是如何解决并发问题的？"><a href="#操作系统是如何解决并发问题的？" class="headerlink" title="操作系统是如何解决并发问题的？"></a>操作系统是如何解决并发问题的？</h3><ul>
+<li>信号量</li>
+<li>锁</li>
+</ul>
+<p>什么是死锁？</p>
+<p>死锁的四要素是什么 ？</p>
+<ul>
+<li>独占性，一个资源不能同时给多个进程使用。如资源被分配给了进程a,此时进程b又来请求该资源，其只能等待进程a使用完，不能抢，也就是 公平</li>
+<li>公平，不可剥夺</li>
+<li>环路等待 三角债务</li>
+<li>请求和保持条件</li>
+</ul>
+<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>什么是juc?</p>
+<p>juc 即 <code>java.util.concurrent</code>包的缩写，是Java官方提供的一个工具包来简化对多线程并发编程使用。</p>
+<h2 id="今日收获"><a href="#今日收获" class="headerlink" title="今日收获"></a>今日收获</h2><p>什么是AQS?</p>
+<p>名词解释：java.util.concurrent.locks.AbstractQueuedSynchronizer，Java并发包中的抽象队列同步器</p>
+<p>功能：提供一个框架用来实现阻塞锁和相关同步机制（信号量，事件等），依赖于一个fifo先进先出的等待队列</p>
+<blockquote>
+<p>Provides a framework for implementing blocking locks and related synchronizers (semaphores, events, etc) that rely on first-in-first-out (FIFO) wait queues. This class is designed to be a useful basis for most kinds of synchronizers that rely on a single atomic int value to represent state. Subclasses must define the protected methods that change this state, and which define what that state means in terms of this object being acquired or released.</p>
+</blockquote>
+<p>如何修改同步状态？</p>
+<ul>
+<li>java.util.concurrent.locks.AbstractQueuedSynchronizer#setState</li>
+<li>java.util.concurrent.locks.AbstractQueuedSynchronizer#getState</li>
+<li>java.util.concurrent.locks.AbstractQueuedSynchronizer#compareAndSetState</li>
+</ul>
+<p>如何使用？</p>
+<p>使用场景？</p>
+<h2 id="JUC-1"><a href="#JUC-1" class="headerlink" title="JUC"></a>JUC</h2><p> java.util.concurrent.Executors</p>
+<p> java.util.concurrent.ExecutorService</p>
+<h2 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h2><h3 id="java-nio-file-WatchService"><a href="#java-nio-file-WatchService" class="headerlink" title="java.nio.file.WatchService"></a>java.nio.file.WatchService</h3><p>什么是WatchKey?</p>
+<p>猜想：监视的对象？</p>
+<p>Java nio 的底层是什么？</p>
+<p>IO多路复用</p>
+<ul>
+<li>WatchKey take() </li>
+<li>WatchKey poll(long timeout, TimeUnit unit)</li>
+<li>WatchKey poll();</li>
+<li>close()</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WatchService watchService = fileSystem.newWatchService();</span><br></pre></td></tr></table></figure>
+
+<h3 id="java-nio-file-WatchKey"><a href="#java-nio-file-WatchKey" class="headerlink" title="java.nio.file.WatchKey"></a>java.nio.file.WatchKey</h3><blockquote>
+<p>A token representing the registration of a watchable object with a WatchService.<br>A watch key is created when a watchable object is registered with a watch service. The key remains valid until:<br>It is cancelled, explicitly, by invoking its cancel method, or<br>Cancelled implicitly, because the object is no longer accessible, or<br>By closing the watch service.<br>A watch key has a state. When initially created the key is said to be ready. When an event is detected then the key is signalled and queued so that it can be retrieved by invoking the watch service’s poll or take methods. Once signalled, a key remains in this state until its reset method is invoked to return the key to the ready state. Events detected while the key is in the signalled state are queued but do not cause the key to be re-queued for retrieval from the watch service. Events are retrieved by invoking the key’s pollEvents method. This method retrieves and removes all events accumulated for the object. When initially created, a watch key has no pending events. Typically events are retrieved when the key is in the signalled state leading to the following idiom:</p>
+</blockquote>
+<p>A token representing the registration of a watchable object with a WatchService.</p>
+<p>在reactive Stream 中也出现了同样的概念 subscrition ,registration</p>
+<p>一个表示可观察对象注册到WatchService的令牌。也就是代表那个可观察的对象的标识符？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WatchKey watchKey = watchService.take();</span><br></pre></td></tr></table></figure>
+
+<p> java.nio.file.WatchEvent</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;WatchEvent&lt;?&gt;&gt; envets &#x3D; watchKey.pollEvents()</span><br></pre></td></tr></table></figure>
+
+<p>java.nio.file.Watchable</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Watchable watchable = watchKey.watchable();</span><br></pre></td></tr></table></figure>
+
+<p>类图关系</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210605165601215.png" alt="image-20210605165601215"></p>
 
       
 
@@ -1080,7 +1127,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/29/notebook/20210529-%E5%88%86%E5%B8%83%E5%BC%8F%E9%85%8D%E7%BD%AE/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/">展开全文 >></a>
         </p>
       
 
@@ -1110,46 +1157,66 @@
 
 
   
-    <article id="post-notebook/20210527-服务注册与发现" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-notebook/JUC/操作系统重要内容" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/05/27/notebook/20210527-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/">notebook/20210527-服务注册与发现</a>
+      <a class="article-title" href="/2021/06/05/notebook/JUC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9/">notebook/JUC/操作系统重要内容</a>
     </h1>
   
 
         
-        <a href="/2021/05/27/notebook/20210527-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2021-05-27T15:22:05.857Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-05-27</time>
+        <a href="/2021/06/05/notebook/JUC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9/" class="archive-article-date">
+  	<time datetime="2021-06-05T13:00:05.535Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="系统维度进行分析"><a href="#系统维度进行分析" class="headerlink" title="系统维度进行分析"></a>系统维度进行分析</h1><h2 id="参与者"><a href="#参与者" class="headerlink" title="参与者"></a>参与者</h2><ul>
-<li>服务提供方 Service Provider</li>
-<li>服务使用方 Service User</li>
-<li>服务注册中心-服务提供方与服务使用方直接的桥梁- Service Registry</li>
-</ul>
-<h2 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h2><ul>
-<li>服务提供方将服务注册到注册中心</li>
-<li>服务使用方到注册中心查询获取服务提供方的服务地址，然后使用服务提供方的服务</li>
-<li>注册中心保存服务地址，为服务使用使用方提供服务查询服务</li>
-</ul>
-<h2 id="功能、目标"><a href="#功能、目标" class="headerlink" title="功能、目标"></a>功能、目标</h2><ul>
-<li>服务稳定，上下先平滑</li>
-<li>高可用，</li>
-<li>服务的负载均衡</li>
-</ul>
-<h2 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h2><p>服务可以分为应用内的服务依赖和应用间的服务依赖。前者是进程内组件的服务调用，后者是进程间应用的服务调用。</p>
-<p>在Java应用中我们使用spring 框架帮助我们简化应用组件间的服务依赖关系，在这之中服务提供方使用注解或者xml配置的方式声明自己为服务提供方。而spring ioc 容器扮演着的的就是服务注册中心的角色，保存服务。而服务使用方使用注解或者xml配置声明自己需要的服务。spring ioc 容器会将为其准备好它所需要的服务。即人们常说的依赖注入（服务注入）。需要注意的是这种服务一般是单例的，即不存在服务的负载均衡问题。</p>
-<p>服务提供方-@Bean</p>
-<p>服务使用方-@Autowired</p>
-<p>服务注册中心-BeanFactory</p>
+        <p>[toc]</p>
+<p>进程间通信</p>
+<h2 id="一般系统思维"><a href="#一般系统思维" class="headerlink" title="一般系统思维"></a>一般系统思维</h2><h3 id="参与者"><a href="#参与者" class="headerlink" title="参与者"></a>参与者</h3><p>进程与进程</p>
+<h3 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h3><p>进程与进程之间进行通信，进程的实体是什么呢？</p>
+<h3 id="目标、功能"><a href="#目标、功能" class="headerlink" title="目标、功能"></a>目标、功能</h3><blockquote>
+<p>为了实现进程间的通信，在 UNIX 系统中提供了一个用于进程间通信的软件包，简称 IPC。它由消息机制、共享存储器机制和信号量机制三部分组成。在每一种通信机制中，都 提供了相应的系统调用供用户程序进行进程间的同步与通信之用。 </p>
+<p>(1) 消息机制。用户(进程)在利用消息机制进行通信时，必须先利用 msgget 系统调用来 建立一个消息队列。若成功，便返回消息队列描述符 msgid，以后用户便可利用 msgid 去访 问该消息队列。用户(进程)可利用发送消息的系统调用 msgsend 向用户指定的消息队列发送 消息；利用 msgrcv 系统调用从指定的消息队列中接收指定类型的消息。</p>
+<p> (2) 共享存储器机制。当用户(进程)要利用共享存储器机制进行通信时，必须先利用 shmget 系统调用来建立一个共享存储区，若成功，便返回该共享存储区描述符 shmid。以后， 用户便可利用 shmid 去访问该共享存储区。进程在建立了共享存储区之后，还必须再利用 shmat 将该共享存储区连接到本进程的虚地址空间上。以后，在进程之间便可利用该共享存 储区进行通信。当进程不再需要该共享存储区时，可利用 shmdt 系统调用来拆除进程与共 享存储区间的连接。</p>
+<p> (3) 信号量机制。在 UNIX 系统中所采用的信号量机制，与第二章中所介绍的一般信号 量集机制相似，允许将一组信号量形成一个信号量集，并对这组信号量施以原子操作，详 见第十章。</p>
+</blockquote>
+<p>IPC</p>
+<p>进程间通信</p>
+<table>
+<thead>
+<tr>
+<th>实现机制</th>
+<th>系统调用</th>
+<th>通信形式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>消息机制</td>
+<td>msg get</td>
+<td>消息队列</td>
+</tr>
+<tr>
+<td>共享存储器机制</td>
+<td>shm get</td>
+<td>共享存储区</td>
+</tr>
+<tr>
+<td>信号量机制</td>
+<td></td>
+<td>信号量集</td>
+</tr>
+</tbody></table>
+<p>从实现机制，系统调用，通信形式来回答</p>
+<p>我了解这个有啥用？</p>
+<p>应付面试？</p>
+<p>如何理解机制？</p>
 
       
 
@@ -1162,7 +1229,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/05/27/notebook/20210527-%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E4%B8%8E%E5%8F%91%E7%8E%B0/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/06/05/notebook/JUC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9/">展开全文 >></a>
         </p>
       
 
@@ -1194,7 +1261,7 @@
   
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
     </nav>
   
 

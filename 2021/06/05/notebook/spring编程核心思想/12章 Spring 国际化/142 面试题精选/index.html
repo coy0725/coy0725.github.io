@@ -8,13 +8,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2021 | Hexo</title>
+  <title>notebook/spring编程核心思想/12章 Spring 国际化/142 面试题精选 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2021/index.html">
+  <meta name="description" content="[toc] spring国际化接口有哪些-沙雕核心接口-MessageSource 层次性接口-org.springframework.context.HierarchicalMessageSource spring 有哪些MessageSource内建实现-996org.springframework.context.support.ResourceBundleMessageSource org">
+<meta property="og:type" content="article">
+<meta property="og:title" content="notebook&#x2F;spring编程核心思想&#x2F;12章 Spring 国际化&#x2F;142 面试题精选">
+<meta property="og:url" content="http://yoursite.com/2021/06/05/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/142%20%E9%9D%A2%E8%AF%95%E9%A2%98%E7%B2%BE%E9%80%89/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[toc] spring国际化接口有哪些-沙雕核心接口-MessageSource 层次性接口-org.springframework.context.HierarchicalMessageSource spring 有哪些MessageSource内建实现-996org.springframework.context.support.ResourceBundleMessageSource org">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-06-05T03:17:19.083Z">
+<meta property="article:modified_time" content="2021-06-07T11:47:25.093Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
   
@@ -164,295 +168,226 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-notebook/spring编程核心思想/12章 Spring 国际化/142 面试题精选" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      notebook/spring编程核心思想/12章 Spring 国际化/142 面试题精选
+    </h1>
+  
+
+        
+        <a href="/2021/06/05/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/142%20%E9%9D%A2%E8%AF%95%E9%A2%98%E7%B2%BE%E9%80%89/" class="archive-article-date">
+  	<time datetime="2021-06-05T03:17:19.083Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
+</a>
+        
+      </header>
     
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h1 id="spring国际化接口有哪些-沙雕"><a href="#spring国际化接口有哪些-沙雕" class="headerlink" title="spring国际化接口有哪些-沙雕"></a>spring国际化接口有哪些-沙雕</h1><p>核心接口-MessageSource</p>
+<p>层次性接口-org.springframework.context.HierarchicalMessageSource</p>
+<h1 id="spring-有哪些MessageSource内建实现-996"><a href="#spring-有哪些MessageSource内建实现-996" class="headerlink" title="spring 有哪些MessageSource内建实现-996"></a>spring 有哪些MessageSource内建实现-996</h1><p>org.springframework.context.support.ResourceBundleMessageSource</p>
+<p>org.springframework.context.support.ReloadableResourceBundleMessageSource</p>
+<p>org.springframework.context.support.StaticMessageSource</p>
+<p>org.springframework.context.support.DelegatingMessageSource</p>
+<h3 id="StaticMessageSource"><a href="#StaticMessageSource" class="headerlink" title="StaticMessageSource"></a>StaticMessageSource</h3><ul>
+<li><p>用于测试而非生产</p>
+</li>
+<li><p>内存型实现与ListResourceBundle实现类似，成本高</p>
+</li>
+</ul>
+<h3 id="如何写map的注解？"><a href="#如何写map的注解？" class="headerlink" title="如何写map的注解？"></a>如何写map的注解？</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Map from 'code + locale' keys to message Strings */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Map&lt;String, String&gt; messages = <span class="keyword">new</span> HashMap&lt;String, String&gt;();</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="如何实现配置自动更新的MessageSource？"><a href="#如何实现配置自动更新的MessageSource？" class="headerlink" title="如何实现配置自动更新的MessageSource？"></a>如何实现配置自动更新的MessageSource？</h1><blockquote>
+<p>这个实现一把不是贼装逼？替换多语言就不需要重启应用了 哈哈</p>
+</blockquote>
+<p>内建的<code>ReloadableResourceBundleMessageSource</code>是去判断一个资源是不是它的最后修改时间，不过这个实现相对来说是比较滞后的 ，并不能够实现自动刷新，通常需要手动刷新的方式来进行实现</p>
+<h2 id="主要技术"><a href="#主要技术" class="headerlink" title="主要技术"></a>主要技术</h2><ul>
+<li>Java NIO 2：java.nio.file.WatchService java1.7</li>
+<li>java Concurrency : java.util.concurrent.ExecutorService</li>
+<li>Spring: org.springframework.context.support.AbstractMessageSource</li>
+</ul>
+<h2 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h2><ol>
+<li>定位资源位置（ Properties 文件） </li>
+<li>初始化 Properties 对象 </li>
+<li>实现 AbstractMessageSource#resolveCode 方法 </li>
+<li>监听资源文件（Java NIO 2 WatchService） </li>
+<li>使用线程池处理文件变化 </li>
+<li>重新装载 Properties 对象</li>
+</ol>
+<h3 id="3、实现-AbstractMessageSource-resolveCode-方法"><a href="#3、实现-AbstractMessageSource-resolveCode-方法" class="headerlink" title="3、实现 AbstractMessageSource#resolveCode 方法"></a>3、实现 AbstractMessageSource#resolveCode 方法</h3><h3 id="4、监听资源文件"><a href="#4、监听资源文件" class="headerlink" title="4、监听资源文件"></a>4、监听资源文件</h3><p>在IDEA中资源文件相当于是文件系统中的一个文件，打包之后会在jar包，如果在jar包里是不存在文件变更的。</p>
+<p>首先要确定文件在什么地方</p>
+<p>资源是否是一个文件，如果是文件可以进行监听他的变化</p>
+<p>把文件变成文件路径，路径路径可以注册WatchService</p>
+<p>构建watchService</p>
+<ul>
+<li>获取当前os文件系统</li>
+<li>使用文件系统创建WatchService</li>
+</ul>
+<p>注册WatchService 到资源文件路径，关心修改事件</p>
+<p>通常监听的方式是监听目录，要去上级去进行操作</p>
+<h3 id="5、监听目录-线程池"><a href="#5、监听目录-线程池" class="headerlink" title="5、监听目录-线程池"></a>5、监听目录-线程池</h3><p>为了不阻塞当前线程，使用线程池进行异步操作</p>
+<p>把工作交给单线程处理文件变化</p>
+<p>watchKey 是否有效，有效就把所有的事件拿出来</p>
+<p>判断watchkey 的watchAble，watchAble是一个路径，转成目录路径</p>
+<p>事件所关联的对象即注册目录的子文件或子目录（事件发生源是相对路径）</p>
+<p>将相对路径处理为绝对路径</p>
+<p>需要将watchKey进行重置，并不是每一次的watchKey都有效</p>
+<blockquote>
+<p>watchService.pool–&gt;watchService.take</p>
+</blockquote>
+<h3 id="6、重新装载properties文件"><a href="#6、重新装载properties文件" class="headerlink" title="6、重新装载properties文件"></a>6、重新装载properties文件</h3><p>实现代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Licensed to the Apache Software Foundation (ASF) under one or more</span></span><br><span class="line"><span class="comment"> * contributor license agreements.  See the NOTICE file distributed with</span></span><br><span class="line"><span class="comment"> * this work for additional information regarding copyright ownership.</span></span><br><span class="line"><span class="comment"> * The ASF licenses this file to You under the Apache License, Version 2.0</span></span><br><span class="line"><span class="comment"> * (the "License"); you may not use this file except in compliance with</span></span><br><span class="line"><span class="comment"> * the License.  You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *     http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment"> * distributed under the License is distributed on an "AS IS" BASIS,</span></span><br><span class="line"><span class="comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment"> * See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment"> * limitations under the License.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">package</span> org.geekbang.thinking.in.spring.i18n;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.context.MessageSource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.ResourceLoaderAware;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.AbstractMessageSource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.DefaultResourceLoader;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.Resource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.ResourceLoader;</span><br><span class="line"><span class="keyword">import</span> org.springframework.core.io.support.EncodedResource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.util.StringUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.FileReader;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.Reader;</span><br><span class="line"><span class="keyword">import</span> java.nio.file.*;</span><br><span class="line"><span class="keyword">import</span> java.text.MessageFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.Locale;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ExecutorService;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.Executors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 动态（更新）资源 &#123;<span class="doctag">@link</span> MessageSource&#125; 实现</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * 实现步骤：</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> * 1. 定位资源位置（ Properties 文件）</span></span><br><span class="line"><span class="comment"> * 2. 初始化 Properties 对象</span></span><br><span class="line"><span class="comment"> * 3. 实现 AbstractMessageSource#resolveCode 方法</span></span><br><span class="line"><span class="comment"> * 4. 监听资源文件（Java NIO 2 WatchService）</span></span><br><span class="line"><span class="comment"> * 5. 使用线程池处理文件变化</span></span><br><span class="line"><span class="comment"> * 6. 重新装载 Properties 对象</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> &lt;a href="mailto:mercyblitz@gmail.com"&gt;Mercy&lt;/a&gt;</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> MessageSource</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> AbstractMessageSource</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DynamicResourceMessageSource</span> <span class="keyword">extends</span> <span class="title">AbstractMessageSource</span> <span class="keyword">implements</span> <span class="title">ResourceLoaderAware</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String resourceFileName = <span class="string">"msg.properties"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String resourcePath = <span class="string">"/META-INF/"</span> + resourceFileName;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ENCODING = <span class="string">"UTF-8"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Resource messagePropertiesResource;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Properties messageProperties;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ExecutorService executorService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ResourceLoader resourceLoader;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">DynamicResourceMessageSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.messagePropertiesResource = getMessagePropertiesResource();</span><br><span class="line">        <span class="keyword">this</span>.messageProperties = loadMessageProperties();</span><br><span class="line">        <span class="keyword">this</span>.executorService = Executors.newSingleThreadExecutor();</span><br><span class="line">        <span class="comment">// 监听资源文件（Java NIO 2 WatchService）</span></span><br><span class="line">        onMessagePropertiesChanged();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">onMessagePropertiesChanged</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span>.messagePropertiesResource.isFile()) &#123; <span class="comment">// 判断是否为文件</span></span><br><span class="line">            <span class="comment">// 获取对应文件系统中的文件</span></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                File messagePropertiesFile = <span class="keyword">this</span>.messagePropertiesResource.getFile();</span><br><span class="line">                Path messagePropertiesFilePath = messagePropertiesFile.toPath();</span><br><span class="line">                <span class="comment">// 获取当前 OS 文件系统</span></span><br><span class="line">                FileSystem fileSystem = FileSystems.getDefault();</span><br><span class="line">                <span class="comment">// 新建 WatchService</span></span><br><span class="line">                WatchService watchService = fileSystem.newWatchService();</span><br><span class="line">                <span class="comment">// 获取资源文件所在的目录</span></span><br><span class="line">                Path dirPath = messagePropertiesFilePath.getParent();</span><br><span class="line">                <span class="comment">// 注册 WatchService 到 dirPath，并且关心修改事件</span></span><br><span class="line">                dirPath.register(watchService, ENTRY_MODIFY);</span><br><span class="line">                <span class="comment">// 处理资源文件变化（异步）</span></span><br><span class="line">                processMessagePropertiesChanged(watchService);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 处理资源文件变化（异步）</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> watchService</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processMessagePropertiesChanged</span><span class="params">(WatchService watchService)</span> </span>&#123;</span><br><span class="line">        executorService.submit(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">                WatchKey watchKey = watchService.take(); <span class="comment">// take 发生阻塞</span></span><br><span class="line">                <span class="comment">// watchKey 是否有效</span></span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="keyword">if</span> (watchKey.isValid()) &#123;</span><br><span class="line">                        <span class="keyword">for</span> (WatchEvent event : watchKey.pollEvents()) &#123;</span><br><span class="line">                            Watchable watchable = watchKey.watchable();</span><br><span class="line">                            <span class="comment">// 目录路径（监听的注册目录）</span></span><br><span class="line">                            Path dirPath = (Path) watchable;</span><br><span class="line">                            <span class="comment">// 事件所关联的对象即注册目录的子文件（或子目录）</span></span><br><span class="line">                            <span class="comment">// 事件发生源是相对路径</span></span><br><span class="line">                            Path fileRelativePath = (Path) event.context();</span><br><span class="line">                            <span class="keyword">if</span> (resourceFileName.equals(fileRelativePath.getFileName().toString())) &#123;</span><br><span class="line">                                <span class="comment">// 处理为绝对路径</span></span><br><span class="line">                                Path filePath = dirPath.resolve(fileRelativePath);</span><br><span class="line">                                File file = filePath.toFile();</span><br><span class="line">                                Properties properties = loadMessageProperties(<span class="keyword">new</span> FileReader(file));</span><br><span class="line">                                <span class="keyword">synchronized</span> (messageProperties) &#123;</span><br><span class="line">                                    messageProperties.clear();</span><br><span class="line">                                    messageProperties.putAll(properties);</span><br><span class="line">                                &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                    <span class="keyword">if</span> (watchKey != <span class="keyword">null</span>) &#123;</span><br><span class="line">                        watchKey.reset(); <span class="comment">// 重置 WatchKey</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Properties <span class="title">loadMessageProperties</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        EncodedResource encodedResource = <span class="keyword">new</span> EncodedResource(<span class="keyword">this</span>.messagePropertiesResource, ENCODING);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> loadMessageProperties(encodedResource.getReader());</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Properties <span class="title">loadMessageProperties</span><span class="params">(Reader reader)</span> </span>&#123;</span><br><span class="line">        Properties properties = <span class="keyword">new</span> Properties();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            properties.load(reader);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (reader != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    reader.close();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> properties;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> Resource <span class="title">getMessagePropertiesResource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ResourceLoader resourceLoader = getResourceLoader();</span><br><span class="line">        Resource resource = resourceLoader.getResource(resourcePath);</span><br><span class="line">        <span class="keyword">return</span> resource;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> MessageFormat <span class="title">resolveCode</span><span class="params">(String code, Locale locale)</span> </span>&#123;</span><br><span class="line">        String messageFormatPattern = messageProperties.getProperty(code);</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.hasText(messageFormatPattern)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> MessageFormat(messageFormatPattern, locale);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> ResourceLoader <span class="title">getResourceLoader</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.resourceLoader != <span class="keyword">null</span> ? <span class="keyword">this</span>.resourceLoader : <span class="keyword">new</span> DefaultResourceLoader();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setResourceLoader</span><span class="params">(ResourceLoader resourceLoader)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.resourceLoader = resourceLoader;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">        DynamicResourceMessageSource messageSource = <span class="keyword">new</span> DynamicResourceMessageSource();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10000</span>; i++) &#123;</span><br><span class="line">            String message = messageSource.getMessage(<span class="string">"name"</span>, <span class="keyword">new</span> Object[]&#123;&#125;, Locale.getDefault());</span><br><span class="line">            System.out.println(message);</span><br><span class="line">            Thread.sleep(<span class="number">1000L</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h1><p>用到了Java nio 和 juc 相关内容，或许应该学习些这两个包的api</p>
+<p>随便学学吧</p>
+<p>在上文中的实现配置自动更新的MessageSource中用到了以下不是很熟悉的api</p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/145-Errors%20%E8%AE%BE%E8%AE%A1/" class="archive-article-date">
-  	<time datetime="2021-06-07T14:57:49.011Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/145-Errors%20%E8%AE%BE%E8%AE%A1/">notebook/spring编程核心思想/13章 Spring 校验Validation/145-Errors 设计</a>
-    </h1>
-  
+      
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/06/05/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/142%20%E9%9D%A2%E8%AF%95%E9%A2%98%E7%B2%BE%E9%80%89/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/144-Validator%20%E8%AE%BE%E8%AE%A1/" class="archive-article-date">
-  	<time datetime="2021-06-07T14:43:52.462Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2021/06/05/notebook/20210605-%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF%E4%B8%8E%E4%BA%8B%E4%BB%B6/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          notebook/20210605-分布式消息与事件
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/05/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/12%E7%AB%A0%20Spring%20%E5%9B%BD%E9%99%85%E5%8C%96/141-Spring%20boot%20%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E9%A2%84%E5%88%9B%E5%BB%BAMessageSource%E8%BF%99%E4%B8%AABean/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">notebook/spring编程核心思想/12章 Spring 国际化/141-Spring boot 为什么要预创建MessageSource这个Bean</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/144-Validator%20%E8%AE%BE%E8%AE%A1/">notebook/spring编程核心思想/13章 Spring 校验Validation/144-Validator 设计</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/143-Spring%20validator%E6%A0%A1%E9%AA%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="archive-article-date">
-  	<time datetime="2021-06-07T14:32:06.518Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/143-Spring%20validator%E6%A0%A1%E9%AA%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">notebook/spring编程核心思想/13章 Spring 校验Validation/143-Spring validator校验使用场景</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/06/notebook/JVM/20210606-%E5%A7%97/" class="archive-article-date">
-  	<time datetime="2021-06-06T14:45:28.414Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/06/notebook/JVM/20210606-%E5%A7%97/">notebook/JVM/20210606-姗</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/06/notebook/JVM/20210606-GC/" class="archive-article-date">
-  	<time datetime="2021-06-06T13:24:11.696Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/06/notebook/JVM/20210606-GC/">notebook/JVM/20210606-GC</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/06/notebook/JVM/20210606-%E5%88%9D%E6%B6%89jvm/" class="archive-article-date">
-  	<time datetime="2021-06-06T13:23:46.728Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/06/notebook/JVM/20210606-%E5%88%9D%E6%B6%89jvm/">notebook/JVM/20210606-初涉jvm</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/06/notebook/JUC/JUC%E5%9F%BA%E7%A1%80%E8%BF%90%E7%94%A8/" class="archive-article-date">
-  	<time datetime="2021-06-06T04:02:11.581Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/06/notebook/JUC/JUC%E5%9F%BA%E7%A1%80%E8%BF%90%E7%94%A8/">notebook/JUC/JUC基础运用</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/06/notebook/JUC/%E9%94%99%E8%AF%AF%20%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB/" class="archive-article-date">
-  	<time datetime="2021-06-06T03:38:09.570Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/06/notebook/JUC/%E9%94%99%E8%AF%AF%20%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB/">notebook/JUC/错误 找不到或无法加载主类</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/" class="archive-article-date">
-  	<time datetime="2021-06-05T15:02:01.513Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/">notebook/JUC/1.0 初识JUC</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/05/notebook/JUC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9/" class="archive-article-date">
-  	<time datetime="2021-06-05T13:00:05.535Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/05/notebook/JUC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9/">notebook/JUC/操作系统重要内容</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2021/page/2/">2</a><a class="page-number" href="/archives/2021/page/3/">3</a><a class="extend next" rel="next" href="/archives/2021/page/2/">Next &amp;raquo;</a>
-    </nav>
   
 
 
@@ -478,8 +413,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

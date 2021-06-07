@@ -8,15 +8,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2021 | Hexo</title>
+  <title>notebook/JUC/1.0 初识JUC | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/archives/2021/index.html">
+  <meta name="description" content="[toc] 一般系统化思考参与者是哪些？ 操作系统资源 cpu IO memory   线程  参与者之间的关系是什么？线程与线程间存在竞争资源关系 目标或功能是什么？提升对计算的利用率，压榨最后一滴血 如果让你来设计，你会如何来控制并发？参考操作系统对其抽象进行Java的实现 相关抽象概念 信号量 semaphore 锁  lock  信号量如何使用信号量来控制并发？ 信号量的数量代表可请求的资">
+<meta property="og:type" content="article">
+<meta property="og:title" content="notebook&#x2F;JUC&#x2F;1.0 初识JUC">
+<meta property="og:url" content="http://yoursite.com/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[toc] 一般系统化思考参与者是哪些？ 操作系统资源 cpu IO memory   线程  参与者之间的关系是什么？线程与线程间存在竞争资源关系 目标或功能是什么？提升对计算的利用率，压榨最后一滴血 如果让你来设计，你会如何来控制并发？参考操作系统对其抽象进行Java的实现 相关抽象概念 信号量 semaphore 锁  lock  信号量如何使用信号量来控制并发？ 信号量的数量代表可请求的资">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210604204334398.png">
+<meta property="og:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210605165601215.png">
+<meta property="article:published_time" content="2021-06-05T15:02:01.513Z">
+<meta property="article:modified_time" content="2021-06-06T01:24:17.014Z">
 <meta property="article:author" content="coy">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gitee.com/dengyuhui/images/raw/master/image-20210604204334398.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -164,295 +171,344 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-notebook/JUC/1.0 初识JUC" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/145-Errors%20%E8%AE%BE%E8%AE%A1/" class="archive-article-date">
-  	<time datetime="2021-06-07T14:57:49.011Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/145-Errors%20%E8%AE%BE%E8%AE%A1/">notebook/spring编程核心思想/13章 Spring 校验Validation/145-Errors 设计</a>
+    <h1 class="article-title" itemprop="name">
+      notebook/JUC/1.0 初识JUC
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/144-Validator%20%E8%AE%BE%E8%AE%A1/" class="archive-article-date">
-  	<time datetime="2021-06-07T14:43:52.462Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/144-Validator%20%E8%AE%BE%E8%AE%A1/">notebook/spring编程核心思想/13章 Spring 校验Validation/144-Validator 设计</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/143-Spring%20validator%E6%A0%A1%E9%AA%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="archive-article-date">
-  	<time datetime="2021-06-07T14:32:06.518Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/143-Spring%20validator%E6%A0%A1%E9%AA%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">notebook/spring编程核心思想/13章 Spring 校验Validation/143-Spring validator校验使用场景</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/06/notebook/JVM/20210606-%E5%A7%97/" class="archive-article-date">
-  	<time datetime="2021-06-06T14:45:28.414Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/06/notebook/JVM/20210606-%E5%A7%97/">notebook/JVM/20210606-姗</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/06/notebook/JVM/20210606-GC/" class="archive-article-date">
-  	<time datetime="2021-06-06T13:24:11.696Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/06/notebook/JVM/20210606-GC/">notebook/JVM/20210606-GC</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/06/notebook/JVM/20210606-%E5%88%9D%E6%B6%89jvm/" class="archive-article-date">
-  	<time datetime="2021-06-06T13:23:46.728Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/06/notebook/JVM/20210606-%E5%88%9D%E6%B6%89jvm/">notebook/JVM/20210606-初涉jvm</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/06/notebook/JUC/JUC%E5%9F%BA%E7%A1%80%E8%BF%90%E7%94%A8/" class="archive-article-date">
-  	<time datetime="2021-06-06T04:02:11.581Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/06/notebook/JUC/JUC%E5%9F%BA%E7%A1%80%E8%BF%90%E7%94%A8/">notebook/JUC/JUC基础运用</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/06/notebook/JUC/%E9%94%99%E8%AF%AF%20%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB/" class="archive-article-date">
-  	<time datetime="2021-06-06T03:38:09.570Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/06/notebook/JUC/%E9%94%99%E8%AF%AF%20%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB/">notebook/JUC/错误 找不到或无法加载主类</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/" class="archive-article-date">
+        
+        <a href="/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/" class="archive-article-date">
   	<time datetime="2021-06-05T15:02:01.513Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/">notebook/JUC/1.0 初识JUC</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>[toc]</p>
+<h1 id="一般系统化思考"><a href="#一般系统化思考" class="headerlink" title="一般系统化思考"></a>一般系统化思考</h1><h2 id="参与者是哪些？"><a href="#参与者是哪些？" class="headerlink" title="参与者是哪些？"></a>参与者是哪些？</h2><ul>
+<li>操作系统资源<ul>
+<li>cpu</li>
+<li>IO</li>
+<li>memory</li>
+</ul>
+</li>
+<li>线程</li>
+</ul>
+<h2 id="参与者之间的关系是什么？"><a href="#参与者之间的关系是什么？" class="headerlink" title="参与者之间的关系是什么？"></a>参与者之间的关系是什么？</h2><p>线程与线程间存在竞争资源关系</p>
+<h2 id="目标或功能是什么？"><a href="#目标或功能是什么？" class="headerlink" title="目标或功能是什么？"></a>目标或功能是什么？</h2><p>提升对计算的利用率，压榨最后一滴血</p>
+<h2 id="如果让你来设计，你会如何来控制并发？"><a href="#如果让你来设计，你会如何来控制并发？" class="headerlink" title="如果让你来设计，你会如何来控制并发？"></a>如果让你来设计，你会如何来控制并发？</h2><p>参考操作系统对其抽象进行Java的实现</p>
+<h3 id="相关抽象概念"><a href="#相关抽象概念" class="headerlink" title="相关抽象概念"></a>相关抽象概念</h3><ul>
+<li>信号量 semaphore</li>
+<li>锁  lock</li>
+</ul>
+<h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><p>如何使用信号量来控制并发？</p>
+<p>信号量的数量代表可请求的资源数</p>
+<p>请求一个就减一个，没有了的话就等待 如何保存处于等待状态的线程呢？</p>
+<p>java.util.concurrent.locks.AbstractQueuedSynchronizer#getQueuedThreads</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Collection&lt;Thread&gt; <span class="title">getQueuedThreads</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ArrayList&lt;Thread&gt; list = <span class="keyword">new</span> ArrayList&lt;Thread&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Node p = tail; p != <span class="keyword">null</span>; p = p.prev) &#123;</span><br><span class="line">            Thread t = p.thread;</span><br><span class="line">            <span class="keyword">if</span> (t != <span class="keyword">null</span>)</span><br><span class="line">                list.add(t);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
-        <div class="article-info info-on-right">
-          
-          
+<p>使用的是一个数组来进行存储的</p>
+<h4 id="java-util-concurrent-Semaphore-java实现"><a href="#java-util-concurrent-Semaphore-java实现" class="headerlink" title="java.util.concurrent.Semaphore-java实现"></a><code>java.util.concurrent.Semaphore</code>-java实现</h4><p>核心成员</p>
+<ul>
+<li>Sync<ul>
+<li>FairSync</li>
+<li>NonfairSync</li>
+</ul>
+</li>
+</ul>
+<p>如何理解同步？</p>
+<h4 id="Sync"><a href="#Sync" class="headerlink" title="Sync"></a>Sync</h4><blockquote>
+<p>Synchronization implementation for semaphore. Uses AQS state to represent permits. Subclassed into fair and nonfair versions.</p>
+</blockquote>
+<p>信号量的同步实现，使用AQS状态来表示 permit</p>
+<p>coy:在IO模型中我们提到过同步与异步，同步是用户进程发起主动调用，异步是才做系统主动发起调用。与这里同步的语言相同吗？</p>
+<p>状态：使用成员变量来表示对象的状态，AQS的状态是什么？</p>
+<p>AQS指的是什么？</p>
+<p><code>java.util.concurrent.locks.AbstractQueuedSynchronizer</code></p>
+<p>抽象队列同步器，其在locks包中，使用锁来实现信号量semaphore？</p>
+<p>AQS的状态即：java.util.concurrent.locks.AbstractQueuedSynchronizer#state</p>
+<p>即AQS的state成员变量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The synchronization state.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> state;</span><br></pre></td></tr></table></figure>
 
+<p>可以注意到其是使用volatile修饰的，保证了这个状态在线程间的可见性</p>
+<p>coy：出了可见性，好像还有个两个特性 原子性 和一致性？</p>
+<h4 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h4><ul>
+<li><p>AbstractOwnableSynchronizer</p>
+<blockquote>
+<p>A synchronizer that may be exclusively owned by a thread. This class provides a basis for creating locks and related synchronizers that may entail a notion of ownership. The AbstractOwnableSynchronizer class itself does not manage or use this information. However, subclasses and tools may use appropriately maintained values to help control and monitor access and provide diagnostics.</p>
+<p>一个可能被线程独占的同步器。该类为创建锁和相关同步器提供了基础，这些同步器可能需要所有权的概念。AbstractOwnableSynchronizer类本身并不管理或使用此信息。但是，子类和工具可以使用适当维护的值来帮助控制和监视访问并提供诊断。</p>
+</blockquote>
+<p>coy：</p>
+<p>核心概念</p>
+<ul>
+<li>同步器</li>
+<li>被线程独占，即具有排他性</li>
+</ul>
+</li>
+<li><p>Node</p>
+<p>这个东西是用来干嘛的？</p>
+<blockquote>
+<p>等待队列节点类。</p>
+<p>等待队列是“CLH”(Craig、Landin和Hagersten)锁队列的变体。CLH锁通常用于自旋锁。相反，我们将它们用于阻塞同步器，但使用相同的基本策略，即在线程的前身节点中保存有关线程的一些控制信息。每个节点中的“status”字段跟踪线程是否应该阻塞。当一个节点的前一个节点释放时，它就会收到信号。另外，队列的每个节点充当一个特定通知样式的监视器，它持有一个等待线程。status字段不能控制线程是否被授予锁等。如果一个线程是队列中的第一个线程，那么它可以尝试获取。但是第一个并不能保证成功;它只给了你争辩的权利。因此，当前发布的竞争者线程可能需要重新等待。</p>
+<p>要排队进入一个CLH锁，您可以原子地将它作为新的尾巴拼接进去。要退出队列，只需设置头部字段。</p>
+<p>+——+ prev +—–+ +—–+</p>
+<p>头| | &lt;—- | | &lt;—- | |尾巴</p>
+<p>+——+ +—–+ +—–+</p>
+<p>插入到CLH队列只需要对“tail”进行单个原子操作，因此存在一个简单的原子分界点，即从未排队到已排队。类似地，脱离队列只涉及更新“头”。但是，节点需要更多的工作来确定它们的继任者是谁，部分原因是为了处理可能由于超时和中断而导致的取消。</p>
+<p>“prev”链接(在原来的CLH锁中没有使用)，主要用于处理取消。如果一个节点被取消，它的后继节点(通常)会链接到一个未取消的前身节点。关于自旋锁的类似力学解释，请参阅Scott和Scherer的论文，网址是<a href="http://www.cs.rochester.edu/u/scott/synchronization/" target="_blank" rel="noopener">http://www.cs.rochester.edu/u/scott/synchronization/</a></p>
+<p>我们也使用“next”链接去执行阻塞机制。每个节点的线程id都保存在其自己的节点中，因此，通过遍历下一个链接来确定它是哪个线程，前辈将通知要唤醒的下一个节点。确定后继节点必须避免与新排队的节点竞争，以设置其前一个节点的“下一个”字段。当一个节点的后继节点显示为空时，通过从原子更新的“tail”向后检查来解决这个问题。(换句话说，下一个链接是一个优化，所以我们通常不需要反向扫描。)</p>
+<p>取消为基本算法引入了一些保守性。因为我们必须轮询取消其他节点，所以我们可能会忽略被取消的节点是在我们前面还是后面。这是通过在取消时总是取消后继程序来处理的，允许它们稳定在一个新的前身上，除非我们能够确定一个未取消的前身将承担这个责任。</p>
+<p>CLH队列需要一个虚拟头节点来开始。但我们不是在建设上创造它们，因为如果从来没有竞争，这将是浪费精力。相反，在第一次争用时构造节点并设置头和尾指针。</p>
+<p>等待条件的线程使用相同的节点，但是使用额外的链接。条件只需要链接简单(非并发)链接队列中的节点，因为它们只在独占时才被访问。在等待时，一个节点被插入到条件队列中。收到信号后，节点被转移到主队列。status字段的一个特殊值用于标记节点在哪个队列上。</p>
+<p>感谢Dave Dice、Mark Moir、Victor Luchangco、Bill Scherer和Michael Scott以及JSR-166专家组的成员，感谢他们提供关于本课程设计的有用想法、讨论和批评。</p>
+</blockquote>
+<p>等待队列的节点，每个节点Node关联一个线程，使用status状态来跟踪线程是否应该被阻塞。</p>
+<p>一个节点的前一个节点释放时，其会受到信号</p>
+<p>每个节点还会持有一个等待线程，如何理解？</p>
+<p>coy:也就是维护了线程间的等待关系，和线程是否应该被阻塞？</p>
+</li>
+</ul>
+<ul>
+<li><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210604204334398.png" alt="image-20210604204334398"></p>
+</li>
+</ul>
+<p>waitStatus</p>
+<p>SIGNAL:该节点的后继节点被阻塞(或即将被阻塞)(通过驻留)，因此当前节点在释放或取消后继节点时必须解除驻留。为了避免竞争，acquire方法必须首先表明它们需要一个信号，然后重试原子的acquire，如果失败，则阻塞。</p>
+<p>CANCELLED:该节点由于超时或中断而被取消。节点永远不会离开这种状态。特别是，取消节点的线程永远不会再阻塞。</p>
+<p>CONDITION:该节点当前处于条件队列中。在传输之前，它不会被用作同步队列节点，此时状态将设置为0。(这里这个值的使用与该领域的其他用途无关，但简化了力学。)</p>
+<p>PROPAGATE:应该将releasshared传播到其他节点。这是在doreleasesshared中设置的(仅用于头节点)，以确保传播继续进行，即使其他操作已经介入。0:以上均为零。数值以数字形式排列，以简化使用。非负值意味着节点不需要发送信号。因此，大多数代码不需要检查特定的值，只需要检查符号。对于正常同步节点，该字段初始化为0，对于条件节点，该字段初始化为CONDITION。使用CAS(或者在可能的情况下，使用无条件的易失性写)修改它</p>
+<h3 id="公平同步和非公平同步指的是什么？"><a href="#公平同步和非公平同步指的是什么？" class="headerlink" title="公平同步和非公平同步指的是什么？"></a>公平同步和非公平同步指的是什么？</h3><p><strong>猜想</strong>：讲的是是否能够进行资源的剥夺？</p>
+<p>permit 对应的是信号量的数量，代表该资源的可用数。</p>
+<blockquote>
+<p>permits – the initial number of permits available. This value may be negative, in which case releases must occur before any acquires will be granted</p>
+</blockquote>
+<p>如何理解这段话？permit 可能为负数，在这种情况下 在授予任何获得之前必须进行释放。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Semaphore</span><span class="params">(<span class="keyword">int</span> permits)</span> </span>&#123;</span><br><span class="line">    sync = <span class="keyword">new</span> NonfairSync(permits);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从构造函数上能看出来如果不指定，默认是非公平同步</p>
+<h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><blockquote>
+<p>Synchronization serves to constrain the interleaving of actions performed by multiple threads of control (e.g., on a multicore processor), allowing only correct executions. Over the years, this ongoing project has developed some of the most efficient and widely used algorithms for locking, concurrent data structures, transactional memory, and persistence.</p>
+<p>同步用于约束由多个控制线程(例如，在多核处理器上)执行的动作的交错，只允许正确的执行。多年来，这个正在进行的项目开发了一些最有效和广泛使用的算法，用于锁定、并发数据结构、事务性内存和持久性。</p>
+</blockquote>
+<h4 id="信号量操作"><a href="#信号量操作" class="headerlink" title="信号量操作"></a>信号量操作</h4><ul>
+<li><p>获取信号量</p>
+<ul>
+<li>acquire 等待</li>
+<li>tryAcquire 非等待</li>
+</ul>
+<blockquote>
+<p>两者有什么区别？</p>
+<p>前者会阻塞，后者不会阻塞</p>
+</blockquote>
+</li>
+<li><p>释放信号量</p>
+</li>
+<li><p>查看有多少信号量</p>
+</li>
+</ul>
+<h2 id="相关内容"><a href="#相关内容" class="headerlink" title="相关内容"></a>相关内容</h2><p>并发的好处与代价</p>
+<h3 id="操作系统是如何解决并发问题的？"><a href="#操作系统是如何解决并发问题的？" class="headerlink" title="操作系统是如何解决并发问题的？"></a>操作系统是如何解决并发问题的？</h3><ul>
+<li>信号量</li>
+<li>锁</li>
+</ul>
+<p>什么是死锁？</p>
+<p>死锁的四要素是什么 ？</p>
+<ul>
+<li>独占性，一个资源不能同时给多个进程使用。如资源被分配给了进程a,此时进程b又来请求该资源，其只能等待进程a使用完，不能抢，也就是 公平</li>
+<li>公平，不可剥夺</li>
+<li>环路等待 三角债务</li>
+<li>请求和保持条件</li>
+</ul>
+<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>什么是juc?</p>
+<p>juc 即 <code>java.util.concurrent</code>包的缩写，是Java官方提供的一个工具包来简化对多线程并发编程使用。</p>
+<h2 id="今日收获"><a href="#今日收获" class="headerlink" title="今日收获"></a>今日收获</h2><p>什么是AQS?</p>
+<p>名词解释：java.util.concurrent.locks.AbstractQueuedSynchronizer，Java并发包中的抽象队列同步器</p>
+<p>功能：提供一个框架用来实现阻塞锁和相关同步机制（信号量，事件等），依赖于一个fifo先进先出的等待队列</p>
+<blockquote>
+<p>Provides a framework for implementing blocking locks and related synchronizers (semaphores, events, etc) that rely on first-in-first-out (FIFO) wait queues. This class is designed to be a useful basis for most kinds of synchronizers that rely on a single atomic int value to represent state. Subclasses must define the protected methods that change this state, and which define what that state means in terms of this object being acquired or released.</p>
+</blockquote>
+<p>如何修改同步状态？</p>
+<ul>
+<li>java.util.concurrent.locks.AbstractQueuedSynchronizer#setState</li>
+<li>java.util.concurrent.locks.AbstractQueuedSynchronizer#getState</li>
+<li>java.util.concurrent.locks.AbstractQueuedSynchronizer#compareAndSetState</li>
+</ul>
+<p>如何使用？</p>
+<p>使用场景？</p>
+<h2 id="JUC-1"><a href="#JUC-1" class="headerlink" title="JUC"></a>JUC</h2><p> java.util.concurrent.Executors</p>
+<p> java.util.concurrent.ExecutorService</p>
+<h2 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h2><h3 id="java-nio-file-WatchService"><a href="#java-nio-file-WatchService" class="headerlink" title="java.nio.file.WatchService"></a>java.nio.file.WatchService</h3><p>什么是WatchKey?</p>
+<p>猜想：监视的对象？</p>
+<p>Java nio 的底层是什么？</p>
+<p>IO多路复用</p>
+<ul>
+<li>WatchKey take() </li>
+<li>WatchKey poll(long timeout, TimeUnit unit)</li>
+<li>WatchKey poll();</li>
+<li>close()</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WatchService watchService = fileSystem.newWatchService();</span><br></pre></td></tr></table></figure>
+
+<h3 id="java-nio-file-WatchKey"><a href="#java-nio-file-WatchKey" class="headerlink" title="java.nio.file.WatchKey"></a>java.nio.file.WatchKey</h3><blockquote>
+<p>A token representing the registration of a watchable object with a WatchService.<br>A watch key is created when a watchable object is registered with a watch service. The key remains valid until:<br>It is cancelled, explicitly, by invoking its cancel method, or<br>Cancelled implicitly, because the object is no longer accessible, or<br>By closing the watch service.<br>A watch key has a state. When initially created the key is said to be ready. When an event is detected then the key is signalled and queued so that it can be retrieved by invoking the watch service’s poll or take methods. Once signalled, a key remains in this state until its reset method is invoked to return the key to the ready state. Events detected while the key is in the signalled state are queued but do not cause the key to be re-queued for retrieval from the watch service. Events are retrieved by invoking the key’s pollEvents method. This method retrieves and removes all events accumulated for the object. When initially created, a watch key has no pending events. Typically events are retrieved when the key is in the signalled state leading to the following idiom:</p>
+</blockquote>
+<p>A token representing the registration of a watchable object with a WatchService.</p>
+<p>在reactive Stream 中也出现了同样的概念 subscrition ,registration</p>
+<p>一个表示可观察对象注册到WatchService的令牌。也就是代表那个可观察的对象的标识符？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WatchKey watchKey = watchService.take();</span><br></pre></td></tr></table></figure>
+
+<p> java.nio.file.WatchEvent</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;WatchEvent&lt;?&gt;&gt; envets &#x3D; watchKey.pollEvents()</span><br></pre></td></tr></table></figure>
+
+<p>java.nio.file.Watchable</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Watchable watchable = watchKey.watchable();</span><br></pre></td></tr></table></figure>
+
+<p>类图关系</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210605165601215.png" alt="image-20210605165601215"></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/06/05/notebook/JUC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9/" class="archive-article-date">
-  	<time datetime="2021-06-05T13:00:05.535Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
-</a>
+<nav id="article-nav">
+  
+    <a href="/2021/06/06/notebook/JUC/%E9%94%99%E8%AF%AF%20%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          notebook/JUC/错误 找不到或无法加载主类
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/06/05/notebook/JUC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">notebook/JUC/操作系统重要内容</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
+        
+        
+    </div>
+</aside>
+
+
+
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/06/05/notebook/JUC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9/">notebook/JUC/操作系统重要内容</a>
-    </h1>
+  
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/2021/page/2/">2</a><a class="page-number" href="/archives/2021/page/3/">3</a><a class="extend next" rel="next" href="/archives/2021/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
   
 
 
@@ -478,8 +534,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
