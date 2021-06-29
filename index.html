@@ -166,956 +166,102 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-notebook/spring编程核心思想/13章 Spring 校验Validation/145-Errors 设计" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-notebook/20210619-record" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/145-Errors%20%E8%AE%BE%E8%AE%A1/">notebook/spring编程核心思想/13章 Spring 校验Validation/145-Errors 设计</a>
+      <a class="article-title" href="/2021/06/29/notebook/20210619-record/">notebook/20210619-record</a>
     </h1>
   
 
         
-        <a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/145-Errors%20%E8%AE%BE%E8%AE%A1/" class="archive-article-date">
-  	<time datetime="2021-06-07T14:57:49.011Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
+        <a href="/2021/06/29/notebook/20210619-record/" class="archive-article-date">
+  	<time datetime="2021-06-29T02:04:49.371Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-29</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>[toc]</p>
-<h2 id="接口职责"><a href="#接口职责" class="headerlink" title="接口职责"></a>接口职责</h2><p>Errors接口主要做数据绑定和校验错误收集接口</p>
-<p>它这个和Java Bean以及属性是有强关联性的，这就是为什么说它事实上仅在Bean的范围里面来进行操作，并不是非常抽象。</p>
-<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><h3 id="reject-方法（重载）：收集错误文案"><a href="#reject-方法（重载）：收集错误文案" class="headerlink" title="reject 方法（重载）：收集错误文案"></a>reject 方法（重载）：收集错误文案</h3><h3 id="reject-Value方法（重载）：收集对象字段中的错误文案"><a href="#reject-Value方法（重载）：收集对象字段中的错误文案" class="headerlink" title="reject Value方法（重载）：收集对象字段中的错误文案"></a>reject Value方法（重载）：收集对象字段中的错误文案</h3><p>Erros对象会绑定一个 Root Object，涉及到一些字段，嵌套字段，嵌套路径</p>
-<p>没有返回值，错误挤压到内部，</p>
-<p>对象错误：全局性错误，对象为空</p>
-<p>字段多无：字段违反相应约束</p>
-<p> 相关组件：BeanPropertyBindingResult和数据绑定关联</p>
-<h2 id="配置组件"><a href="#配置组件" class="headerlink" title="配置组件"></a>配置组件</h2><h3 id="Java-Bean错误描述：org-springframework-validation-ObjectError"><a href="#Java-Bean错误描述：org-springframework-validation-ObjectError" class="headerlink" title="Java Bean错误描述：org.springframework.validation.ObjectError"></a>Java Bean错误描述：<code>org.springframework.validation.ObjectError</code></h3><h3 id="Java-Bean属性错误描述：org-springframework-validation-FieldError"><a href="#Java-Bean属性错误描述：org-springframework-validation-FieldError" class="headerlink" title="Java Bean属性错误描述：org.springframework.validation.FieldError"></a>Java Bean属性错误描述：<code>org.springframework.validation.FieldError</code></h3><p>这里的属性指的是它的对象字段，而不是静态字段</p>
-<h2 id="Errors-文案来源"><a href="#Errors-文案来源" class="headerlink" title="Errors 文案来源"></a>Errors 文案来源</h2><ul>
-<li><p>选择Errors实现（如：org.springframework.validation.BeanPropertyBindingResult）</p>
-</li>
-<li><p>调用reject或rejectValue方法</p>
-</li>
-<li><p>获取Errors对象中ObjectError或FieldError</p>
-</li>
-<li><p>将ObjectError或FieldError中的code和args,关联MessageSource实现（如ResourceBundleMessageSource）</p>
-<p>coy：对这个比较感兴趣</p>
-<p>这个如何和<code>MessageSource</code>进行打通？答案在<code>MessageSourceResolvable</code>接口</p>
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210607235825375.png" alt="image-20210607235825375"></p>
-</li>
-</ul>
-<p>MessageSource接口与MessageSourceResolver</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">String <span class="title">getMessage</span><span class="params">(MessageSourceResolvable resolvable, Locale locale)</span> <span class="keyword">throws</span> NoSuchMessageException</span>;</span><br></pre></td></tr></table></figure>
-
-
-
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210608001008296.png" alt="image-20210608001008296"></p>
-<h2 id="ErrorsMessageDemo"><a href="#ErrorsMessageDemo" class="headerlink" title="ErrorsMessageDemo"></a>ErrorsMessageDemo</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Licensed to the Apache Software Foundation (ASF) under one or more</span></span><br><span class="line"><span class="comment"> * contributor license agreements.  See the NOTICE file distributed with</span></span><br><span class="line"><span class="comment"> * this work for additional information regarding copyright ownership.</span></span><br><span class="line"><span class="comment"> * The ASF licenses this file to You under the Apache License, Version 2.0</span></span><br><span class="line"><span class="comment"> * (the "License"); you may not use this file except in compliance with</span></span><br><span class="line"><span class="comment"> * the License.  You may obtain a copy of the License at</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> *     http://www.apache.org/licenses/LICENSE-2.0</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Unless required by applicable law or agreed to in writing, software</span></span><br><span class="line"><span class="comment"> * distributed under the License is distributed on an "AS IS" BASIS,</span></span><br><span class="line"><span class="comment"> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></span><br><span class="line"><span class="comment"> * See the License for the specific language governing permissions and</span></span><br><span class="line"><span class="comment"> * limitations under the License.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">package</span> org.geekbang.thinking.in.spring.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.geekbang.thinking.in.spring.ioc.overview.domain.User;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.MessageSource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.support.StaticMessageSource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.Errors;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.FieldError;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.ObjectError;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Locale;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 错误文案示例</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> &lt;a href="mailto:mercyblitz@gmail.com"&gt;Mercy&lt;/a&gt;</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> Errors</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ErrorsMessageDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 0. 创建 User 对象</span></span><br><span class="line">        User user = <span class="keyword">new</span> User();</span><br><span class="line">        user.setName(<span class="string">"小马哥"</span>);</span><br><span class="line">        <span class="comment">// 1. 选择 Errors - BeanPropertyBindingResult</span></span><br><span class="line">        Errors errors = <span class="keyword">new</span> BeanPropertyBindingResult(user, <span class="string">"user"</span>);</span><br><span class="line">        <span class="comment">// 2. 调用 reject 或 rejectValue</span></span><br><span class="line">        <span class="comment">// reject 生成 ObjectError</span></span><br><span class="line">        <span class="comment">// reject 生成 FieldError</span></span><br><span class="line">        errors.reject(<span class="string">"user.properties.not.null"</span>);</span><br><span class="line">        <span class="comment">// user.name = user.getName()</span></span><br><span class="line">        errors.rejectValue(<span class="string">"name"</span>, <span class="string">"name.required"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 3. 获取 Errors 中 ObjectError 和 FieldError</span></span><br><span class="line">        <span class="comment">// FieldError is ObjectError</span></span><br><span class="line">        List&lt;ObjectError&gt; globalErrors = errors.getGlobalErrors();</span><br><span class="line">        List&lt;FieldError&gt; fieldErrors = errors.getFieldErrors();</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 4. 通过 ObjectError 和 FieldError 中的 code 和 args 来关联 MessageSource 实现</span></span><br><span class="line">        MessageSource messageSource = createMessageSource();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (ObjectError error : allErrors) &#123;</span><br><span class="line">            String message = messageSource.getMessage(error.getCode(), error.getArguments(), Locale.getDefault());</span><br><span class="line">            System.out.println(message);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> MessageSource <span class="title">createMessageSource</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        StaticMessageSource messageSource = <span class="keyword">new</span> StaticMessageSource();</span><br><span class="line">        messageSource.addMessage(<span class="string">"user.properties.not.null"</span>, Locale.getDefault(), <span class="string">"User 所有属性不能为空"</span>);</span><br><span class="line">        messageSource.addMessage(<span class="string">"id.required"</span>, Locale.getDefault(), <span class="string">"the id of User must not be null."</span>);</span><br><span class="line">        messageSource.addMessage(<span class="string">"name.required"</span>, Locale.getDefault(), <span class="string">"the name of User must not be null."</span>);</span><br><span class="line">        <span class="keyword">return</span> messageSource;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/145-Errors%20%E8%AE%BE%E8%AE%A1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/spring编程核心思想/13章 Spring 校验Validation/144-Validator 设计" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/144-Validator%20%E8%AE%BE%E8%AE%A1/">notebook/spring编程核心思想/13章 Spring 校验Validation/144-Validator 设计</a>
-    </h1>
-  
-
-        
-        <a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/144-Validator%20%E8%AE%BE%E8%AE%A1/" class="archive-article-date">
-  	<time datetime="2021-06-07T14:43:52.462Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Validator</p>
-<p>[toc]</p>
-<h2 id="接口职责"><a href="#接口职责" class="headerlink" title="接口职责"></a>接口职责</h2><p>Spring内部校验器接口，通过编程的方式校验目标对象</p>
-<h2 id="核心方法"><a href="#核心方法" class="headerlink" title="核心方法"></a>核心方法</h2><ul>
-<li><p>校验目标类能否校验</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(Class&lt;?&gt; clazz)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p>注意：使用场景十分狭隘，为什么？</p>
-<p>它是针对某一个Bean或者某个类的对象来进行操作</p>
-</li>
-<li><p>校验目标对象，并将校验失败的内容输出至Errors对象</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">validate</span><span class="params">(Object target, Errors errors)</span></span>;</span><br></pre></td></tr></table></figure>
-
-<p>也就是Errors有两个职责</p>
+        <p>现在时间是</p>
+<p>2021年6月19日</p>
+<p>人是九点多醒来，但是是什么时候清醒过来的呢？</p>
+<p>这些这段话前一个小时我在玩dnf,一个人登录上游戏，无尽的落寞。</p>
+<p>小溪是清澈平静的静静流淌，但不可否认，平静清澈下水面下是存在淤泥的，只需一个顽皮孩子或一场风雨</p>
+<p>腐烂的树叶和泥沙从溪底翻涌上来，平时清澈的溪水变得浑浊，令人生厌，大概不会有人喜欢这时的它，肮脏，</p>
+<p>充满着腐烂的气息</p>
+<p>时间一分一秒过着，滴答，滴答，小溪又变得清澈起来，时间能带走什么？</p>
+<h2 id="情绪"><a href="#情绪" class="headerlink" title="情绪"></a>情绪</h2><p>如何与世界相处，如何与自己相处？</p>
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>想要对于情绪有更深层次的了解，不想被坏情绪所困扰，由情绪的不稳定身心、工作生活造成了很大的影响。</p>
 <ul>
-<li>组织我们的错误</li>
-<li>存储我们我们相关的错误（国际化文案 ）</li>
+<li>想要做的事情因为情绪不好不想去做</li>
+<li>坏情绪让我感到痛苦，对生活感到失望</li>
 </ul>
-<p>coy:校验失败的内容如何国际化?</p>
-</li>
-</ul>
-<h2 id="配置组件"><a href="#配置组件" class="headerlink" title="配置组件"></a>配置组件</h2><ul>
-<li>错误收集器-org.springframework.validation.Errors</li>
-<li>Validator工作类-org.springframework.validation.ValidationUtils</li>
-</ul>
-<h2 id="自定义实现"><a href="#自定义实现" class="headerlink" title="自定义实现"></a>自定义实现</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserLoginValidator</span> <span class="keyword">implements</span> <span class="title">Validator</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MINIMUM_PASSWORD_LENGTH = <span class="number">6</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">supports</span><span class="params">(Class clazz)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> UserLogin<span class="class">.<span class="keyword">class</span>.<span class="title">isAssignableFrom</span>(<span class="title">clazz</span>)</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">validate</span><span class="params">(Object target, Errors errors)</span> </span>&#123;</span><br><span class="line">       ValidationUtils.rejectIfEmptyOrWhitespace(errors, <span class="string">"userName"</span>, <span class="string">"field.required"</span>);</span><br><span class="line">       ValidationUtils.rejectIfEmptyOrWhitespace(errors, <span class="string">"password"</span>, <span class="string">"field.required"</span>);</span><br><span class="line">       UserLogin login = (UserLogin) target;</span><br><span class="line">       <span class="keyword">if</span> (login.getPassword() != <span class="keyword">null</span></span><br><span class="line">             &amp;&amp; login.getPassword().trim().length() &lt; MINIMUM_PASSWORD_LENGTH) &#123;</span><br><span class="line">          errors.rejectValue(<span class="string">"password"</span>, <span class="string">"field.min.length"</span>,</span><br><span class="line">                <span class="keyword">new</span> Object[]&#123;Integer.valueOf(MINIMUM_PASSWORD_LENGTH)&#125;,</span><br><span class="line">                <span class="string">"The password must be at least ["</span> + MINIMUM_PASSWORD_LENGTH + <span class="string">"] characters in length."</span>);</span><br><span class="line">       &#125;</span><br><span class="line">    &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>程序式而非声明式，比较落后</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/144-Validator%20%E8%AE%BE%E8%AE%A1/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/spring编程核心思想/13章 Spring 校验Validation/143-Spring validator校验使用场景" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/143-Spring%20validator%E6%A0%A1%E9%AA%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">notebook/spring编程核心思想/13章 Spring 校验Validation/143-Spring validator校验使用场景</a>
-    </h1>
-  
-
-        
-        <a href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/143-Spring%20validator%E6%A0%A1%E9%AA%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/" class="archive-article-date">
-  	<time datetime="2021-06-07T14:32:06.518Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[toc]</p>
-<h2 id="Spring校验相关内容"><a href="#Spring校验相关内容" class="headerlink" title="Spring校验相关内容"></a>Spring校验相关内容</h2><ol>
-<li>Spring校验使用场景</li>
-<li>Validator接口设计</li>
-<li>Errors接口设计</li>
-<li>Errors文案来源</li>
-<li>自定义 Validator</li>
-<li>Validator的救赎</li>
-<li>面试题精选</li>
-</ol>
-<p>接口设计</p>
-<p>无论是validator 或者是error接口都不是十分优秀，有一些过度设计的嫌疑</p>
-<p>设计复杂，不大容易理解</p>
-<p>coy:</p>
-<p>何出此言？</p>
-<p>validator 的救赎</p>
-<p>hibernate validator，如果没有这个框架，无论是spring boot还是spring cloud，他们后续的一些关于spring的校验，事实上基本上失败，</p>
-<h2 id="Spring校验使用场景"><a href="#Spring校验使用场景" class="headerlink" title="Spring校验使用场景"></a>Spring校验使用场景</h2><h3 id="常规校验（Validator）"><a href="#常规校验（Validator）" class="headerlink" title="常规校验（Validator）"></a>常规校验（Validator）</h3><p>用途很少，通常来说Spring的校验和Bean的数据绑定以及Bean上的一些数据上的校验是一种强绑定的方式。</p>
-<p>何为强绑定？</p>
-<p>在接口设计时会提到这一点</p>
-<h3 id="数据绑定（DataBinder）"><a href="#数据绑定（DataBinder）" class="headerlink" title="数据绑定（DataBinder）"></a>数据绑定（DataBinder）</h3><p> 例如外部化配置源与普通POJO的绑定 ，比如他可能有层次性，多级对象的嵌套这种情况也会有的。 </p>
-<h3 id="spring-web-参数绑定"><a href="#spring-web-参数绑定" class="headerlink" title="spring web 参数绑定"></a>spring web 参数绑定</h3><p>主要针对Servlet引擎进行实现，请求参数 字符类型，转为其他类型需要做一些校验。 </p>
-<h3 id="Spring-web-mvc-webFlux-处理方法参数校验"><a href="#Spring-web-mvc-webFlux-处理方法参数校验" class="headerlink" title="Spring web mvc/webFlux 处理方法参数校验"></a>Spring web mvc/webFlux 处理方法参数校验</h3><p>通常我们会在spring mvc一些处理方法上面增加一些注解的方式来进行二次校验，不需要人为干预</p>
-<p>绑定Bean Validation对参数进行校验（字段长度等）</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/07/notebook/spring%E7%BC%96%E7%A8%8B%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3/13%E7%AB%A0%20Spring%20%E6%A0%A1%E9%AA%8CValidation/143-Spring%20validator%E6%A0%A1%E9%AA%8C%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/JVM/20210606-姗" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/06/notebook/JVM/20210606-%E5%A7%97/">notebook/JVM/20210606-姗</a>
-    </h1>
-  
-
-        
-        <a href="/2021/06/06/notebook/JVM/20210606-%E5%A7%97/" class="archive-article-date">
-  	<time datetime="2021-06-06T14:45:28.414Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>一些想说的</p>
-<p>为什么每次出去玩都要吵架？</p>
-<p>想去哪玩，定好时间地点然后去玩不就好了吗</p>
-<p>你想要什么？</p>
-<p>我能给你什么？</p>
-<p>我想说的几点</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/06/notebook/JVM/20210606-%E5%A7%97/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/JVM/20210606-GC" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/06/notebook/JVM/20210606-GC/">notebook/JVM/20210606-GC</a>
-    </h1>
-  
-
-        
-        <a href="/2021/06/06/notebook/JVM/20210606-GC/" class="archive-article-date">
-  	<time datetime="2021-06-06T13:24:11.696Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/06/notebook/JVM/20210606-GC/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/JVM/20210606-初涉jvm" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/06/notebook/JVM/20210606-%E5%88%9D%E6%B6%89jvm/">notebook/JVM/20210606-初涉jvm</a>
-    </h1>
-  
-
-        
-        <a href="/2021/06/06/notebook/JVM/20210606-%E5%88%9D%E6%B6%89jvm/" class="archive-article-date">
-  	<time datetime="2021-06-06T13:23:46.728Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[toc]</p>
-<h1 id="以下哪个扮演的角色更重要？"><a href="#以下哪个扮演的角色更重要？" class="headerlink" title="以下哪个扮演的角色更重要？"></a>以下哪个扮演的角色更重要？</h1><h2 id="叫什么？"><a href="#叫什么？" class="headerlink" title="叫什么？"></a>叫什么？</h2><p>助记符，起概括总结作用</p>
-<p>水</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>对我情绪产生影响主要的几点</p>
 <ul>
-<li>中文-水</li>
-<li>英文-water</li>
-<li>化学式-H2O</li>
+<li>js时常的闹分手</li>
+<li>对未来的忧虑和生活的压力</li>
 </ul>
-<p>这么看H2O似乎能够给我们提供更多的信息，其揭示了什么组成了水。</p>
-<h2 id="是什么？"><a href="#是什么？" class="headerlink" title="是什么？"></a>是什么？</h2><p>水是什么？</p>
-<p>水是生命之源，生命的源头。强调的是生命起源于水，但水到底是什么呢？</p>
-<p>水的本质是什么？</p>
-<p>物理-氢原子 氧原子</p>
-<p>化学-化合物</p>
-<h3 id="物理变化与化学变化的区别是什么？"><a href="#物理变化与化学变化的区别是什么？" class="headerlink" title="物理变化与化学变化的区别是什么？"></a>物理变化与化学变化的区别是什么？</h3><p>一加一等不等于二？</p>
-<p>如果等于2那么是物理变化</p>
-<p>如果不等于2那么是化学变化</p>
-<p>氢气和氧气混在一起还是氢气和氧气</p>
-<p>如果发生燃烧了呢？</p>
-<p>整体大于部分之和就是这么个道理</p>
-<h2 id="用来干什么？"><a href="#用来干什么？" class="headerlink" title="用来干什么？"></a>用来干什么？</h2><p>用来做什么必然涉及到除了自己的其他角色，即将与其他元素产生关系。</p>
-<p>jvm</p>
-<p>叫什么？</p>
-<p>Java® Virtual Machine</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/06/notebook/JVM/20210606-%E5%88%9D%E6%B6%89jvm/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/JUC/JUC基础运用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/06/notebook/JUC/JUC%E5%9F%BA%E7%A1%80%E8%BF%90%E7%94%A8/">notebook/JUC/JUC基础运用</a>
-    </h1>
-  
-
-        
-        <a href="/2021/06/06/notebook/JUC/JUC%E5%9F%BA%E7%A1%80%E8%BF%90%E7%94%A8/" class="archive-article-date">
-  	<time datetime="2021-06-06T04:02:11.581Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[toc]</p>
-<h1 id="小马哥-seagmentFault"><a href="#小马哥-seagmentFault" class="headerlink" title="小马哥 seagmentFault"></a>小马哥 seagmentFault</h1><h2 id="基础运用相关内容"><a href="#基础运用相关内容" class="headerlink" title="基础运用相关内容"></a>基础运用相关内容</h2><ol>
-<li><p>Java并发锁</p>
-</li>
-<li><p>Java原子操作</p>
-</li>
-<li><p>Java并发限制</p>
-</li>
-<li><p>Java线程池</p>
-</li>
-<li><p>面试题解析</p>
-</li>
-</ol>
-<h2 id="Java并发锁"><a href="#Java并发锁" class="headerlink" title="Java并发锁"></a>Java并发锁</h2><h3 id="重进入锁-ReentrantLock"><a href="#重进入锁-ReentrantLock" class="headerlink" title="重进入锁-ReentrantLock"></a>重进入锁-ReentrantLock</h3><p>Synchronized关键字的api 实现</p>
-<blockquote>
-<p>A reentrant mutual exclusion Lock with the same basic behavior and semantics as the implicit monitor lock accessed using synchronized methods and statements, but with extended capabilities</p>
-</blockquote>
-<p>如何理解重进入<code>Reentrant</code></p>
-<p>coy:</p>
-<p>可重入，谁可重入？可重入改变了什么？看下其<code>lock</code>方法</p>
-<blockquote>
-<p>Acquires the lock if it is not held by another thread and returns immediately, setting the lock hold count to one.<br>If the current thread already holds the lock then the hold count is incremented by one and the method returns immediately.<br>If the lock is held by another thread then the current thread becomes disabled for thread scheduling purposes and lies dormant until the lock has been acquired, at which time the lock hold count is set to one.</p>
-</blockquote>
-<p>线程去获取锁lock会出现以下几种情况</p>
-<ul>
-<li>锁没有被其他线程占用，将count置为1</li>
-<li>锁已经被当前线程占用了，将count数加1</li>
-<li>锁被其他线程占用，进去阻塞状态，直到获得锁，然后将count置为1</li>
-</ul>
-<p>猜测：可重入的意思指的是拥有锁的线程可以进行重复加锁，增加锁的次数，锁了多少次，就需要解锁多少次</p>
-<blockquote>
-<p>锁：洗衣机</p>
-<p>寝室:线程</p>
-<p>寝室成员：方法</p>
-<p>寝室里所有人都要洗衣服，洗完才能让别的寝室洗</p>
-</blockquote>
-<h4 id="最佳编程实践"><a href="#最佳编程实践" class="headerlink" title="最佳编程实践"></a>最佳编程实践</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">X</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">m</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    lock.lock();  <span class="comment">// block until condition holds</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="comment">// ... method body</span></span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">      lock.unlock()</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="重进入读写锁-ReentrantReadWriteLock"><a href="#重进入读写锁-ReentrantReadWriteLock" class="headerlink" title="重进入读写锁-ReentrantReadWriteLock"></a>重进入读写锁-ReentrantReadWriteLock</h3><p>在重进入锁的基础上，有读锁（共享）和写锁（排他，独占）</p>
-<h3 id="邮票锁-StampedLock"><a href="#邮票锁-StampedLock" class="headerlink" title="邮票锁-StampedLock"></a>邮票锁-StampedLock</h3><p>乐观锁，有版本概念</p>
-<blockquote>
-<p>A capability-based lock with three modes for controlling read/write access. <strong>The state of a StampedLock consists of a version and mode.</strong> Lock acquisition methods return a stamp that represents and controls access with respect to a lock state; “try” versions of these methods may instead return the special value zero to represent failure to acquire access. Lock release and conversion methods require stamps as arguments, and fail if they do not match the state of the lock. The three modes are:</p>
-<ul>
-<li><p><strong>Writing</strong>. Method writeLock possibly blocks waiting for exclusive access, returning a stamp that can be used in method unlockWrite to release the lock. Untimed and timed versions of tryWriteLock are also provided. When the lock is held in write mode, no read locks may be obtained, and all optimistic read validations will fail.</p>
-</li>
-<li><p><strong>Reading</strong>. Method readLock possibly blocks waiting for non-exclusive access, returning a stamp that can be used in method unlockRead to release the lock. Untimed and timed versions of tryReadLock are also provided.</p>
-</li>
-<li><p><strong>Optimistic Reading</strong>. Method tryOptimisticRead returns a non-zero stamp only if the lock is not currently held in write mode. Method validate returns true if the lock has not been acquired in write mode since obtaining a given stamp. This mode can be thought of as an extremely weak version of a read-lock, that can be broken by a writer at any time. The use of optimistic mode for short read-only code segments often reduces contention and improves throughput. However, its use is inherently fragile. Optimistic read sections should only read fields and hold them in local variables for later use after validation. Fields read while in optimistic mode may be wildly inconsistent, so usage applies only when you are familiar enough with data representations to check consistency and/or repeatedly invoke method validate(). For example, such steps are typically required when first reading an object or array reference, and then accessing one of its fields, elements or methods.</p>
-</li>
-</ul>
-</blockquote>
-<h1 id="Lesson-Concurrency"><a href="#Lesson-Concurrency" class="headerlink" title="Lesson: Concurrency"></a><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/index.html" target="_blank" rel="noopener">Lesson: Concurrency</a></h1><blockquote>
-<p>Computer users take it for granted that their systems can do more than one thing at a time. They assume that they can continue to work in a word processor, while other applications download files, manage the print queue, and stream audio. Even a single application is often expected to do more than one thing at a time. For example, that streaming audio application must simultaneously read the digital audio off the network, decompress it, manage playback, and update its display. Even the word processor should always be ready to respond to keyboard and mouse events, no matter how busy it is reformatting text or updating the display. Software that can do such things is known as <em>concurrent</em> software.</p>
-<p>The Java platform is designed from the ground up to support concurrent programming, with basic concurrency support in the Java programming language and the Java class libraries. Since version 5.0, the Java platform has also included high-level concurrency APIs. This lesson introduces the platform’s basic concurrency support and summarizes some of the high-level APIs in the <code>java.util.concurrent</code> packages.</p>
-</blockquote>
-<p>Java平台为支持并发编程从头设计，使用Java编程语言和Java类库提供基本的并发支持。从版本5.0开始，Java平台也包含了高级并发api。</p>
-<h2 id="High-Level-Concurrency-Objects"><a href="#High-Level-Concurrency-Objects" class="headerlink" title="High Level Concurrency Objects"></a>High Level Concurrency Objects</h2><blockquote>
-<ul>
-<li><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/newlocks.html" target="_blank" rel="noopener">Lock objects</a> support locking idioms that simplify many concurrent applications.</li>
-<li><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/executors.html" target="_blank" rel="noopener">Executors</a> define a high-level API for launching and managing threads. Executor implementations provided by <code>java.util.concurrent</code> provide thread pool management suitable for large-scale applications.</li>
-<li><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/collections.html" target="_blank" rel="noopener">Concurrent collections</a> make it easier to manage large collections of data, and can greatly reduce the need for synchronization.</li>
-<li><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/atomicvars.html" target="_blank" rel="noopener">Atomic variables</a> have features that minimize synchronization and help avoid memory consistency errors.</li>
-<li><a href="https://docs.oracle.com/javase/tutorial/essential/concurrency/threadlocalrandom.html" target="_blank" rel="noopener"><code>ThreadLocalRandom</code></a> (in JDK 7) provides efficient generation of pseudo-random numbers from multiple threads</li>
-</ul>
-</blockquote>
-<ul>
-<li>锁对象支持简化许多并发应用程序的锁定习惯用法。</li>
-</ul>
-<p>coy:</p>
-<ol>
-<li>锁的习惯用法是什么？</li>
-<li>如何理解锁？<ol>
-<li>锁代表的是访问控制 Access Control</li>
-</ol>
-</li>
-<li>简化了哪里？</li>
-</ol>
-<p>executor定义了用于启动和管理线程的高级API。concurrent提供的Executor实现提供了适合大型应用程序的线程池管理。</p>
-<p>coy:</p>
-<ol>
-<li><p>从这句话可以看出来<code>Excutor</code>和<code>Thread</code>类是密不可分的，简化和帮助我们更好的使用<code>Thread</code>api.</p>
-</li>
-<li><p>启动和管理，如何理解管理？</p>
-<p>管理与crud? 操作系统管理的是硬件资源，而Excutor是管理Thread。</p>
-<p>核心修饰语：安全，有效，公平</p>
-<p>Excutor是如何实现这些语义的呢？</p>
-<blockquote>
-<p>操作系统管理计算机上软硬件资源。[^操作系统之哲学原理]</p>
-<p>例如，操作系统对CPU、内存、磁盘等的管理，使得不同用户之间或者同一用户的不同程序之间可以安全有序地共享这些硬件资源。那怎么让用户很好地利用这些硬件资源呢？就是分块（parcel out），把硬件分块给应用程序使用。这里关键的原则是有效和公平，这是管理者的必备素质。有效指的是不能浪费资源，公平指的是每个人都有可能享有资源，即不能有不公平的现象。当然真正的公平是没有的事，这很像人类生活的现实。不过追求公平却是我们的本能，在虚拟世界里尽可能公平一点还是非常应该的，至少应该是设计操作系统时的不懈追求。</p>
-<p>根据管理的资源不同，操作系统具体功能如下：</p>
-<p>CPU管理，即如何分配CPU给不同应用和用户。</p>
-<p>内存管理：即如何分配内存给不同应用和用户。</p>
-<p>外存管理：即如何分配外存（磁盘）给不同应用和用户。</p>
-<p>I/O管理：即如何分配输入输出设备给应用和用户。</p>
-<p>除了对上述资源进行管理和抽象外，操作系统作为掌控一切的软件系统，其自身必须是稳定和安全的，即操作系统自己不能出现故障。因此，操作系统的设计还需包括如下两项：健壮性管理：即如何确保操作系统自身的正常运作。安全性管理：即如何防止非法操作和入侵。为完成上面所列的功能，操作系统设计人员构思了许多机制。而所有这些机制均有其渊源，其背后隐含的是人的哲学思维。本书就是要讲解操作系统背后的哲学原理，并依据这些哲学原理阐述操作系统是通过何种机制、以何种方式完成上述列举的各种管理功能的。</p>
-</blockquote>
-<p>一般系统分析</p>
-<ul>
-<li>参与者<ul>
-<li>操作系统</li>
-<li>计算机上的软硬件资源</li>
-<li>用户应用</li>
-</ul>
-</li>
-<li>目标<ul>
-<li>使得不同用户或者统一用户的不同程序之间可以安全有序地共享这些硬件资源</li>
-</ul>
-</li>
-<li>关系<ul>
-<li>共享高效-安全与有序之间的关系</li>
-<li>如果资源是独占的，也就是改变的源头只有一个，那么压根不存在有序和安全的说法，天然就是有序安全的，但不一定是高效</li>
-<li>一元一次方程，二元一次方程 元代表的是变化量</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<ul>
-<li><p>并发收集使管理大型数据集合变得更容易，并且可以大大减少对同步的需求。</p>
-</li>
-<li><p>原子变量具有最小化同步和避免内存一致性错误的特性。</p>
-</li>
-<li><p>ThreadLocalRandom(在JDK 7中)提供了从多个线程高效生成伪随机数的功能</p>
-</li>
-</ul>
-<p>高级并发api</p>
-<p>低级并发api</p>
-<p>错误: 找不到或无法加载主类 com.coy.java.concurrency.Safelock</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/06/notebook/JUC/JUC%E5%9F%BA%E7%A1%80%E8%BF%90%E7%94%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/JUC/错误 找不到或无法加载主类" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/06/notebook/JUC/%E9%94%99%E8%AF%AF%20%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB/">notebook/JUC/错误 找不到或无法加载主类</a>
-    </h1>
-  
-
-        
-        <a href="/2021/06/06/notebook/JUC/%E9%94%99%E8%AF%AF%20%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB/" class="archive-article-date">
-  	<time datetime="2021-06-06T03:38:09.570Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-06</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>错误: 找不到或无法加载主类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"E:\Program Files\Java\jdk1.8.0_91\bin\java.exe"</span> <span class="string">"-javaagent:E:\Program Files\JetBrains\IntelliJ IDEA 2019.2.3\lib\idea_rt.jar=2376:E:\Program Files\JetBrains\IntelliJ IDEA 2019.2.3\bin"</span> -Dfile.encoding=UTF-<span class="number">8</span> -classpath <span class="string">"E:\Program Files\Java\jdk1.8.0_91\jre\lib\charsets.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\deploy.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\access-bridge-64.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\cldrdata.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\dnsns.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\jaccess.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\jfxrt.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\localedata.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\nashorn.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\sunec.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\sunjce_provider.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\sunmscapi.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\sunpkcs11.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\ext\zipfs.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\javaws.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\jce.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\jfr.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\jfxswt.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\jsse.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\management-agent.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\plugin.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\resources.jar;E:\Program Files\Java\jdk1.8.0_91\jre\lib\rt.jar"</span></span><br><span class="line">    com.coy.java.concurrency.Safelock</span><br><span class="line">错误: 找不到或无法加载主类 com.coy.java.concurrency.Safelock</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210606114023821.png" alt="image-20210606114023821"></p>
-<p>1、删除文件</p>
-<ul>
-<li>main62.iml</li>
-<li>stage-3-lesson-3.iml</li>
-</ul>
-<p>2、重新导入模块</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/06/notebook/JUC/%E9%94%99%E8%AF%AF%20%E6%89%BE%E4%B8%8D%E5%88%B0%E6%88%96%E6%97%A0%E6%B3%95%E5%8A%A0%E8%BD%BD%E4%B8%BB%E7%B1%BB/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-notebook/JUC/1.0 初识JUC" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/">notebook/JUC/1.0 初识JUC</a>
-    </h1>
-  
-
-        
-        <a href="/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/" class="archive-article-date">
-  	<time datetime="2021-06-05T15:02:01.513Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[toc]</p>
-<h1 id="一般系统化思考"><a href="#一般系统化思考" class="headerlink" title="一般系统化思考"></a>一般系统化思考</h1><h2 id="参与者是哪些？"><a href="#参与者是哪些？" class="headerlink" title="参与者是哪些？"></a>参与者是哪些？</h2><ul>
-<li>操作系统资源<ul>
-<li>cpu</li>
-<li>IO</li>
-<li>memory</li>
-</ul>
-</li>
-<li>线程</li>
-</ul>
-<h2 id="参与者之间的关系是什么？"><a href="#参与者之间的关系是什么？" class="headerlink" title="参与者之间的关系是什么？"></a>参与者之间的关系是什么？</h2><p>线程与线程间存在竞争资源关系</p>
-<h2 id="目标或功能是什么？"><a href="#目标或功能是什么？" class="headerlink" title="目标或功能是什么？"></a>目标或功能是什么？</h2><p>提升对计算的利用率，压榨最后一滴血</p>
-<h2 id="如果让你来设计，你会如何来控制并发？"><a href="#如果让你来设计，你会如何来控制并发？" class="headerlink" title="如果让你来设计，你会如何来控制并发？"></a>如果让你来设计，你会如何来控制并发？</h2><p>参考操作系统对其抽象进行Java的实现</p>
-<h3 id="相关抽象概念"><a href="#相关抽象概念" class="headerlink" title="相关抽象概念"></a>相关抽象概念</h3><ul>
-<li>信号量 semaphore</li>
-<li>锁  lock</li>
-</ul>
-<h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><p>如何使用信号量来控制并发？</p>
-<p>信号量的数量代表可请求的资源数</p>
-<p>请求一个就减一个，没有了的话就等待 如何保存处于等待状态的线程呢？</p>
-<p>java.util.concurrent.locks.AbstractQueuedSynchronizer#getQueuedThreads</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> Collection&lt;Thread&gt; <span class="title">getQueuedThreads</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        ArrayList&lt;Thread&gt; list = <span class="keyword">new</span> ArrayList&lt;Thread&gt;();</span><br><span class="line">        <span class="keyword">for</span> (Node p = tail; p != <span class="keyword">null</span>; p = p.prev) &#123;</span><br><span class="line">            Thread t = p.thread;</span><br><span class="line">            <span class="keyword">if</span> (t != <span class="keyword">null</span>)</span><br><span class="line">                list.add(t);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用的是一个数组来进行存储的</p>
-<h4 id="java-util-concurrent-Semaphore-java实现"><a href="#java-util-concurrent-Semaphore-java实现" class="headerlink" title="java.util.concurrent.Semaphore-java实现"></a><code>java.util.concurrent.Semaphore</code>-java实现</h4><p>核心成员</p>
-<ul>
-<li>Sync<ul>
-<li>FairSync</li>
-<li>NonfairSync</li>
-</ul>
-</li>
-</ul>
-<p>如何理解同步？</p>
-<h4 id="Sync"><a href="#Sync" class="headerlink" title="Sync"></a>Sync</h4><blockquote>
-<p>Synchronization implementation for semaphore. Uses AQS state to represent permits. Subclassed into fair and nonfair versions.</p>
-</blockquote>
-<p>信号量的同步实现，使用AQS状态来表示 permit</p>
-<p>coy:在IO模型中我们提到过同步与异步，同步是用户进程发起主动调用，异步是才做系统主动发起调用。与这里同步的语言相同吗？</p>
-<p>状态：使用成员变量来表示对象的状态，AQS的状态是什么？</p>
-<p>AQS指的是什么？</p>
-<p><code>java.util.concurrent.locks.AbstractQueuedSynchronizer</code></p>
-<p>抽象队列同步器，其在locks包中，使用锁来实现信号量semaphore？</p>
-<p>AQS的状态即：java.util.concurrent.locks.AbstractQueuedSynchronizer#state</p>
-<p>即AQS的state成员变量</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The synchronization state.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> state;</span><br></pre></td></tr></table></figure>
-
-<p>可以注意到其是使用volatile修饰的，保证了这个状态在线程间的可见性</p>
-<p>coy：出了可见性，好像还有个两个特性 原子性 和一致性？</p>
-<h4 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h4><ul>
-<li><p>AbstractOwnableSynchronizer</p>
-<blockquote>
-<p>A synchronizer that may be exclusively owned by a thread. This class provides a basis for creating locks and related synchronizers that may entail a notion of ownership. The AbstractOwnableSynchronizer class itself does not manage or use this information. However, subclasses and tools may use appropriately maintained values to help control and monitor access and provide diagnostics.</p>
-<p>一个可能被线程独占的同步器。该类为创建锁和相关同步器提供了基础，这些同步器可能需要所有权的概念。AbstractOwnableSynchronizer类本身并不管理或使用此信息。但是，子类和工具可以使用适当维护的值来帮助控制和监视访问并提供诊断。</p>
-</blockquote>
+<h2 id="如何管理自己情绪"><a href="#如何管理自己情绪" class="headerlink" title="如何管理自己情绪"></a>如何管理自己情绪</h2><h2 id="关于情绪"><a href="#关于情绪" class="headerlink" title="关于情绪"></a>关于情绪</h2><h3 id="传统观点"><a href="#传统观点" class="headerlink" title="传统观点"></a>传统观点</h3><p>情绪是人类进化的产物，由外界因素激发内在情绪反应。如果我们无法用理性的思维去控制情绪，就会做出傻事，甚至产生暴力行为。大量科学研究证明这可能是错误的</p>
 <p>coy：</p>
-<p>核心概念</p>
-<ul>
-<li>同步器</li>
-<li>被线程独占，即具有排他性</li>
-</ul>
-</li>
-<li><p>Node</p>
-<p>这个东西是用来干嘛的？</p>
 <blockquote>
-<p>等待队列节点类。</p>
-<p>等待队列是“CLH”(Craig、Landin和Hagersten)锁队列的变体。CLH锁通常用于自旋锁。相反，我们将它们用于阻塞同步器，但使用相同的基本策略，即在线程的前身节点中保存有关线程的一些控制信息。每个节点中的“status”字段跟踪线程是否应该阻塞。当一个节点的前一个节点释放时，它就会收到信号。另外，队列的每个节点充当一个特定通知样式的监视器，它持有一个等待线程。status字段不能控制线程是否被授予锁等。如果一个线程是队列中的第一个线程，那么它可以尝试获取。但是第一个并不能保证成功;它只给了你争辩的权利。因此，当前发布的竞争者线程可能需要重新等待。</p>
-<p>要排队进入一个CLH锁，您可以原子地将它作为新的尾巴拼接进去。要退出队列，只需设置头部字段。</p>
-<p>+——+ prev +—–+ +—–+</p>
-<p>头| | &lt;—- | | &lt;—- | |尾巴</p>
-<p>+——+ +—–+ +—–+</p>
-<p>插入到CLH队列只需要对“tail”进行单个原子操作，因此存在一个简单的原子分界点，即从未排队到已排队。类似地，脱离队列只涉及更新“头”。但是，节点需要更多的工作来确定它们的继任者是谁，部分原因是为了处理可能由于超时和中断而导致的取消。</p>
-<p>“prev”链接(在原来的CLH锁中没有使用)，主要用于处理取消。如果一个节点被取消，它的后继节点(通常)会链接到一个未取消的前身节点。关于自旋锁的类似力学解释，请参阅Scott和Scherer的论文，网址是<a href="http://www.cs.rochester.edu/u/scott/synchronization/" target="_blank" rel="noopener">http://www.cs.rochester.edu/u/scott/synchronization/</a></p>
-<p>我们也使用“next”链接去执行阻塞机制。每个节点的线程id都保存在其自己的节点中，因此，通过遍历下一个链接来确定它是哪个线程，前辈将通知要唤醒的下一个节点。确定后继节点必须避免与新排队的节点竞争，以设置其前一个节点的“下一个”字段。当一个节点的后继节点显示为空时，通过从原子更新的“tail”向后检查来解决这个问题。(换句话说，下一个链接是一个优化，所以我们通常不需要反向扫描。)</p>
-<p>取消为基本算法引入了一些保守性。因为我们必须轮询取消其他节点，所以我们可能会忽略被取消的节点是在我们前面还是后面。这是通过在取消时总是取消后继程序来处理的，允许它们稳定在一个新的前身上，除非我们能够确定一个未取消的前身将承担这个责任。</p>
-<p>CLH队列需要一个虚拟头节点来开始。但我们不是在建设上创造它们，因为如果从来没有竞争，这将是浪费精力。相反，在第一次争用时构造节点并设置头和尾指针。</p>
-<p>等待条件的线程使用相同的节点，但是使用额外的链接。条件只需要链接简单(非并发)链接队列中的节点，因为它们只在独占时才被访问。在等待时，一个节点被插入到条件队列中。收到信号后，节点被转移到主队列。status字段的一个特殊值用于标记节点在哪个队列上。</p>
-<p>感谢Dave Dice、Mark Moir、Victor Luchangco、Bill Scherer和Michael Scott以及JSR-166专家组的成员，感谢他们提供关于本课程设计的有用想法、讨论和批评。</p>
+<p>什么证据证明了这一点？</p>
+<p>因情绪波动做出极端行为的人不是很多吗？</p>
 </blockquote>
-<p>等待队列的节点，每个节点Node关联一个线程，使用status状态来跟踪线程是否应该被阻塞。</p>
-<p>一个节点的前一个节点释放时，其会受到信号</p>
-<p>每个节点还会持有一个等待线程，如何理解？</p>
-<p>coy:也就是维护了线程间的等待关系，和线程是否应该被阻塞？</p>
+<h3 id="作者观点"><a href="#作者观点" class="headerlink" title="作者观点"></a>作者观点</h3><ol>
+<li><p>情绪并非与生俱来的，即非人类进化的产物？</p>
 </li>
-</ul>
-<ul>
-<li><p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210604204334398.png" alt="image-20210604204334398"></p>
+<li><p>不是由外界激发的，而是由个体创造的</p>
 </li>
-</ul>
-<p>waitStatus</p>
-<p>SIGNAL:该节点的后继节点被阻塞(或即将被阻塞)(通过驻留)，因此当前节点在释放或取消后继节点时必须解除驻留。为了避免竞争，acquire方法必须首先表明它们需要一个信号，然后重试原子的acquire，如果失败，则阻塞。</p>
-<p>CANCELLED:该节点由于超时或中断而被取消。节点永远不会离开这种状态。特别是，取消节点的线程永远不会再阻塞。</p>
-<p>CONDITION:该节点当前处于条件队列中。在传输之前，它不会被用作同步队列节点，此时状态将设置为0。(这里这个值的使用与该领域的其他用途无关，但简化了力学。)</p>
-<p>PROPAGATE:应该将releasshared传播到其他节点。这是在doreleasesshared中设置的(仅用于头节点)，以确保传播继续进行，即使其他操作已经介入。0:以上均为零。数值以数字形式排列，以简化使用。非负值意味着节点不需要发送信号。因此，大多数代码不需要检查特定的值，只需要检查符号。对于正常同步节点，该字段初始化为0，对于条件节点，该字段初始化为CONDITION。使用CAS(或者在可能的情况下，使用无条件的易失性写)修改它</p>
-<h3 id="公平同步和非公平同步指的是什么？"><a href="#公平同步和非公平同步指的是什么？" class="headerlink" title="公平同步和非公平同步指的是什么？"></a>公平同步和非公平同步指的是什么？</h3><p><strong>猜想</strong>：讲的是是否能够进行资源的剥夺？</p>
-<p>permit 对应的是信号量的数量，代表该资源的可用数。</p>
+<li><p>情绪可以被管理和控制</p>
+</li>
+</ol>
+<p>coy:</p>
 <blockquote>
-<p>permits – the initial number of permits available. This value may be negative, in which case releases must occur before any acquires will be granted</p>
+<p>1、不是有外界激发，而是由自己创造的,这句话应如何理解？</p>
+<p>我平时情绪挺稳定的，很少主动和她去争吵些什么，但只要她和我吵，我还是会很烦恼，心情低落到谷底，什么都不想做。‘</p>
+<p>如何区分外界激发和个体创造？这本来也不冲突吧，情绪是一种综合反应。个体创造肯定是个体创造，毕竟情绪的主体是自己，这和外界激发也不矛盾吧’</p>
+<p>3、情绪是可以被管理和控制的</p>
+<p>有的人可以很好的控制情绪，有的人则不行，我应该勉强能及格吧，但及格够吗？我需要的是一种稳定的情绪状态。</p>
+<p>如何管理和控制呢？</p>
 </blockquote>
-<p>如何理解这段话？permit 可能为负数，在这种情况下 在授予任何获得之前必须进行释放。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Semaphore</span><span class="params">(<span class="keyword">int</span> permits)</span> </span>&#123;</span><br><span class="line">    sync = <span class="keyword">new</span> NonfairSync(permits);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>从构造函数上能看出来如果不指定，默认是非公平同步</p>
-<h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><blockquote>
-<p>Synchronization serves to constrain the interleaving of actions performed by multiple threads of control (e.g., on a multicore processor), allowing only correct executions. Over the years, this ongoing project has developed some of the most efficient and widely used algorithms for locking, concurrent data structures, transactional memory, and persistence.</p>
-<p>同步用于约束由多个控制线程(例如，在多核处理器上)执行的动作的交错，只允许正确的执行。多年来，这个正在进行的项目开发了一些最有效和广泛使用的算法，用于锁定、并发数据结构、事务性内存和持久性。</p>
-</blockquote>
-<h4 id="信号量操作"><a href="#信号量操作" class="headerlink" title="信号量操作"></a>信号量操作</h4><ul>
-<li><p>获取信号量</p>
+<h2 id="建构论"><a href="#建构论" class="headerlink" title="建构论"></a>建构论</h2><p>引入建构论一词，什么是建构论呢？</p>
 <ul>
-<li>acquire 等待</li>
-<li>tryAcquire 非等待</li>
+<li>情感现实主义 - 相信你所体验到的事物</li>
+<li>概念的形成 - 对事物积累的认识 </li>
+<li>社会现实的影响 - 社会文化 - 环境 - 场方程</li>
+</ul>
+<p>情绪构建论的核心观点</p>
+<ol>
+<li><p>情绪类别并不具备情绪指纹</p>
+<p>愤怒的某个实例没必要和其他实例一样，它也不是由一组神经元构成的，变异性是常态。</p>
+</li>
+<li><p>你所体验或者感知到的情绪是你的基因带来的不可避免的结果</p>
+</li>
+</ol>
+<h2 id="抑郁、自卑、与焦虑"><a href="#抑郁、自卑、与焦虑" class="headerlink" title="抑郁、自卑、与焦虑"></a>抑郁、自卑、与焦虑</h2><p>当人们无法实现自己的理想时会感到抑郁</p>
+<p>当人们无法满足他人的期望时会感到焦虑</p>
+<p>coy：</p>
+<blockquote>
+<p>我有这样吗？我因为什么而焦虑和抑郁呢？</p>
+<p>我因为没有钱而焦虑，因为没有钱就不能够给父母和爱的人舒适的生活。</p>
+</blockquote>
+<p>作者发现很多人无法区分抑郁和焦虑，引入概念<code>情绪粒度</code>,用该词来描绘人对分辨情绪状态的水平。</p>
+<h2 id="情绪指纹"><a href="#情绪指纹" class="headerlink" title="情绪指纹"></a>情绪指纹</h2><ul>
+<li>面部表情</li>
+<li>脸部肌电图 </li>
 </ul>
 <blockquote>
-<p>两者有什么区别？</p>
-<p>前者会阻塞，后者不会阻塞</p>
+<p>6个电机，42块肌肉，不够准确</p>
 </blockquote>
-</li>
-<li><p>释放信号量</p>
-</li>
-<li><p>查看有多少信号量</p>
-</li>
-</ul>
-<h2 id="相关内容"><a href="#相关内容" class="headerlink" title="相关内容"></a>相关内容</h2><p>并发的好处与代价</p>
-<h3 id="操作系统是如何解决并发问题的？"><a href="#操作系统是如何解决并发问题的？" class="headerlink" title="操作系统是如何解决并发问题的？"></a>操作系统是如何解决并发问题的？</h3><ul>
-<li>信号量</li>
-<li>锁</li>
-</ul>
-<p>什么是死锁？</p>
-<p>死锁的四要素是什么 ？</p>
 <ul>
-<li>独占性，一个资源不能同时给多个进程使用。如资源被分配给了进程a,此时进程b又来请求该资源，其只能等待进程a使用完，不能抢，也就是 公平</li>
-<li>公平，不可剥夺</li>
-<li>环路等待 三角债务</li>
-<li>请求和保持条件</li>
+<li>面部动作编码系统</li>
 </ul>
-<h1 id="JUC"><a href="#JUC" class="headerlink" title="JUC"></a>JUC</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>什么是juc?</p>
-<p>juc 即 <code>java.util.concurrent</code>包的缩写，是Java官方提供的一个工具包来简化对多线程并发编程使用。</p>
-<h2 id="今日收获"><a href="#今日收获" class="headerlink" title="今日收获"></a>今日收获</h2><p>什么是AQS?</p>
-<p>名词解释：java.util.concurrent.locks.AbstractQueuedSynchronizer，Java并发包中的抽象队列同步器</p>
-<p>功能：提供一个框架用来实现阻塞锁和相关同步机制（信号量，事件等），依赖于一个fifo先进先出的等待队列</p>
-<blockquote>
-<p>Provides a framework for implementing blocking locks and related synchronizers (semaphores, events, etc) that rely on first-in-first-out (FIFO) wait queues. This class is designed to be a useful basis for most kinds of synchronizers that rely on a single atomic int value to represent state. Subclasses must define the protected methods that change this state, and which define what that state means in terms of this object being acquired or released.</p>
-</blockquote>
-<p>如何修改同步状态？</p>
-<ul>
-<li>java.util.concurrent.locks.AbstractQueuedSynchronizer#setState</li>
-<li>java.util.concurrent.locks.AbstractQueuedSynchronizer#getState</li>
-<li>java.util.concurrent.locks.AbstractQueuedSynchronizer#compareAndSetState</li>
-</ul>
-<p>如何使用？</p>
-<p>使用场景？</p>
-<h2 id="JUC-1"><a href="#JUC-1" class="headerlink" title="JUC"></a>JUC</h2><p> java.util.concurrent.Executors</p>
-<p> java.util.concurrent.ExecutorService</p>
-<h2 id="NIO"><a href="#NIO" class="headerlink" title="NIO"></a>NIO</h2><h3 id="java-nio-file-WatchService"><a href="#java-nio-file-WatchService" class="headerlink" title="java.nio.file.WatchService"></a>java.nio.file.WatchService</h3><p>什么是WatchKey?</p>
-<p>猜想：监视的对象？</p>
-<p>Java nio 的底层是什么？</p>
-<p>IO多路复用</p>
-<ul>
-<li>WatchKey take() </li>
-<li>WatchKey poll(long timeout, TimeUnit unit)</li>
-<li>WatchKey poll();</li>
-<li>close()</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WatchService watchService = fileSystem.newWatchService();</span><br></pre></td></tr></table></figure>
-
-<h3 id="java-nio-file-WatchKey"><a href="#java-nio-file-WatchKey" class="headerlink" title="java.nio.file.WatchKey"></a>java.nio.file.WatchKey</h3><blockquote>
-<p>A token representing the registration of a watchable object with a WatchService.<br>A watch key is created when a watchable object is registered with a watch service. The key remains valid until:<br>It is cancelled, explicitly, by invoking its cancel method, or<br>Cancelled implicitly, because the object is no longer accessible, or<br>By closing the watch service.<br>A watch key has a state. When initially created the key is said to be ready. When an event is detected then the key is signalled and queued so that it can be retrieved by invoking the watch service’s poll or take methods. Once signalled, a key remains in this state until its reset method is invoked to return the key to the ready state. Events detected while the key is in the signalled state are queued but do not cause the key to be re-queued for retrieval from the watch service. Events are retrieved by invoking the key’s pollEvents method. This method retrieves and removes all events accumulated for the object. When initially created, a watch key has no pending events. Typically events are retrieved when the key is in the signalled state leading to the following idiom:</p>
-</blockquote>
-<p>A token representing the registration of a watchable object with a WatchService.</p>
-<p>在reactive Stream 中也出现了同样的概念 subscrition ,registration</p>
-<p>一个表示可观察对象注册到WatchService的令牌。也就是代表那个可观察的对象的标识符？</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">WatchKey watchKey = watchService.take();</span><br></pre></td></tr></table></figure>
-
-<p> java.nio.file.WatchEvent</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;WatchEvent&lt;?&gt;&gt; envets &#x3D; watchKey.pollEvents()</span><br></pre></td></tr></table></figure>
-
-<p>java.nio.file.Watchable</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Watchable watchable = watchKey.watchable();</span><br></pre></td></tr></table></figure>
-
-<p>类图关系</p>
-<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210605165601215.png" alt="image-20210605165601215"></p>
-
+<h2 id="杏仁核-恐惧中枢"><a href="#杏仁核-恐惧中枢" class="headerlink" title="杏仁核-恐惧中枢"></a>杏仁核-恐惧中枢</h2><p>像杏仁核这样的脑区域对于恐惧十分重要，但并非充要条件</p>
+<h2 id="如何控制情绪"><a href="#如何控制情绪" class="headerlink" title="如何控制情绪"></a>如何控制情绪</h2>
       
 
       
@@ -1127,7 +273,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/05/notebook/JUC/1.0%20%E5%88%9D%E8%AF%86JUC/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/06/29/notebook/20210619-record/">展开全文 >></a>
         </p>
       
 
@@ -1157,20 +303,177 @@
 
 
   
-    <article id="post-notebook/JUC/操作系统重要内容" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-notebook/20210628-并发" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/06/05/notebook/JUC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9/">notebook/JUC/操作系统重要内容</a>
+      <a class="article-title" href="/2021/06/29/notebook/20210628-%E5%B9%B6%E5%8F%91/">notebook/20210628-并发</a>
     </h1>
   
 
         
-        <a href="/2021/06/05/notebook/JUC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9/" class="archive-article-date">
-  	<time datetime="2021-06-05T13:00:05.535Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-05</time>
+        <a href="/2021/06/29/notebook/20210628-%E5%B9%B6%E5%8F%91/" class="archive-article-date">
+  	<time datetime="2021-06-29T01:59:30.398Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-29</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h1><h2 id="操作系统导论"><a href="#操作系统导论" class="headerlink" title="操作系统导论"></a>操作系统导论</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>本书中的并发主题比较特别。它是许多操作系统书籍中靠前的主题，而在本书中是直到学生了解了CPU和<strong>内存的虚拟化</strong>之后才开始讲解的。根据我们近15年来教授本课程的经验，学生很难理解并发问题是如何产生的，或者很难理解人们试图解决它的原因。那是因为他们还不了解<strong>地址空间</strong>是什么、<strong>进程</strong>是什么，或者为什么<strong>上下文切换</strong>可以在任意时间点发生。然而，一旦他们理解了这些概念，那么再引入<strong>线程</strong>的概念和由此产生的问题就变得相当容易，或者至少比较容易。</p>
+<h3 id="2-3-并发"><a href="#2-3-并发" class="headerlink" title="2.3 并发"></a>2.3 并发</h3><p>本书的另一个主题是并发（concurrency）。我们使用这个术语来指代一系列问题，这些问题在同时（并发地）处理很多事情时出现且必须解决。并发问题首先出现在操作系统本身中。如你所见，在上面关于虚拟化的例子中，操作系统同时处理很多事情，首先运行一个进程，然后再运行一个进程，等等。事实证明，这样做会导致一些深刻而有趣的问题。遗憾的是，并发问题不再局限于操作系统本身。事实上，现代多线程（multi-threaded）程序也存在相同的问题。</p>
+<p>事实证明，这些奇怪的、不寻常的结果与指令如何执行有关，指令每次执行一条。遗憾的是，上面的程序中的关键部分是增加共享计数器的地方，它需要3条指令：一条将计数器的值从内存加载到寄存器，一条将其递增，另一条将其保存回内存。<strong>因为这3条指令并不是以原子方式（atomically）执行（所有的指令一次性执行）的，所以奇怪的事情可能会发生。</strong>关于这种并发（concurrency）问题，我们将在本书的第2部分中详细讨论。</p>
+<h3 id="2-5-操作系统设计目标"><a href="#2-5-操作系统设计目标" class="headerlink" title="2.5 操作系统设计目标"></a>2.5 操作系统设计目标</h3><p>现在你已经了解了操作系统实际上做了什么：它取得CPU、内存或磁盘等<strong>物理资源</strong>（resources），并对它们进行<strong>虚拟化</strong>（virtualize）。它处理与<strong>并发</strong>（concurrency）有关的麻烦且棘手的问题。它<strong>持久地（persistently）存储文件</strong>，从而使它们长期安全。鉴于我们希望建立这样一个系统，所以要有一些目标，以帮助我们集中设计和实现，并在必要时进行折中。找到合适的折中是建立系统的关键。</p>
+<p>由于希望更好地利用机器资源，多道程序（multiprogramming）变得很普遍。操作系统不是一次只运行一项作业，而是将大量作业加载到内存中并在它们之间快速切换，从而提高CPU利用率。这种切换非常重要，因为I/O设备很慢。在处理I/O时让程序占着CPU，浪费了CPU时间。那么，为什么不切换到另一份工作并运行一段时间？<strong>在I/O进行和任务中断时，要支持多道程序和重叠运行。</strong>这一愿望迫使操作系统创新，沿着多个方向进行概念发展。<strong>内存保护</strong>（memory protection）等问题变得重要。我们不希望一个程序能够访问另一个程序的内存。了解<strong>如何处理多道程序引入的并发（concurrency）问题</strong>也很关键。在中断存在的情况下，确保操作系统正常运行是一个很大的挑战。我们将在本书后面研究这些问题和相关主题。</p>
+<h2 id="操作系统之哲学原理"><a href="#操作系统之哲学原理" class="headerlink" title="操作系统之哲学原理"></a>操作系统之哲学原理</h2><p>进程虽然让并发从理想变为现实，但其自身却是串行的：进程只有一个<strong>执行序列</strong>。若要使进程本身也提供<strong>并发</strong>，则需要对线程进行讨论。该篇讨论了进程级的并发机制-线程模型，包括第7～10章的内容。第7章的内容包括进程分身术——线程、线程管理、线程的用户态和内核态以及混合态实现、现代操作系统的线程实现模型、多线程之间的关系、线程模型主要考虑的问题等。第8章的内容包括为什么同步、同步的目的、锁原语的进化、睡觉与叫醒原语、信号量、管程、消息传递和栅栏等。第9章对死锁的产生、发展、防止与避免进行讲解，并讨论死锁、活锁和饥饿的关系。第10章讲述如何使用中断启用和禁止、测试与设置来实现锁原语。</p>
+<h3 id="1-6-操作系统范畴-IO管理"><a href="#1-6-操作系统范畴-IO管理" class="headerlink" title="1.6 操作系统范畴 IO管理"></a>1.6 操作系统范畴 IO管理</h3><p>I/O管理也称为设备管理，就是管理输入输出设备。I/O管理的目的有两个：<strong>一是屏蔽不同设备的差异性</strong>，即用户用同样的方式访问不同的设备，从而降低编程的难度；<strong>二是提供并发访问</strong>，即将那些看上去并不具备共享特性的设备（如打印机）变得可以共享。</p>
+<h3 id="1-7-为什么学习操作系统"><a href="#1-7-为什么学习操作系统" class="headerlink" title="1.7 为什么学习操作系统"></a>1.7 为什么学习操作系统</h3><p>首先，操作系统的功能应用于很多领域。如果开发<strong>并发程序</strong>：Web Service、分布式系统和网络，你会发现，这些领域大量使用了操作系统的概念和技术。如果你学好了操作系统，你就可以对你做的事情更加有信心。</p>
+<p>其次，操作系统的技巧也应用于很多领域，如<strong>抽象、缓存、并发</strong>等。操作系统简单来说就是实现抽象：进程抽象、文件抽象、虚拟存储抽象等。而很多领域也使用抽象。如数据结构和程序设计就大量使用了抽象，记得抽象数据类型吗？记得抽象类吗？很多地方都用缓存。你开发Web应用要不要缓存呢？这些你都需要。如果学习操作系统，你就掌握了这些知识。触类旁通，你学习别的知识时就容易多了。不过最重要的理由并不是上面的两条，而是操作系统真的很有趣。对于一个计算机专业的学生来说，难道不想知道自己写的程序如何在计算机上运行吗？读者一定见过汽车吧。汽车前面那个盖子叫前盖（hood）。很多人买车后第一件事是什么？打开前盖。那么打开前盖看到的是什么东西？马达、变速箱。为什么第一件事要打开前盖呢</p>
+<h3 id="2-4-多道批处理系统"><a href="#2-4-多道批处理系统" class="headerlink" title="2.4 多道批处理系统"></a>2.4 多道批处理系统</h3><p>虽然批处理操作系统无需人机交互过程就能在一定程度上提高计算机的效率，但还是不那么令人满意。因为CPU和I/O设备的运行是<strong>串行</strong>的，即在程序进行输入输出时，CPU只能等待。CPU需要不断地探询I/O是否完成，因而不能执行别的程序。</p>
+<p>由于I/O设备的运行速度相对于CPU来说实在太慢，这种让高速设备等待低速设备的状况令人颇感痛心。人们又想，能否将CPU和I/O进行<strong>并发</strong>呢？即在一个程序输入输出时，让另一个程序继续执行。换句话说，能否将CPU运行和I/O设备的运行重叠起来而改善整个系统的效率呢？答案是肯定的，不过需要付出代价。因为CPU和I/O重叠需要我们将<strong>多个程序同时加载到计算机内存</strong>里，从而出现了多道批处理操作系统</p>
+<h3 id="进程原理篇"><a href="#进程原理篇" class="headerlink" title="进程原理篇"></a>进程原理篇</h3><p>顾名思义，计算机是用来进行计算的，或者说计算机的基本功能是计算功能。而进行计算的关键部件是计算机的芯片，即CPU。CPU能够按照一定的顺序进行正确计算是在一个指挥者的控制之下完成的。这个指挥者就是操作系统。操作系统对CPU进行管理的重要手段就是<strong>进程模型</strong>，或者说进程是<strong>操作系统</strong>这个魔术师施法的道具。</p>
+<p>进程是操作系统演化过程中的一个里程碑，由于进程的出现，人类希望的<strong>并发</strong>从理想变为了现实。从根本上说，进程出现的动机是人类渴望的并发。进程的出现也让操作系统的复杂性大为增加：<strong>由于需要对进程进行分离存储而导致出现内存管理</strong>；由于需要让不同进程有条不紊地往前推进而导致<strong>进程调度</strong>的出现。显然，理解进程对理解操作系统十分重要，对其进行管理也就理所当然地成为操作系统的一个关键职责</p>
+<h3 id="4-1-进程概论"><a href="#4-1-进程概论" class="headerlink" title="4.1 进程概论"></a>4.1 进程概论</h3><p>进程在Multics操作系统出现前叫做工作（job）。工作是IBM用于多道批处理程序设计中的概念。由于历史的原因，Multics操作系统的研发人员不愿意承用IBM发明的术语，而将工作改为了进程（process）。那么进程出现的动机是什么呢？</p>
+<p>本书在第2章提到，单一操作员单一控制终端、批处理均存在效率低下的问题，即CPU使用率不高。为了提高CPU利用率，人们想起将多个程序同时加载到计算机里，<strong>并发</strong>执行。这些同时存在于计算机内存的程序就称为进程。进程让每个用户感觉到自己独占CPU。因此，进程就是为了在CPU上实现<strong>多道编程</strong>而出现的概念，如图4-2所示。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210628122839784.png" alt="image-20210628122839784"></p>
+<h3 id="4-2-进程模型"><a href="#4-2-进程模型" class="headerlink" title="4.2 进程模型"></a>4.2 进程模型</h3><p>对于操作系统来说，进程是其提供的一种抽象，目的是通过<strong>并发</strong>来提高系统利用率，同时还能缩短系统响应时间。这种抽象听上去很不错。但这种抽象是如何实现的呢？或者说，操作系统如何实现进程呢？</p>
+<p>首先，任何抽象都需要有一个物理基础。对于进程来说，其物理基础就是程序。程序运行在计算机上，而在计算机上运行首先需要解决的问题是<strong>进程的存储</strong>：给进程分配合适的内存，让其有一个安身之处。由于多个进程可能同时并存，因此进程的存储需要考虑如何让多个进程<strong>共享同一个物理内存而不发生冲突</strong>。操作系统解决这个问题的手段是<strong>内存管理</strong>。</p>
+<p>此外，进程运行实际上是指进程在CPU上执行。那么<strong>如何将CPU在多个进程之间进行交接或切换</strong>，这就是进程实现需要解决的另一个问题。操作系统解决这个问题的手段就是进程调度：决定在什么时候让什么进程使用CPU。这个议题将在本书第5章予以讨论</p>
+<h3 id="5-1-进程调度的定义"><a href="#5-1-进程调度的定义" class="headerlink" title="5.1 进程调度的定义"></a>5.1 进程调度的定义</h3><p>本书前面讲过，在多进程<strong>并发</strong>的环境里，虽然从概念上看，有多个进程在同时执行，但在单个CPU下，实际上在任何时刻只能有一个进程处于执行状态。而其他进程则处于非执行状态。那么这就有一个需要解决的问题：我们是如何确定在任意时刻到底由哪个进程执行，哪些不执行呢？或者说，我们是如何进行进程调度的呢？</p>
+<p>一般来说，程序使用CPU的模式有3种：一种是程序大部分时间在CPU上执行；另一种是程序大部分时间在进行输入输出；还有一种是程序介于前两种模式之间。</p>
+<h3 id="线程原理篇"><a href="#线程原理篇" class="headerlink" title="线程原理篇"></a>线程原理篇</h3><p>进程虽然让<strong>并发</strong>从理想变为现实，但其自身却是<strong>串行</strong>：进程只有一个执行序列。只有一个执行序列的进程模型并不能从根本上满足人类的所有<strong>并发</strong>的奢望。并发其实并非人类的唯一诉求，甚至也不一定是最重要的诉求。有了并发，我们希望的是并发能够帮助我们实现在非并发时难以实现或实现成本高昂的功能：并发的个体通过合作来完成复杂的任务</p>
+<p>虽然可以使用诸<strong>多进程</strong>来相互协作实现需要<strong>并发</strong>才能完成的功能，但进程间的协作有着重要的限制：每个进程有自己的<strong>独立空间</strong>。这种限制导致进程之间的协作存在明显缺陷：<strong>如果相互协作的进程需要动态共享大量的数据，则操作起来十分麻烦。</strong>就像一群人之间的协作一样，由于每个人都是独立的个体，各有不同的喜好和习惯，协作难免产生误解和沟通困难。如果一件事情让一个人来处理，协作上就不会发生问题。因此，如果能够让一个进程内部实现并发来完成一个复杂的任务，协作上的难度就会少很多。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210628123628166.png" alt="image-20210628123628166"></p>
+<p>虽然进程和线程出现的动机都是并发，但它们的并发层次不同：进程属于处理器级并发，即在处理器这一层次上提供并发的抽象；线程则属于进程级并发，即在进程这个层次上再提供一层并发的抽象。如果我们下到底层，进入计算机体系结构里就会发现，流水线提供的也是一种并发，不过是指令级并发。<strong>这样，流水线、进程、线程就从低到高在3个层次上提供我们所迫切需要的并发！</strong></p>
+<h3 id="7-3-线程模型的实现"><a href="#7-3-线程模型的实现" class="headerlink" title="7.3 线程模型的实现"></a>7.3 线程模型的实现</h3><p>线程模型在进程基础上提供第二次<strong>并发</strong>。由于线程之间的共享远比进程之间的共享丰富，因此其在需要高度共享的环境下发挥着重要的作用。</p>
+<p>但线程这个模型如何实现呢？与进程一样，线程本身也对应某种物理现实，也需要<strong>存储</strong>和<strong>调度</strong>。在存储上，由于线程依附于进程而存在，其存储解决方案无需额外设计，而是直接附于进程存储方案上。</p>
+<p>线程的<strong>调度</strong>却与进程调度有稍许不同。由于线程是在进程的基础上产生的概念（进程里面的一个执行序列），其调度可以由进程负责。当然，我们也可以将线程的调度交给操作系统。而这两种不同的调度推手就形成了线程的两种实现：用户态实现和内核态实现。由进程自己管理就是用户态线程的实现，由操作系统管理就是内核态线程实现。<strong>用户态</strong>和<strong>内核态</strong>的判断以<strong>线程表</strong>所处的位置为依据：位于内核叫内核态实现，位于用户层叫用户态实现。</p>
+<p>细心的读者也许已经注意到，我们在讲述进程时没有提到过实现方式的问题，即应该是在用户态还是在内核态实现的问题。这是因为进程是在CPU上实现<strong>并发</strong>（多道编程），而CPU是由操作系统管理的，因此，<strong>进程的实现只能由操作系统内核来进行</strong>，而不存在用户态实现的情况，根本没有这种探讨的需要。但对于线程就不同了，因为线程是进程内部的东西，当然存在由进程直接管理线程的可能性。因此，线程存在着内核态与用户态两种实现可能。</p>
+<h3 id="7-5-多线程的关系"><a href="#7-5-多线程的关系" class="headerlink" title="7.5 多线程的关系"></a>7.5 多线程的关系</h3><p>推出线程模型的目的就是实现<strong>进程级并发</strong>。因为在一个进程中通常会出现多个线程，否则，我们也没有必要搞什么线程了。就像看舞台剧，如果只跳上来一个人，从头演到尾，没有其他人上场，大部分观众都会觉得无聊。我们要看的是演员对不同人物的刻画，色彩斑斓。因此，研究线程就要研究多线程，多个线程共享一个舞台，时而交互、时而独舞。</p>
+<p>但共享一个舞台会带来不必要的麻烦。就像人们共享资源时难免产生争端一样。线程在共享地址空间的过程中也会产生矛盾。这些矛盾归结到下面两个根本问题：</p>
+<p><strong>线程之间如何通信？线程之间如何同步？</strong></p>
+<p>而上述两个问题在进程层面也同样存在。从一个更高的层次上看，不同的进程也共享着一个巨大的空间，这个空间就是整个计算机。因此，进程之间也会存在矛盾，而这些矛盾也体现在如何通信（沟通）和如何同步（协调）上。</p>
+<h3 id="7-7-线程的困惑-确定性与不确定性"><a href="#7-7-线程的困惑-确定性与不确定性" class="headerlink" title="7.7 线程的困惑 确定性与不确定性"></a>7.7 线程的困惑 确定性与不确定性</h3><p>讲完本章后，读者应该可以得出一个结论：线程是很有用的东西，因为它实现了<strong>进程内部的并发</strong>。但这个结论是真的吗？线程让进程有了分身术，它在进程级别上实现了多道编程，使得一个进程可以同时做多件事情，提高了程序运行的效率，提高了硬件资源的使用率。似乎线程带给我们的只有优点，或者说线程带给我们的优点远远大于其缺点。</p>
+<p>虽然线程的优势很明显，但带来的问题也是显而易见的，那就是<strong>系统运行的不确定性</strong>。虽然在多进程时，系统运行也存在一定的不确定性，但这种不确定性基本体现在<strong>程序执行的先后顺序上</strong>，而每个程序运行的结果基本是确定的。而<strong>线程的引入却带来了程序本身运行结果的不确定性</strong>：由于多线程的存在，就每个单一线程来看，其执行效率、执行正确性均存在不确定性。当然，通过使用同步机制，可以改善这种不确定性。但如果在多线程执行过程中出现异常，则情况就相当麻烦。另外，在多线程下，如果某个进程的某个线程创建了一个子进程，那对于该进程的其他线程来讲意味着什么？这是一个众说纷纭、莫衷一是的话题。用烧菜的例子来说，就是一般情况下我们也许能够掌控局势，使得每个菜都烧得不错。但问题是，如果因为环境的问题，如火候、水量不对，或者烧菜者的协调和判断能力不足，造成红烧肉干底，汤溢出，则将造成手乱脚忙，顾此失彼，从而造成烧菜失败。</p>
+<p>如果读者对计算机硬件与体系结构熟悉，可能能够看出来，线程的机制非常类似于硬件的流水线机制。流水线也是提供并发，不过是指令级的（而不是程序级的）。并发当然提高了计算机的吞吐率，改善了用户响应时间。但问题是，在多流水线多梯级情况下，由于有许多指令同时在不同的流水线和梯级上执行，其之间存在的数据和指令依赖关系十分复杂。如果万一再发生异常，如何保存一个一致性的状态都成了问题。图7-8给出的是流水线的指令级并发和线程的程序级并发的对照。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210628124524370.png" alt="image-20210628124524370"></p>
+<p><strong>从某种程度上说，线程与流水线分别是软件层和硬件层不确定性的根源</strong>。流水线使得我们可以在硬件指令执行上并发，线程则使我们在软件指令执行上并发。但其带来的操作系统、编译系统和指令集结构的高度复杂是否值得，也许并不容易回答。</p>
+<h2 id="架构整洁之道"><a href="#架构整洁之道" class="headerlink" title="架构整洁之道"></a>架构整洁之道</h2><h3 id="第六章函数式编程"><a href="#第六章函数式编程" class="headerlink" title="第六章函数式编程"></a>第六章函数式编程</h3><h4 id="不可变性与软件架构"><a href="#不可变性与软件架构" class="headerlink" title="不可变性与软件架构"></a>不可变性与软件架构</h4><p>为什么不可变性是软件架构设计需要考虑的重点呢？为什么软件架构师要操心变量的可变性呢？答案显而易见：<strong>所有的竞争问题、死锁问题、并发更新问题都是由可变变量导致的</strong>。如果变量永远不会被更改，那就不可能产生竞争或者并发更新问题。如果锁状态是不可变的，那就永远不会产生死锁问题。</p>
+<p>换句话说，一切并发应用遇到的问题，一切由于使用多线程、多处理器而引起的问题，如果没有可变变量的话都不可能发生。作为一个软件架构师，当然应该要对并发问题保持高度关注。我们需要确保自己设计的系统在多线程、多处理器环境中能稳定工作。所以在这里，我们实际应该要问的问题是：不可变性是否实际可行？</p>
+<h4 id="可变性的隔离"><a href="#可变性的隔离" class="headerlink" title="可变性的隔离"></a>可变性的隔离</h4><p>一种常见方式是将应用程序，或者是应用程序的内部服务进行切分，划分为<strong>可变</strong>的和<strong>不可变</strong>的两种组件。不可变组件用纯函数的方式来执行任务，期间不更改任何状态。这些不可变的组件将通过与一个或多个非函数式组件通信的方式来修改变量状态（参见图6.1）。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210628125421797.png" alt="image-20210628125421797"></p>
+<p>由于状态的修改会导致一系列<strong>并发</strong>问题的产生，所以我们通常会采用某种事务型内存来保护可变变量，避免同步更新和竞争状态的发生。<strong>事务型内存</strong>基本上与数据库保护磁盘数据的方式[9]类似，通常采用的是<strong>事务</strong>或者<strong>重试机制</strong>。</p>
+<p>这里的要点是：</p>
+<p>一个架构设计良好的应用程序应该将状态修改的部分和不需要修改状态的部分隔离成单独的组件，然后用合适的机制来保护可变量。</p>
+<p>软件架构师应该着力于将大部分处理逻辑都归于不可变组件中，可变状态组件的逻辑应该越少越好。</p>
+<h2 id="Java的逻辑"><a href="#Java的逻辑" class="headerlink" title="Java的逻辑"></a>Java的逻辑</h2><h3 id="前言-1"><a href="#前言-1" class="headerlink" title="前言"></a>前言</h3><p>第五部分（第15～20章）介绍并发。第15章介绍并发的传统基础知识，包括线程的基本概念、线程同步的基本机制synchronized、线程协作的基本机制wait/notify，以及线程的中断。第16章介绍并发包的基石，包括原子变量和CAS、显式锁与显式条件。第17章介绍<strong>并发容器</strong>，包括写时复制的List和Set、ConcurrentHashMap、基于跳表的Map和Set，以及各种并发队列。第18章介绍异步任务执行服务，包括基本概念和实现原理、主要的实现机制线程池，以及定时任务。第19章介绍一些专门的同步和协作工具类，包括读写锁、信号量、倒计时门栓、循环栅栏，以及ThreadLocal。第20章对整个并发部分从多个角度进行系统总结。</p>
+<h3 id="7-6-随机"><a href="#7-6-随机" class="headerlink" title="7.6 随机"></a>7.6 随机</h3><p>需要说明的是，Random类是线程安全的，也就是说，多个线程可以同时使用一个Random实例对象，不过，如果<strong>并发</strong>性很高，会产生竞争，这时，可以考虑使用多线程库中的ThreadLocalRandom类。另外，Java类库中还有一个随机类SecureRandom，可以产生安全性更高、随机性更强的随机数，用于安全加密等领域。</p>
+<h2 id="kafka入门与实战"><a href="#kafka入门与实战" class="headerlink" title="kafka入门与实战"></a>kafka入门与实战</h2><p>分区使得Kafka在<strong>并发</strong>处理上变得更加容易，理论上来说，分区数越多吞吐量越高，但这要根据集群实际环境及业务场景而定。同时，分区也是Kafka保证消息被顺序消费以及对消息进行负载均衡的基础。</p>
+<h3 id="1-4-2-kafka-特性"><a href="#1-4-2-kafka-特性" class="headerlink" title="1.4 2 kafka 特性"></a>1.4 2 kafka 特性</h3><p>Kafka高度依赖于<strong>文件系统</strong>来存储和缓存消息。说到文件系统，大家普遍认为磁盘读写慢，依赖于文件系统进行存储和缓存消息势必在性能上会大打折扣，其实文件系统存储速度快慢一定程度上也取决于我们对磁盘的用法。据Kafka官方网站介绍：6块7200r/min SATA RAID-5阵列的磁盘<strong>线性写的速度为600 MB/s</strong>，而<strong>随机写的速度为100KB/s</strong>，<strong>线性写的速度约是随机写的6000多倍</strong>。由此看来磁盘的快慢取决于我们是如何去应用磁盘。加之现代的操作系统提供了预读（read-ahead）和延迟写（write-behind）技术，使得磁盘的写速度并不是大家想象的那么慢。同时，由于Kafka是基于JVM（Java Virtual Machine）的，而Java对象内存消耗非常高，且随着Java对象的增加JVM的垃圾回收也越来越频繁和繁琐，这些都加大了内存的消耗。<strong>鉴于以上因素，使用文件系统和依赖于页缓存（page cache）的存储比维护一个内存的存储或是应用其他结构来存储消息更有优势，因此Kafka选择以文件系统来存储数据。</strong></p>
+<p>消息系统数据持久化一般采用为每个消费者队列提供一个B树或其他通用的随机访问数据结构来维护消息的元数据，<strong>B树操作的时间复杂度为O(log n),</strong> O(log n)的时间复杂度可以看成是一个常量时间，而且B树可以支持各种各样的事务性和非事务性语义消息的传递。尽管B树具有这些优点，但这并不适合磁盘操作。目前的磁盘寻道时间一般在10ms以内，对一块磁盘来说，在同一时刻只能有一个磁头来读写磁盘，这样在<strong>并发IO能力</strong>上就有问题。同时，对树结构性能的观察结果表明：其性能会随着数据的增长而线性下降。鉴于消息系统本身的作用考虑，数据的持久化队列可以建立在简单地对文件进行追加的实现方案上。因为是顺序追加，所以Kafka在设计上是采用<strong>时间复杂度O(1)的磁盘结构</strong>，它提供了常量时间的性能，即使是存储海量的信息（TB级）也如此，性能和数据的大小关系也不大，同时Kafka将数据持久化到磁盘上，这样只要磁盘空间足够大数据就可以一直追加，而不会像一般的消息系统在消息被消费后就删除掉，Kafka提供了相关配置让用户自己决定消息要保存多久，这样为消费者提供了更灵活的处理方式，因此Kafka能够在没有性能损失的情况下提供一般消息系统不具备的特性。</p>
+<p>系统不具备的特性。</p>
+<h3 id="3-5-3-日志加载与恢复"><a href="#3-5-3-日志加载与恢复" class="headerlink" title="3.5.3 日志加载与恢复"></a>3.5.3 日志加载与恢复</h3><p>Log类在逻辑层面上可以理解为与分区对应，也就是说Log类封装了对一个分区的基本操作，从实现层面而言，也是对日志段（LogSegment）操作和管理的封装。在实例化Log对象时，Log会完成该分区目录下所有日志段的恢复操作，并将日志段加载到ConcurrentSkipListMap类型的segments集合中。ConcurrentSkipListMap具有跳跃表的功能，适用于<strong>高并发访问</strong>，多个线程可以安全地并发进行插入、删除、更新和访问操作，<strong>该集合的特性为通过偏移量快速查找日志提供了保证</strong></p>
+<h3 id="6-5-2-消费者"><a href="#6-5-2-消费者" class="headerlink" title="6.5.2 消费者"></a>6.5.2 消费者</h3><p>spring-kafka是通过监听模式消费消息的。spring-kafka定义了一个消息监听者容器接口MessageListenerContainer，该接口KafkaMessageListenerContainer和ConcurrentMessageListener Container有两个实现类，分别表示单线程容器和<strong>多线程并发容器</strong>。其实，多线程并发容器是根据用户指定的并发数（concurrency）来创建多个单线程容器。之所以称为线程容器，是由于消费者线程是交由消息监听者容器来管理，然而监听者容器并不是直接管理消费者线程，而是管理消费者工厂（ConsumerFactory）。spring-kafka对消费者管理实现方式和对生产者管理实现方式相同，即每一个消费者是由消费者工厂直接管理，包括创建消费者、提交消费偏移量，因此我们只需要在配置文件中实例化一个消费者工厂，由它来创建KafkaConsumer。</p>
+<p>一个ContainerProperties对象。其中ContainerProperties类定义实例化容器的相关配置，包括消费者消费的主题、分区与消费者分配关系等。若不指定分区与消费者分配关系，多线程并发容器会根据并发数与分区数自动进行分配。并发消费监听者容器有一个重要的属性concurrency，用于指定并发数，也就是消费者线程数。</p>
+<h2 id="redis-5-设计与源码分析"><a href="#redis-5-设计与源码分析" class="headerlink" title="redis 5 设计与源码分析"></a>redis 5 设计与源码分析</h2><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>Redis使用多路I/O复用模型（select、poll、epoll），可以高效处理大量<strong>并发连接</strong>。</p>
+<h3 id="9-1-基础知识"><a href="#9-1-基础知识" class="headerlink" title="9.1 基础知识"></a>9.1 基础知识</h3><p>epoll是Linux内核为处理大量<strong>并发网络连接</strong>而提出的解决方案，能显著提升系统CPU利用率。epoll使用非常简单，总共只有3个API:</p>
+<ul>
+<li><p>epoll_create函数创建一个epoll专用的文件描述符，用于后续epoll相关API调用；</p>
+</li>
+<li><p>epoll_ctl函数向epoll注册、修改或删除需要监控的事件；</p>
+</li>
+<li><p>epoll_wait函数会阻塞进程，直到监控的若干网络连接有事件发生。</p>
+</li>
+</ul>
+<h2 id="操作系统原理教程"><a href="#操作系统原理教程" class="headerlink" title="操作系统原理教程"></a>操作系统原理教程</h2><p>（2）共享性（Sharing）。<strong>支持系统并发性的物质基础是资源共享</strong>。资源若不能共享，多任务并发就不能实现；同样，若没有多任务并发，也就没有资源共享。资源共享是操作系统追求的主要目标之一。为了提高计算机系统的资源利用率，更好地共享系统资源，操作系统的各部分功能设计中采用了各种各样的分配调度算法。</p>
+<p>● 三个基本操作系统的类型的特征是<strong>并发性、共享性和虚拟性</strong>等；关于操作系统的运行通常或者由中断和异常激活，或者作为一个独立的进程运行</p>
+<h2 id="计算机组成与操作系统"><a href="#计算机组成与操作系统" class="headerlink" title="计算机组成与操作系统"></a>计算机组成与操作系统</h2><h3 id="1-7-操作系统的基础概念"><a href="#1-7-操作系统的基础概念" class="headerlink" title="1.7 操作系统的基础概念"></a>1.7 操作系统的基础概念</h3><p>1.并发性（Concurrence）</p>
+<p>并发性是指两个或多个事件在同一时间间隔内发生。在多道程序环境下，并发性是指宏观上在一段时间内有多道程序在同时运行，但微观上看，在单处理机系统中，每一时刻只能执行一道程序，所以这些程序是在同一时间间隔内交替执行。在多处理机系统中，并发程序不仅在宏观上是并发的，而且在微观上也是并行运行的。在分布式系统中，多台计算机并存，使程序的并发特征得到更充分的体现。并行和并发是既相似又有区别的两个概念。<strong>并行是指两个或多个事件在同一时刻发生，而并发是指两个或多个事件在同一时间间隔内发生。</strong></p>
+<h3 id="3-1-进程同步与互斥"><a href="#3-1-进程同步与互斥" class="headerlink" title="3.1 进程同步与互斥"></a>3.1 进程同步与互斥</h3><h4 id="进程交互"><a href="#进程交互" class="headerlink" title="进程交互"></a>进程交互</h4><p>以进程之间是否知道对方的存在，按进程的交互方式划分，可以分为以下3种情况。</p>
+<p>（1）进程之间不知道对方的存在。这是一些独立的进程，它们不会一起工作。只是无意地同时存在着。尽管这些进程不在一起工作，但是操作系统需要知道它们对资源的竞争情况。例如，两个无关的进程都要使用同一磁盘文件或打印机，操作系统必须控制和管理对它们的访问。</p>
+<p>（2）进程间接知道对方。进程并不需要知道对方的进程标识符，但它们共享某些数据，它们在共享数据时要进行合作。</p>
+<p>（3）进程直接知道对方。进程通过进程标识符相互通信，用于合作完成某些任务。</p>
+<p>进程的并发执行，使进程之间存在着交互，<strong>进程间的交互关系包括互斥、同步和通信</strong>。</p>
+<h5 id="进程互斥"><a href="#进程互斥" class="headerlink" title="进程互斥"></a>进程互斥</h5><p>是指由于共享资源所要求的排他性，进程之间要相互竞争，某个进程使用这种资源时，其他进程必须等待。换句话说，互斥是指多个进程不能同时使用同一个资源。这种情况下，进程之间知道对方的程度最低。</p>
+<h5 id="进程同步"><a href="#进程同步" class="headerlink" title="进程同步"></a>进程同步</h5><p>是指多个进程中发生的事件存在着某种时序关系，必须协同动作、相互配合，以共同完成一个任务。进程同步的主要任务是使并发执行的诸多进程有效地共享资源和相互合作，从而使程序的执行具有可再现性。这种情况，进程之间知道对方的程度较高，因为进程之间要相互合作。</p>
+<h5 id="进程通信"><a href="#进程通信" class="headerlink" title="进程通信"></a>进程通信</h5><p>是指多个进程之间要传递一定的信息。这种情况下，进程之间知道对方的程度最高，需要传递的信息量也最大。</p>
+<h4 id="3-临界区进入准则"><a href="#3-临界区进入准则" class="headerlink" title="3.临界区进入准则"></a>3.临界区进入准则</h4><p>为实现<strong>并发进程对临界资源的互斥访问</strong>，要求对临界区的使用，应遵循“<strong>空进，忙等，让权等，不死等</strong>”的原则。也就是说，为防止两个或多个进程同时进入各自的临界区，可以在系统中设置专门的管理机制来协调这些进程，这一管理机制应遵循以下几个准则：</p>
+<p>（1）空闲让进。当没有进程处于临界区时，相应的临界资源处于空闲状态。这时，如果有一个进程申请使用该临界资源，则允许该进程进入自己的临界区访问临界资源。</p>
+<p>（2）忙则等待。当已有进程处于临界区时，说明该进程正使用着相应的临界资源。此时，如果有其他进程试图进入自己的临界区，则它必须等待（阻塞状态），以保证对临界资源的互斥访问。</p>
+<p>（3）让权等待。对于等待进入临界区的进程而言，既然它目前不能进入自己的临界区，它必须立即释放处理机，以避免降低处理机的利用率。</p>
+<p>（4）有限等待。对要求进入临界区的进程，应能让它在有限时间内进入，以免陷入“死等”状态。上面的4条准则中，（1）、（2）侧重于功能方面的要求，使互斥的进程能正确地使用相应的临界资源；而（3）、（4）侧重于性能方面的要求，要求尽可能提高处理机等资源的利用率和系统性能。</p>
+<h3 id="3-3-1-管程的基本思想"><a href="#3-3-1-管程的基本思想" class="headerlink" title="3.3.1 管程的基本思想"></a>3.3.1 管程的基本思想</h3><p>Dijkstra于1971年提出，把所有进程对某一临界资源的同步操作集中起来，构成一个所谓的“秘书”进程。凡是要访问临界资源的进程，都必须先向“秘书”报告，并由“秘书”实现诸进程的同步。1973年Hansan和Hoare又把“秘书”的思想发展为管程的概念，把<strong>并发进程之间的同步操作，分别集中于相应的管程中</strong>。</p>
+<p>管程对共享资源进行了封装，进程可以调用管程中定义的操作过程，而这些操作过程的实现，在管程的外部是不可见的。管程相当于围墙，它把共享资源和对它操作的若干过程围了起来，所有进程要访问临界资源时，都必须经过管程（相当于通过围墙的门）才能进入，而<strong>管程每次只允许一个进程进入，从而实现了进程互斥</strong>。进入管程的互斥机制是由编译器负责的，通常使用信号量。由于实现互斥是由编译器完成的，不用程序员自己实现，所以出错的几率很小。</p>
+<h4 id="2-管程的结构"><a href="#2-管程的结构" class="headerlink" title="2.管程的结构"></a>2.管程的结构</h4><p>管程控制机制要求进程必须互斥进入管程，所以尽管一个进程可以通过调用管程中的任何一个过程进入，仍可以将管程想象成只有一个入口点，并保证一次只有一个进程可以进入。其他试图进入管程的进程需加入到入口等待队列。如图3.5所示给出了管程的结构，图中左侧虚线区域内是指管程的内部等待区，其中包含一系列对于不同条件变量的等待队列，这些队列称为紧急等待队列，只有当管程中紧急等待队列没有使用管程的需求时，才可能从入口队列中调入新的进程。一个在管程中的进程可以通过发送cwait（x）将自身挂起在条件x的等待队列上。当条件变量x发生变化时，管程会发送csignal（x），通知相应的条件队列，唤醒等待进程。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210628133157983.png" alt="image-20210628133157983"></p>
+<h2 id="nginx-高性能web-服务器"><a href="#nginx-高性能web-服务器" class="headerlink" title="nginx 高性能web 服务器"></a>nginx 高性能web 服务器</h2><h3 id="3-2-4-Nginx服务器如何处理请求"><a href="#3-2-4-Nginx服务器如何处理请求" class="headerlink" title="3.2.4 Nginx服务器如何处理请求"></a>3.2.4 Nginx服务器如何处理请求</h3><p><strong>Nginx服务器的一个显著优势是能够同时处理大量并发请求</strong>。<strong>它结合多进程机制和异步机制对外提供服务</strong>。异步机制使用的是异步非阻塞方式。在2.3.2节中，我们介绍过Nginx服务器启动后，可以产生一个主进程（masterprocess）和多个工作进程（worker processes），其中可以在配置文件中指定产生的工作进程数量。Nginx服务器的所有工作进程都用于接收和处理客户端的请求。这类似于Apache使用的改进的多进程机制，预先生成多个工作进程，等待处理客户端请求。</p>
+<p>注意实际上，Nginx服务器的进程模型有两种：Single模型和Master-Worker模型。Single模型为单进程方式，性能较差，一般在实际工作中不使用。Master-Worker模型实际上被更广泛地称为Master-Slave模型。在Nginx服务器中，充当Slave角色的是工作进程。</p>
+<p>每个工作进程使用了异步非阻塞方式，可以处理多个客户端请求。当某个工作进程接收到客户端的请求以后，调用IO进行处理，如果不能立即得到结果，就去处理其他的请求；而客户端在此期间也无需等待响应，可以去处理其他的事情；当IO调用返回结果时，就会通知此工作进程；该进程得到通知，暂时挂起当前处理的事务，去响应客户端请求。</p>
+<p>客户端请求数量增长、网络负载繁重时，Nginx服务器使用多进程机制能够保证不增长对系统资源的压力；同时使用异步非阻塞方式减少了工作进程在I/O调用上的阻塞延迟，保证了不降低对请求的处理能力。</p>
+<h1 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h1><h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><h2 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h2><h2 id="地址空间"><a href="#地址空间" class="headerlink" title="地址空间"></a>地址空间</h2><h2 id="上下文切换"><a href="#上下文切换" class="headerlink" title="上下文切换"></a>上下文切换</h2><h2 id="内存虚拟化"><a href="#内存虚拟化" class="headerlink" title="内存虚拟化"></a>内存虚拟化</h2><h2 id="原子化"><a href="#原子化" class="headerlink" title="原子化"></a>原子化</h2><h2 id="执行方式"><a href="#执行方式" class="headerlink" title="执行方式"></a>执行方式</h2><h3 id="串行化"><a href="#串行化" class="headerlink" title="串行化"></a>串行化</h3><h3 id="并行化"><a href="#并行化" class="headerlink" title="并行化"></a>并行化</h3><h2 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h2><h2 id="同步原语"><a href="#同步原语" class="headerlink" title="同步原语"></a>同步原语</h2><h3 id="mutex（MUTually-EX-clusive）锁"><a href="#mutex（MUTually-EX-clusive）锁" class="headerlink" title="mutex（MUTually EX clusive）锁"></a>mutex（MUTually EX clusive）锁</h3><p>只有锁持有者才能操作，其他线程会阻塞并等待CPU。</p>
+<h3 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h3><p>自旋锁允许锁持有者操作，其他的需要自旋锁的线程会在CPU 上循环自旋，检查锁是否被释放。虽然这样可以提供低延时的访问，被阻塞的线程不会离开CPU，时刻准备着运行直到锁可用，但是线程自旋、等待也是对CPU 资源的浪费。</p>
+<h3 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h3><p>读/写锁通过允许多个读者或者只允许一个写者而没有读者，来保证数据的完整性。</p>
+<p>mutex 锁可以用库或内核实现成为<strong>自适应mutex 锁</strong>（adaptive mutex lock）：这是自旋锁和mutex 锁的混合，如果锁持有者当前正运行在另一个CPU 上，线程会自旋，如果不是，线程会阻塞（或者自旋的时间阈值到了）。自适应的mutex 锁的优化支持低延时访问而又不浪费CPU资源，在基于Solaris 的系统上已经用了很多年。它在2009年应用到了Linux 上，称为自适应自旋mutex（adaptivespinning mutex）[1]。调查锁的性能问题会很耗时，常常要求熟悉应用程序源代码。一般来说这是开发人员的事情。</p>
+<h2 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h2><h2 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h2><h2 id="管程"><a href="#管程" class="headerlink" title="管程"></a>管程</h2><h2 id="用户态、内核态、混合态"><a href="#用户态、内核态、混合态" class="headerlink" title="用户态、内核态、混合态"></a>用户态、内核态、混合态</h2><h1 id="关键问题"><a href="#关键问题" class="headerlink" title="关键问题"></a>关键问题</h1><h3 id="如何构建正确的并发程序"><a href="#如何构建正确的并发程序" class="headerlink" title="如何构建正确的并发程序"></a>如何构建正确的并发程序</h3><p>如果同一个内存空间中有很多并发执行的线程，如何构建一个正确工作的程序？操作系统需要什么原语？硬件应该提供哪些机制？我们如何利用它们来解决并发问题</p>
+<h1 id="目标、功能"><a href="#目标、功能" class="headerlink" title="目标、功能"></a>目标、功能</h1><h1 id="参与者"><a href="#参与者" class="headerlink" title="参与者"></a>参与者</h1><h1 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h1><h1 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h1><h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/29/notebook/20210628-%E5%B9%B6%E5%8F%91/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/20210628-锁" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/28/notebook/20210628-%E9%94%81/">notebook/20210628-锁</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/28/notebook/20210628-%E9%94%81/" class="archive-article-date">
+  	<time datetime="2021-06-28T13:33:40.529Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-28</time>
 </a>
         
       </header>
@@ -1178,45 +481,621 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>[toc]</p>
-<p>进程间通信</p>
-<h2 id="一般系统思维"><a href="#一般系统思维" class="headerlink" title="一般系统思维"></a>一般系统思维</h2><h3 id="参与者"><a href="#参与者" class="headerlink" title="参与者"></a>参与者</h3><p>进程与进程</p>
-<h3 id="关系"><a href="#关系" class="headerlink" title="关系"></a>关系</h3><p>进程与进程之间进行通信，进程的实体是什么呢？</p>
-<h3 id="目标、功能"><a href="#目标、功能" class="headerlink" title="目标、功能"></a>目标、功能</h3><blockquote>
-<p>为了实现进程间的通信，在 UNIX 系统中提供了一个用于进程间通信的软件包，简称 IPC。它由消息机制、共享存储器机制和信号量机制三部分组成。在每一种通信机制中，都 提供了相应的系统调用供用户程序进行进程间的同步与通信之用。 </p>
-<p>(1) 消息机制。用户(进程)在利用消息机制进行通信时，必须先利用 msgget 系统调用来 建立一个消息队列。若成功，便返回消息队列描述符 msgid，以后用户便可利用 msgid 去访 问该消息队列。用户(进程)可利用发送消息的系统调用 msgsend 向用户指定的消息队列发送 消息；利用 msgrcv 系统调用从指定的消息队列中接收指定类型的消息。</p>
-<p> (2) 共享存储器机制。当用户(进程)要利用共享存储器机制进行通信时，必须先利用 shmget 系统调用来建立一个共享存储区，若成功，便返回该共享存储区描述符 shmid。以后， 用户便可利用 shmid 去访问该共享存储区。进程在建立了共享存储区之后，还必须再利用 shmat 将该共享存储区连接到本进程的虚地址空间上。以后，在进程之间便可利用该共享存 储区进行通信。当进程不再需要该共享存储区时，可利用 shmdt 系统调用来拆除进程与共 享存储区间的连接。</p>
-<p> (3) 信号量机制。在 UNIX 系统中所采用的信号量机制，与第二章中所介绍的一般信号 量集机制相似，允许将一组信号量形成一个信号量集，并对这组信号量施以原子操作，详 见第十章。</p>
+<h1 id="相关资料"><a href="#相关资料" class="headerlink" title="相关资料"></a>相关资料</h1><h2 id="操作系统导论"><a href="#操作系统导论" class="headerlink" title="操作系统导论"></a>操作系统导论</h2><h3 id="操作系统介绍"><a href="#操作系统介绍" class="headerlink" title="操作系统介绍"></a>操作系统介绍</h3><p>如何构建正确的并发程序</p>
+<p>如果同一个内存空间中有很多并发执行的线程，如何构建一个正确工作的程序？<strong>操作系统需要什么原语</strong>？硬件应该提供哪些机制？我们如何利用它们来解决并发问题？</p>
+<h3 id="10-多处理器调度"><a href="#10-多处理器调度" class="headerlink" title="10 多处理器调度"></a>10 多处理器调度</h3><p>既然缓存已经做了这么多工作来提供一致性，应用程序（或操作系统）还需要关心共享数据的访问吗？依然需要！</p>
+<p>跨CPU访问（尤其是写入）共享数据或数据结构时，需要使用<strong>互斥原语</strong>（比如锁），才能保证正确性（其他方法，如使用无锁（lock-free）数据结构，很复杂，偶尔才使用。详情参见并发部分关于死锁的章节）。例如，假设多CPU并发访问一个共享队列。如果没有锁，即使有底层一致性协议，并发地从队列增加或删除元素，依然不会得到预期结果。需要用锁来保证数据结构状态更新的原子性</p>
+<h3 id="25-关于并发的对话"><a href="#25-关于并发的对话" class="headerlink" title="25 关于并发的对话"></a>25 关于并发的对话</h3><p>首先，操作系统必须用<strong>锁（lock）</strong>和条件变量（condition variable）这样的原语，来支持多线程应用程序，我们很快会讨论。其次，操作系统本身是第一个并发程序——它必须非常小心地访问自己的内存，否则会发生许多奇怪而可怕的事情</p>
+<h3 id="26-并发介绍"><a href="#26-并发介绍" class="headerlink" title="26 并发介绍"></a>26 并发介绍</h3><p>我们说过，如果有一条指令来做到这一点，我们可以发出这条指令然后完事。但在一般情况下，不会有这样的指令。设想我们要构建一个并发的B树，并希望更新它。我们真的希望硬件支持“B树的原子性更新”指令吗？可能不会，至少理智的指令集不会。因此，我们要做的是<strong>要求硬件提供一些有用的指令，可以在这些指令上构建一个通用的集合，即所谓的同步原语</strong>（synchronization primitive）。通过使用这些硬件同步原语，加上操作系统的一些帮助，我们将能够构建多线程代码，以同步和受控的方式访问临界区，从而可靠地产生正确的结果—— 尽管有并发执行的挑战。很棒，对吗。</p>
+<p>线程应该使用某种<strong>互斥（mutual exclusion）原语</strong>。这样做可以保证只有一个线程进入临界区，从而避免出现竞态，并产生确定的程序输出。</p>
+<h3 id="如何实现同步"><a href="#如何实现同步" class="headerlink" title="如何实现同步"></a>如何实现同步</h3><p>为了构建有用的<strong>同步原语</strong>，需要从硬件中获得哪些支持？需要从操作系统中获得什么支持？如何正确有效地构建这些原语？程序如何使用它们来获得期望的结果？</p>
+<p>研究如何构建对同步原语的支持来支持原子性</p>
+<p>研究支持在多线程程序中常见的睡眠/唤醒交互的机制</p>
+<h3 id="27-3-锁"><a href="#27-3-锁" class="headerlink" title="27.3 锁"></a>27.3 锁</h3><p>除了线程创建和join之外，POSIX线程库提供的最有用的函数集，可能是通过<strong>锁（lock）</strong>来提供互斥进入临界区的那些函数。这方面最基本的一对函数是：</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210628234406350.png" alt="image-20210628234406350"></p>
+<p>函数应该易于理解和使用。如果你意识到有一段代码是一个临界区，就需要通过锁来保护，以便像需要的那样运行。你大概可以想象代码的样子：</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210628234626564.png" alt="image-20210628234626564"></p>
+<p>这段代码的意思是：如果在调用pthread_mutex_lock()时没有其他线程持有<strong>锁</strong>，线程将获取该锁并进入临界区。如果另一个线程确实持有该锁，那么尝试获取该锁的线程将不会从该调用返回，直到获得该锁（意味着持有该锁的线程通过解锁调用释放该锁）。当然，在给定的时间内，许多线程可能会卡住，在获取锁的函数内部等待。然而，只有获得锁的线程才应该调用解锁。</p>
+<p><strong>获取锁和释放锁函数</strong>不是pthread与锁进行交互的仅有的函数。特别是，这里有两个你可能感兴趣的函数：</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210628234755950.png" alt="image-20210628234755950"></p>
+<p>这两个调用用于获取锁。如果锁已被占用，则trylock版本将失败。获取锁的timedlock定版本会在超时或获取锁后返回，以先发生者为准。因此，具有零超时的timedlock退化为trylock的情况。通常应避免使用这两种版本，但有些情况下，避免卡在（可能无限期的）获取锁的函数中会很有用，我们将在以后的章节中看到（例如，当我们研究死锁时）。</p>
+<h2 id="数据库系统教程"><a href="#数据库系统教程" class="headerlink" title="数据库系统教程"></a>数据库系统教程</h2><h3 id="12-3-并发控制中的加锁方法"><a href="#12-3-并发控制中的加锁方法" class="headerlink" title="12.3 并发控制中的加锁方法"></a>12.3 并发控制中的加锁方法</h3><p>在数据库环境下，进行<strong>并发控制</strong>的主要方式是使用封锁机制，即<strong>加锁</strong>（Locking）。加锁是一种并行控制技术，是用来调整对共享目标（如数据库中共享记录）的并行存取的技术。</p>
+<p>以火车订票系统为例，若事务T要订票，就需要修改剩余票数，则在读取剩余票数前先封锁该数据，然后再对数据进行读取和修改操作。在事务T操作过程中，其他事务不能读取和修改剩余票数，直到事务T修改完成并将数据写回到数据库，并且解除了对该数据的封锁后其他事务才能访问这些数据。</p>
+<p><strong>锁是与数据项有关的一个变量，它描述了数据项的状态，这个状态是关于在数据项上可进行的操作。</strong>它防止了第一个事务在完成它的全部活动前第二个事务对数据记录的访问。<strong>通常，在数据库中每个数据项都有一个锁</strong>。锁是作为控制并发事务对数据项访问的一种手段，加锁是并发控制最常使用的形式，而且它也是大多数应用程序选择的方法。锁由一个锁管理器来加锁和解锁。锁管理器的主要数据结构是一个<strong>锁表</strong>，在锁表中，每一项<strong>由事务标识符、粒度标识符和锁类型组成</strong>。</p>
+<blockquote>
+<p>coy:<strong>通常，在数据库中每个数据项都有一个锁</strong>。Java中每个对象也有一个内置锁</p>
 </blockquote>
-<p>IPC</p>
-<p>进程间通信</p>
-<table>
+<p>加锁就是限制事务内和事务外对数据的操作。加锁是实现并发控制的一个非常重要的技术。所谓加锁，是事务T对某项数据操作前，先向系统发出请求，封锁其所要使用的数据。加锁后事务T对其要操作的数据具有了一定的控制权，在事务T释放它的锁之前，其他事务不能操作这些数据。</p>
+<p>具体的控制权由锁的类型决定。基本的锁类型有两种：排它锁（Exclusive Locks，也称X锁或写锁）和共享锁（Share Locks，也称S锁或读锁）。</p>
+<p>• 共享锁：若事务T给数据项A加了S锁，则事务T可以读A，但不能修改A，其他事务可以再给A加S锁，但不能加X锁，直到T释放了A上的S锁为止。即对于读操作（检索数据）来说，可以有多个事务同时获得共享锁，但阻止其他事务对已获得共享锁的数据进行排他封锁。</p>
+<p>共享锁的操作基于这样的事实：查询操作并不改变数据库中的数据，而更新操作（揑入、删除和修改）才会真正使数据库中的数据发生变化。<strong>加锁的真正目的在于防止更新操作带来的使数据不一致的问题，而对查询操作则可放心地并行进行。</strong></p>
+<p>• 排他锁：若事务T给数据项A加了X锁，则允许T读取和修改A，但不允许其他事务再给A加仸何类型的锁和进行仸何操作。即一旦一个事务获得了对某一数据的排他锁，则仸何其他事务均不能对该数据进行仸何封锁，其他事务只能进入等待状态，直到第一个事务撤销了对该数据的封锁。</p>
+<p>锁管理器拒绝不兼容的加锁请求，即</p>
+<p>• 如果事务T1在数据项A上加了S锁，则允许事务T2在A上的S锁请求，即允许其他事务对A再加S锁。换句话说，读-读是可交换的。‘’</p>
+<p>• 如果事务T1在数据项A上加了S锁，则拒绝事务T2在A上的X锁请求，即不允许其他事务再对A加X锁。换句话说，读-写是不可交换的。</p>
+<p>• 如果事务T1在数据项A上加了X锁，则事务T2在A上的仸何加锁请求都将被拒绝，即不允许其他事务再对A加仸何锁。换句话说，写-写是不可交换的。</p>
+<h3 id="12-3-1-锁的粒度"><a href="#12-3-1-锁的粒度" class="headerlink" title="12.3.1 锁的粒度"></a>12.3.1 锁的粒度</h3><p>数据库是命名的数据项的集合。由并发控制程序选择的作为保护单位的数据项的大小被称为粒度。粒度可以是数据库中一些记录的一个字段，也可以是更大的单位，如记录或者是一个磁盘块。粒度是由并发控制子系统控制的独立的数据单位，在基于锁的并发控制机制中，粒度是一个可加锁单位。锁的粒度表明加锁使用的级别。尽管也可以使用更小的或更大的单位（如元组、关系），但通常情况下，锁的粒度是数据页。大多数商业数据库管理系统都提供了不同的加锁粒度，主要有</p>
+<p>• 数据库级；</p>
+<p>• 表级；</p>
+<p>• 页级；</p>
+<p>• 行（元组）级；</p>
+<p>• 属性（字段）级。</p>
+<p>锁的粒度影响数据库的并发程度。一个数据项可以小到一个属性（或字段）值，也可以大到一个磁盘块，甚至是一个文件或整个数据库。</p>
+<ol>
+<li><p>数据库级锁</p>
+<p>数据库级锁是对整个数据库进行加锁。因此，在某个事务执行期间，将防止其他仸何事务使用数据库中的仸何表。</p>
+</li>
+<li><p>表级锁</p>
+<p>表级锁是对整个表进行加锁。因此，在一个事务使用这个表时，将防止仸何其他事务访问表中的仸何数据。如果某个事务希望访问一些表，则每个表都被加锁。但是，两个事务可以访问相同的数据库，只要它们访问的表不同即可。表级锁的限制比数据库级锁少，但当有很多事务等待访问相同的表时，也会引起阻塞，尤其是当事务需要访问相同表的不同部分而且彼此没有相互干扰时，这个条件就成为一个问题。因此，<strong>表级锁不适合多用户的数据库管理系统</strong>。</p>
+</li>
+<li><p>页级锁</p>
+<p>页级锁是对整个磁盘页（或磁盘块）进行加锁。一页有固定的大小，如4KB、8KB、16KB、32KB等。一个表能够跨多个页，而一个页可以包含一个或多个表的若干行数据（元组）。<strong>页级锁最适合多用户数据库管理系统使用。</strong></p>
+</li>
+<li><p>行级锁</p>
+<p>行级锁是对特定的行（或元组）进行加锁，对数据库中的每个表的每一行存在一个锁。数据库管理系统允许并发事务同时访问同一个表的不同行数据，即使这些行位于相同的页上。行级锁比数据库级锁、表级锁或页级锁的限制要少很多，因此行级锁提高了数据的可获得性，但对行级锁的管理需要很高的成本。</p>
+</li>
+<li><p>字段锁</p>
+<p>属性级锁是对特定的属性（或字段）进行加锁。属性级锁允许并发事务访问相同的行，只要这些事务是访问行中的不同属性即可。属性级锁为多用户数据访问产生了最大的灵活性，但它需要很大的计算机开销。</p>
+</li>
+</ol>
+<h3 id="12-3-2-封锁协议"><a href="#12-3-2-封锁协议" class="headerlink" title="12.3.2 封锁协议"></a>12.3.2 封锁协议</h3><p>运用X锁和S锁给数据项加锁时，还需要约定一些规则，如何时申请X锁或S锁、持锁时间、何时释放锁等。我们称这些规则为封锁协议或加锁协议（Locking Protocel）。对封锁方式规定不同的规则，就形成了各种不同级别的封锁协议。不同级别的<strong>封锁协议</strong>所能达到的<strong>系统一致性级别</strong>是不同的。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210629001701082.png" alt="image-20210629001701082"></p>
+<h2 id="java-并发实现原理"><a href="#java-并发实现原理" class="headerlink" title="java 并发实现原理"></a>java 并发实现原理</h2><h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>对整个Concurrent包的源码进行分析，有以下几个目的：</p>
+<p>（1）帮助使用者合理地选择解决方案。Concurrent包很庞大，有各式各样的线程互斥与同步机制。明白实现原理，使用者可以根据自己的业务场景，选择最适合自己的解决方案。避免重复造轮子，也避免因为使用不当而掉到“坑”里。</p>
+<p>（2）对源码的分析，将让使用者对内存屏障、CAS原子操作、<strong>锁</strong>、<strong>无锁</strong>等底层原理的认识，不再停留于一个“似是而非”的阶段，而是深刻地认识其本质。</p>
+<p>（3）吸收借鉴大师的思维。在Concurrent 包中，可以看到各种巧妙的并发处理策略。看了Concurrent包，才会发现在多线程中，不是只有简陋的<strong>互斥锁</strong>、通知机制和线程池。</p>
+<h3 id="1-3-1-锁的对象是什么"><a href="#1-3-1-锁的对象是什么" class="headerlink" title="1.3.1 锁的对象是什么"></a>1.3.1 锁的对象是什么</h3><p>对不熟悉多线程原理的人来说，很容易误解synchronized 关键字：它通常加在所有的静态成员函数和非静态成员函数的前面，表面看好像是“函数之间的互斥”，其实不是。synchronized关键字其实是“给某个对象加了把锁”，这个锁究竟加在了什么对象上面？如下面的代码所示，给函数f1（）、f2（）加上synchronized关键字。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210629125703546.png" alt="image-20210629125703546"></p>
+<p>对于非静态成员函数，<strong>锁</strong>其实是加在对象a上面的；对于静态成员函数，锁是加在A.class上面的。当然，class本身也是对象。</p>
+<p>这间接回答了关于synchronized 的常见问题：一个静态成员函数和一个非静态成员函数，都加了synchronized关键字，分别被两个线程调用，它们是否互斥？很显然，因为是两把不同的<strong>锁</strong>，所以不会互斥。</p>
+<h3 id="1-3-2-锁的本质是什么"><a href="#1-3-2-锁的本质是什么" class="headerlink" title="1.3.2 锁的本质是什么"></a>1.3.2 锁的本质是什么</h3><p>无论使用什么编程语言，只要是多线程的，就一定会涉及锁。既然锁如此常见，那么锁的本质到底是什么呢？</p>
+<p>如图1-2所示，多个线程要访问同一个资源。线程就是一段段运行的代码；资源就是一个变量、一个对象或一个文件等；而<strong>锁就是要实现线程对资源的访问控制</strong>，保证同一时间只能有一个线程去访问某一个资源。打个比方，线程就是一个个游客，资源就是一个待参观的房子。这个房子同一时间只允许一个游客进去参观，当一个人出来后下一个人才能进去。而锁，就是这个房子门口的守卫。如果同一时间允许多个游客参观，<strong>锁</strong>就变成<strong>信号量</strong>，这点后面会专门讨论。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210629130124978.png" alt="image-20210629130124978"></p>
+<p><strong>从程序角度来看，锁其实就是一个“对象”</strong>，这个对象要完成以下几件事情：</p>
+<p>（1）这个对象内部得有一个标志位（state变量），记录自己有没有被某个线程占用（也就是记录当前有没有游客已经进入了房子）。最简单的情况是这个state有0、1两个取值，0表示没有线程占用这个<strong>锁</strong>，1表示有某个线程占用了这个锁。</p>
+<p>（2）如果这个对象被某个线程占用，它得记录这个线程的thread ID，知道自己是被哪个线程占用了（也就是记录现在是谁在房子里面）。</p>
+<p>（3）这个对象还得维护一个thread id list，记录其他所有阻塞的、等待拿这个锁的线程（也就是记录所有在外边等待的游客）。在当前线程释放锁之后（也就是把state从1改回0），从这个thread id list里面取一个线程唤醒。</p>
+<p>既然<strong>锁是一个“对象”</strong>，要访问的共享资源本身也是一个对象，例如前面的对象a，这两个对象可以合成一个对象。代码就变成synchronized（this）{…}，我们要访问的共享资源是对象a，锁也是加在对象a上面的。当然，也可以另外新建一个对象，代码变成synchronized（obj1）{…}。这个时候，访问的共享资源是对象a，而锁是加在新建的对象obj1上面的。</p>
+<p><strong>资源和锁合二为一，使得在Java里面，synchronized关键字可以加在任何对象的成员上面</strong>。这意味着，这个对象既是共享资源，同时也具备“锁”的功能！下面来看Java 是如何做到让任何一个对象都具备“锁”的功能的，这也就是synchronized的实现原理。</p>
+<h3 id="1-3-3-synchronized实现原理"><a href="#1-3-3-synchronized实现原理" class="headerlink" title="1.3.3 synchronized实现原理"></a>1.3.3 synchronized实现原理</h3><p>答案在Java的对象头里。在对象头里，有一块数据叫MarkWord。在64位机器上，Mark Word是8字节（64位）的，这64位中有2个重要字段：<strong>锁标志位和占用该锁的thread ID</strong>。因为不同版本的JVM实现，对象头的数据结构会有各种差异，此处不再进一步讨论。</p>
+<p>此处主要是想说明锁实现的思路，因为后面讲ReentrantLock的详细实现时，也基于类似的思路。在这个基本的思路之上，synchronized还会有偏向、自旋等优化策略，ReentrantLock同样会用到这些优化策略，到时会结合代码详细展开。</p>
+<h3 id="1-4-1-生产者消费模型"><a href="#1-4-1-生产者消费模型" class="headerlink" title="1.4.1 生产者消费模型"></a>1.4.1 生产者消费模型</h3><p>生产者-消费者模型是一个常见的多线程编程模型，如图1-3所示。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210629134144729.png" alt="image-20210629134144729"></p>
+<p>一个内存队列，多个生产者线程往内存队列中放数据；多个消费者线程从内存队列中取数据。要实现这样一个编程模型，需要做下面几件事情：</p>
+<p>（1）内存队列本身要加锁，才能实现线程安全。</p>
+<p>（2）阻塞。当内存队列满了，生产者放不进去时，会被阻塞；当内存队列是空的时候，消费者无事可做，会被阻塞。</p>
+<p>（3）双向通知。消费者被阻塞之后，生产者放入新数据，要notify（）消费者；反之，生产者被阻塞之后，消费者消费了数据，要notify（）生产者。</p>
+<p>第（1）件事情必须要做，第（2）件和第（3）件事情不一定要做。例如，可以采取一个简单的办法，生产者放不进去之后，睡眠几百毫秒再重试，消费者取不到数据之后，睡眠几百毫秒再重试。但这个办法效率低下，也不实时。所以，我们只讨论如何阻塞、如何通知的问题。</p>
+<h4 id="1．如何阻塞？"><a href="#1．如何阻塞？" class="headerlink" title="1．如何阻塞？"></a><strong>1．如何阻塞？</strong></h4><p>办法1：线程自己阻塞自己，也就是生产者、消费者线程各自调用wait（）和notify（）。</p>
+<p>办法2：用一个阻塞队列，当取不到或者放不进去数据的时候，入队/出队函数本身就是阻塞的。这也就是BlockingQueue的实现，后面会详细讲述。</p>
+<h4 id="2．如何双向通知？"><a href="#2．如何双向通知？" class="headerlink" title="2．如何双向通知？"></a>2．如何双向通知？</h4><p>办法1：wait（）与notify（）机制。</p>
+<p>办法2：Condition机制。此处，先讲wait（）与notify（）机制，后面会专门讲Condition机制与BlockingQueue机制。</p>
+<h3 id="1-4-3-为什么wait（）的时候必须释放锁"><a href="#1-4-3-为什么wait（）的时候必须释放锁" class="headerlink" title="1.4.3 为什么wait（）的时候必须释放锁"></a>1.4.3 为什么wait（）的时候必须释放锁</h3><p>当线程A进入synchronized（obj1）中之后，也就是对obj1上了锁。此时，调用wait（）进入阻塞状态，一直不能退出synchronized代码块；那么，线程B永远无法进入synchronized（obj1）同步块里，永远没有机会调用notify（），岂不是<strong>死锁</strong>了？</p>
+<p>这就涉及一个关键的问题：在wait（）的内部，会先释放锁obj1，然后进入阻塞状态，之后，它被另外一个线程用notify（）唤醒，去重新拿锁！其次，wait（）调用完成后，执行后面的业务逻辑代码，然后退出synchronized同步块，再次释放锁。</p>
+<p>wait（）内部的伪代码如下：</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210629131005046.png" alt="image-20210629131005046"></p>
+<p>只有如此，才能避免上面所说的死锁问题。后面讲Condition实现的时候，会再详细讨论这个问题。</p>
+<h3 id="1-9-综合应用-无锁编程"><a href="#1-9-综合应用-无锁编程" class="headerlink" title="1.9 综合应用 无锁编程"></a>1.9 综合应用 无锁编程</h3><p>提到多线程编程，就绕不开“<strong>锁</strong>”，在Java中就是指synchronized关键字和Lock。在Linux中，主要是指pthread的mutex。但锁又是性能杀手，所以很多的前辈大师们研究如何可以不用锁，也能实现线程安全。无锁编程是一个庞大而深入的话题，既涉及底层的CPU架构（例如前面讲的内存屏障），又涉及不同语言的具体实现。在作者的另一本书《软件架构设计：大型网站技术架构与业务架构融合之道》中，也对无锁编程做了介绍，此处再次总结一下常用的几种无锁编程的场景，也是对本章技术点的一个应用</p>
+<h3 id="1-9-1-一写一读的无锁队列：内存屏障"><a href="#1-9-1-一写一读的无锁队列：内存屏障" class="headerlink" title="1.9.1 一写一读的无锁队列：内存屏障"></a>1.9.1 一写一读的无锁队列：内存屏障</h3><p>一写一读的无锁队列即Linux内核的kfifo队列，一写一读两个线程，不需要锁，只需要<strong>内存屏障</strong>。</p>
+<h3 id="1-9-2-一写多读的无锁队列：volatile关键字"><a href="#1-9-2-一写多读的无锁队列：volatile关键字" class="headerlink" title="1.9.2 一写多读的无锁队列：volatile关键字"></a>1.9.2 一写多读的无锁队列：volatile关键字</h3><p>在Martin Fowler关于LMAX架构的介绍中，谈到了Disruptor。Disruptor是一个开源的并发框架，能够在无锁的情况下实现Queue并发操作。<strong>Disruptor的RingBuffer之所以可以做到完全无锁，也是因为“单线程写”，这是“前提的前提”。</strong>离开了这个前提条件，没有任何技术可以做到完全无锁。借用Disruptor官方提到的一篇博客文章Sharing Data Among Threads WithoutContention，也就是single-writer principle。</p>
+<p><strong>在这个原则下，利用volatile 关键字可以实现一写多读的线程安全</strong>。具体来说，就是RingBuffer有一个头指针，对应一个生产者线程；多个尾指针对应多个消费者线程。每个消费者线程只会操作自己的尾指针。所有这些指针的类型都是volatile变量，通过头指针和尾指针的比较，判断队列是否为空。</p>
+<h3 id="1-9-3-多写多读的无锁队列：CAS"><a href="#1-9-3-多写多读的无锁队列：CAS" class="headerlink" title="1.9.3 多写多读的无锁队列：CAS"></a>1.9.3 多写多读的无锁队列：CAS</h3><p>同内存屏障一样，<strong>CAS（Compare And Set）也是CPU提供的一种原子指令</strong>。在第2章中会对CAS进行详细的解释。基于CAS和链表，可以实现一个多写多读的队列。具体来说，就是链表有一个头指针head和尾指针tail。入队列，通过对tail进行CAS操作完成；出队列，对head进行CAS操作完成。在第3章讲Lock的实现的时候，将反复用到这种队列，会详细展开介绍。</p>
+<h3 id="1-9-4-无锁栈"><a href="#1-9-4-无锁栈" class="headerlink" title="1.9.4 无锁栈"></a>1.9.4 无锁栈</h3><p>无锁栈比无锁队列的实现更简单，只需要对head 指针进行CAS 操纵，就能实现多线程的入栈和出栈。在第4章讲工具类的实现的时候，会用到无锁栈。</p>
+<h3 id="1-9-5-无锁链表"><a href="#1-9-5-无锁链表" class="headerlink" title="1.9.5 无锁链表"></a>1.9.5 无锁链表</h3><p>相比无锁队列与无锁栈，无锁链表要复杂得多，因为无锁链表要在中间插入和删除元素。在5.6节，介绍ConcurrentSkipListMap实现的时候，会讲到并发的跳查表。其实现就是基于无锁链表的，到时会详细展开论述。</p>
+<h3 id="2-2-1-悲观锁与乐观锁"><a href="#2-2-1-悲观锁与乐观锁" class="headerlink" title="2.2.1 悲观锁与乐观锁"></a>2.2.1 悲观锁与乐观锁</h3><p>对于悲观锁，作者认为数据发生并发冲突的概率很大，所以读操作之前就上锁。synchronized关键字，以及后面要讲的ReentrantLock都是悲观锁的典型例子。对于乐观锁，作者认为数据发生并发冲突的概率比较小，所以读操作之前不上锁。等到写操作的时候，再判断数据在此期间是否被其他线程修改了。如果被其他线程修改了，就把数据重新读出来，重复该过程；如果没有被修改，就写回去。判断数据是否被修改，同时写回新值，这两个操作要合成一个原子操作，也就是CAS（Compare And Set）。AtomicInteger的实现就是典型的乐观锁，在MySQL和Redis中有类似的思路。</p>
+<h3 id="2-1-2-Unsafe的CAS详解"><a href="#2-1-2-Unsafe的CAS详解" class="headerlink" title="2.1.2 Unsafe的CAS详解"></a>2.1.2 Unsafe的CAS详解</h3><p>上面调用的CAS函数，其实是封装的Unsafe类中的一个native函数，如下所示。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210629184031117.png" alt="image-20210629184031117"></p>
+<p>AtomicInteger封装过的compareAndSet有两个参数。第一个参数expect是指变量的旧值（是读出来的值，写回去的时候，希望没有被其他线程修改，所以称为expect）；第二个参数update是指变量的新值（修改过的，希望写入的值）。当expect等于变量当前的值时，说明在修改的期间，没有其他线程对此变量进行过修改，所以可以成功写入，变量被更新为update，返回true；否则返回false。</p>
+<h3 id="2-1-3-自旋与阻塞"><a href="#2-1-3-自旋与阻塞" class="headerlink" title="2.1.3 自旋与阻塞"></a>2.1.3 自旋与阻塞</h3><p>当一个线程拿不到锁的时候，有以下两种基本的等待策略。</p>
+<p>策略1：放弃CPU，进入阻塞状态，等待后续被唤醒，再重新被操作系统调度。</p>
+<p>策略2：不放弃CPU，空转，不断重试，也就是所谓的“自旋”。很显然，如果是单核的CPU，只能用策略1。因为如果不放弃CPU，那么其他线程无法运行，也就无法释放锁。但对于多CPU或者多核，策略2就很有用了，因为没有线程切换的开销。</p>
+<p>AtomicInteger的实现就用的是“自旋”策略，如果拿不到锁，就会一直重试。有一点要说明：这两种策略并不是互斥的，可以结合使用。如果拿不到锁，先自旋几圈；如果自旋还拿不到锁，再阻塞，synchronized关键字就是这样的实现策略。</p>
+<h2 id="Java并发编程之美"><a href="#Java并发编程之美" class="headerlink" title="Java并发编程之美"></a>Java并发编程之美</h2><h3 id="1-3-线程通知与等待"><a href="#1-3-线程通知与等待" class="headerlink" title="1.3 线程通知与等待"></a>1.3 线程通知与等待</h3><p>当一个线程调用一个共享变量的wait（）方法时，该调用线程会被阻塞挂起，直到发生下面几件事情之一才返回：（1）其他线程调用了该共享对象的notify（）或者notifyAll（）方法；</p>
+<p>（2）其他线程调用了该线程的interrupt（）方法，该线程抛出InterruptedException异常返回。另外需要注意的是，如果调用wait（）方法的线程没有事先获取该对象的监视器锁，则调用wait（）方法时调用线程会抛出IllegalMonitorStateException异常。那么一个<strong>线程如何才能获取一个共享变量的监视器锁呢</strong>？</p>
+<p>（1）执行synchronized同步代码块时，使用该共享变量作为参数。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210629193902907.png" alt="image-20210629193902907"></p>
+<p>（2）调用该共享变量的方法，并且该方法使用了synchronized修饰。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210629193910207.png" alt="image-20210629193910207"></p>
+<p>另外需要注意的是，一个线程可以从挂起状态变为可以运行状态（也就是被唤醒），即使该线程没有被其他线程调用notify（）、notifyAll（）方法进行通知，或者被中断，或者等待超时，这就是所谓的虚假唤醒。虽然虚假唤醒在应用实践中很少发生，但要防患于未然，做法就是不停地去测试该线程被唤醒的条件是否满足，不满足则继续等待，也就是说在一个循环中调用wait（）方法进行防范。退出循环的条件是满足了唤醒该线程的条件。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210629193931572.png" alt="image-20210629193931572"></p>
+<p>如上代码是经典的调用共享变量wait（）方法的实例，首先通过同步块获取obj上面的监视器锁，然后在while循环内调用obj的wait（）方法。</p>
+<h1 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h1><h2 id="临界区"><a href="#临界区" class="headerlink" title="临界区"></a>临界区</h2><p>临界区（critical section）是访问共享资源的一段代码，资源通常是一个变量或数据结构</p>
+<h2 id="竞态条件"><a href="#竞态条件" class="headerlink" title="竞态条件"></a>竞态条件</h2><p>竞态条件（race condition）出现在多个执行线程大致同时进入临界区时，它们都试图更新共享的数据结构，导致了令人惊讶的（也许是不希望的）结果。</p>
+<h2 id="不确定性（indeterminate）程序"><a href="#不确定性（indeterminate）程序" class="headerlink" title="不确定性（indeterminate）程序"></a>不确定性（indeterminate）程序</h2><p>不确定性（indeterminate）程序由一个或多个竞态条件组成，程序的输出因运行而异，具体取决于哪些线程在何时运行。这导致结果不是确定的（deterministic），而我们通常期望计算机系统给出确定的结果。</p>
+<h2 id="原语"><a href="#原语" class="headerlink" title="原语"></a>原语</h2><h3 id="互斥原语"><a href="#互斥原语" class="headerlink" title="互斥原语"></a>互斥原语</h3><h4 id="锁-lock"><a href="#锁-lock" class="headerlink" title="锁 lock"></a>锁 lock</h4><h3 id="条件变量-condition-variable"><a href="#条件变量-condition-variable" class="headerlink" title="条件变量 condition variable"></a>条件变量 condition variable</h3><p>所有线程库还有一个主要组件（当然POSIX线程也是如此），就是存在一个<strong>条件变量（condition variable</strong>）。当线程之间必须发生某种信号时，如果一个线程在等待另一个线程继续执行某些操作，条件变量就很有用。希望以这种方式进行交互的程序使用两个主要函数：</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210628235023746.png" alt="image-20210628235023746"></p>
+<p>要使用条件变量，必须另外有一个与此条件相关的<strong>锁</strong>。在调用上述任何一个函数时，应该持有这个锁。</p>
+<p>第一个函数pthread_cond_wait()使调用线程进入休眠状态，因此等待其他线程发出信号，通常当程序中的某些内容发生变化时，现在正在休眠的线程可能会关心它。典型的用法如下所示：</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210628235114039.png" alt="image-20210628235114039"></p>
+<p>在这段代码中，在初始化相关的锁和条件之后[插图]，一个线程检查变量ready是否已经被设置为零以外的值。如果没有，那么线程只是简单地调用等待函数以便休眠，直到其他线程唤醒它。</p>
+<h2 id="锁的类型"><a href="#锁的类型" class="headerlink" title="锁的类型"></a>锁的类型</h2><h3 id="共享锁"><a href="#共享锁" class="headerlink" title="共享锁"></a>共享锁</h3><h3 id="排他锁"><a href="#排他锁" class="headerlink" title="排他锁"></a>排他锁</h3><h2 id="锁表"><a href="#锁表" class="headerlink" title="锁表"></a>锁表</h2><p>锁管理器的主要数据结构是一个<strong>锁表</strong>，在锁表中，每一项<strong>由事务标识符、粒度标识符和锁类型组成</strong>。</p>
+<h2 id="锁的粒度"><a href="#锁的粒度" class="headerlink" title="锁的粒度"></a>锁的粒度</h2><h3 id="数据库级锁"><a href="#数据库级锁" class="headerlink" title="数据库级锁"></a>数据库级锁</h3><h3 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h3><h3 id="页级锁"><a href="#页级锁" class="headerlink" title="页级锁"></a>页级锁</h3><h3 id="行级锁"><a href="#行级锁" class="headerlink" title="行级锁"></a>行级锁</h3><h3 id="字段级锁"><a href="#字段级锁" class="headerlink" title="字段级锁"></a>字段级锁</h3><h2 id="乐观锁"><a href="#乐观锁" class="headerlink" title="乐观锁"></a>乐观锁</h2><h2 id="悲观锁"><a href="#悲观锁" class="headerlink" title="悲观锁"></a>悲观锁</h2>
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/28/notebook/20210628-%E9%94%81/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/20210623-同步异步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/23/notebook/20210623-%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5/">notebook/20210623-同步异步</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/23/notebook/20210623-%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5/" class="archive-article-date">
+  	<time datetime="2021-06-23T02:01:38.471Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-23</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>同步异步在不同上下文语境中的含义</p>
+<h2 id="kafka副本复制"><a href="#kafka副本复制" class="headerlink" title="kafka副本复制"></a>kafka副本复制</h2><p>Kafka 的复制机制既不是完全的同步复制，也不是单纯的异步复制。事实上，同步复制要求所有能工作的 follower 副本都复制完，这条消息才会被确认为已成功提交，这种复制方式极大地影响了性能。而在异步复制方式下，follower副本异步地从leader副本中复制数据，数据只要被leader副本写入就被认为已经成功提交。在这种情况下，如果follower副本都还没有复制完而落后于leader副本，突然leader副本宕机，则会造成数据丢失。Kafka使用的这种ISR的方式则有效地权衡了数据可靠性和性能之间的关系。[^kafka 设计与实践原理]</p>
+<h2 id="IO同步异步"><a href="#IO同步异步" class="headerlink" title="IO同步异步"></a>IO同步异步</h2><p>同步IO，是一种用户空间与内核空间的IO发起方式。同步IO是指用户空间的线程是主动发起IO请求的一方，内核空间是被动接受方。异步IO则反过来，是指系统内核是主动发起IO请求的一方，用户空间的线程是被动接受方。[^    Netty、 Redis、zookeeper高并发实战]</p>
+<h2 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h2><p>虽然线程的优势很明显，但带来的问题也是显而易见的，那就是系统运行的不确定性。虽然在多进程时，系统运行也存在一定的不确定性，但这种不确定性基本体现在程序执行的先后顺序上，而每个程序运行的结果基本是确定的。而线程的引入却带来了程序本身运行结果的不确定性：由于多线程的存在，就每个单一线程来看，其执行效率、执行正确性均存在不确定性。当然，通过使用同步机制，可以改善这种不确定性。[^ 操作系统哲学原理]</p>
+<p>那么到底什么是“同步”呢？同步就是让所有线程按照一定的规则执行，使得其正确性和效率都有迹可寻。<strong>线程同步的手段就是对线程之间的穿插进行控制。</strong>下面以“金鱼问题”来演示线程同步的各种控制手段。</p>
+<h3 id="同步机制"><a href="#同步机制" class="headerlink" title="同步机制"></a>同步机制</h3><ul>
+<li>互斥 检查字条，留字条</li>
+<li>锁 </li>
+<li>循环等待</li>
+</ul>
+<p>信号量（semphore）可以说是所有原语里面功能最强大的。它不仅是一个同步原语，还是一个通信原语。而且，它还能作为锁来使用</p>
+<p>锁解决了同步问题，但带来的是循环等待，我们不满意。为了消除循环等待，我们发明了睡觉与叫醒。但睡觉与叫醒又带来了死锁，因此，我们发明了信号量。</p>
+<h3 id="同步调用与异步调用"><a href="#同步调用与异步调用" class="headerlink" title="同步调用与异步调用"></a>同步调用与异步调用</h3><p>如何实现同步为了构建有用的同步原语，需要从硬件中获得哪些支持？需要从操作系统中获得什么支持？如何正确有效地构建这些原语？程序如何使用它们来获得期望的结果？</p>
+<p>关键并发术语临界区、竞态条件、不确定性、互斥执行这4个术语对于并发代码来说非常重要，我们认为有必要明确地指出。请参阅Dijkstra的一些早期著作[D65，D68]了解更多细节。·临界区（critical section）是访问共享资源的一段代码，资源通常是一个变量或数据结构。</p>
+<p>·竞态条件（race condition）出现在多个执行线程大致同时进入临界区时，它们都试图更新共享的数据结构，导致了令人惊讶的（也许是不希望的）结果。·</p>
+<p>不确定性（indeterminate）程序由一个或多个竞态条件组成，程序的输出因运行而异，具体取决于哪些线程在何时运行。这导致结果不是确定的（deterministic），而我们通常期望计算机系统给出确定的结果。·为了避免这些问题，线程应该使用某种互斥（mutual exclusion）原语。这样做可以保证只有一个线程进入临界区，从而避免出现竞态，并产生确定的程序输出。</p>
+<p>如何构建对同步原语的支持来支持原子性，还要研究支持在多线程程序中常见的睡眠/唤醒交互的机制。如果现在不明白，没问题！当你阅读条件变量（condition variable）的章节时，很快就会发生。如果那时还不明白，那就有点问题了。</p>
+<p>使用原子操作原子操作是构建计算机系统的最强大的基础技术之一，从计算机体系结构到并行代码（我们在这里研究的内容）、文件系统（我们将很快研究）、数据库管理系统，甚至分布式系统[L+93]。将一系列动作原子化（atomic）背后的想法可以简单用一个短语表达：“全部或没有”。<strong>看上去，要么你希望组合在一起的所有活动都发生了，要么它们都没有发生。不会看到中间状态。</strong>有时，将许多行为组合为单个原子动作称为事务（transaction），这是一个在数据库和事务处理世界中非常详细地发展的概念[GR92]。在探讨并发的主题中，我们将使用同步原语，将指令的短序列变成原子性的执行块。但是我们会看到，原子性的想法远不止这些。例如，文件系统使用诸如日志记录或写入时复制等技术来自动转换其磁盘状态，这对于在系统故障时正确运行至关重要</p>
+<p>线程API指导当你使用POSIX线程库（或者实际上，任何线程库）来构建多线程程序时，需要记住一些小而重要的事情：·保持简洁。最重要的一点，线程之间的锁和信号的代码应该尽可能简洁。复杂的线程交互容易产生缺陷。·让线程交互减到最少。尽量减少线程之间的交互。每次交互都应该想清楚，并用验证过的、正确的方法来实现（很多方法会在后续章节中学习）。·初始化锁和条件变量。未初始化的代码有时工作正常，有时失败，会产生奇怪的结果。·检查返回值。当然，任何C和UNIX的程序，都应该检查返回值，这里也是一样。否则会导致古怪而难以理解的行为，让你尖叫，或者痛苦地揪自己的头发。·注意传给线程的参数和返回值。具体来说，如果传递在栈上分配的变量的引用，可能就是在犯错误。·每个线程都有自己的栈。类似于上一条，记住每一个线程都有自己的栈。因此，线程局部变量应该是线程私有的，其他线程不应该访问。线程之间共享数据，值要在堆（heap）或者其他全局可访问的位置。·线程之间总是通过条件变量发送信号。切记不要用标记变量来同步。</p>
+<p>因为有界缓冲区是共享资源，所以我们必须通过同步机制来访问它，以免[插图]产生竞态条件</p>
+<p>我们看到了引入锁之外的另一个重要同步原语：条件变量。当某些程序状态不符合要求时，通过允许线程进入休眠状态，条件变量使我们能够漂亮地解决许多重要的同步问题，包括著名的（仍然重要的）生产者/消费者问题，以及覆盖条件</p>
+<p>事实上，Dijkstra及其同事发明了信号量，作为与同步有关的所有工作的唯一原语。你会看到，可以使用信号量作为锁和条件变量。</p>
+<h3 id="如何使用信号量？"><a href="#如何使用信号量？" class="headerlink" title="如何使用信号量？"></a>如何使用信号量？</h3><p>如何使用信号量代替锁和条件变量？什么是信号量？什么是二值信号量？用锁和条件变量来实现信号量是否简单？不用锁和条件变量，如何实现信号量？</p>
+<h2 id="阻塞与非阻塞接口"><a href="#阻塞与非阻塞接口" class="headerlink" title="阻塞与非阻塞接口"></a>阻塞与非阻塞接口</h2><p>阻塞与非阻塞接口阻塞（或同步，synchronous）接口在返回给调用者之前完成所有工作。非阻塞（或异步，asynchronous）接口开始一些工作，但立即返回，从而让所有需要完成的工作都在后台完成。通常阻塞调用的主犯是某种I/O。例如，如果一个调用必须从磁盘读取才能完成，它可能会阻塞，等待发送到磁盘的I / O请求返回。非阻塞接口可用于任何类型的编程（例如，使用线程），但在<strong>基于事件</strong>的方法中非常重要，因为阻塞的调用会阻止所有进展。</p>
+<p>基于事件的方法还有其他一些困难，我们应该指出。例如，当系统从单个CPU转向多个CPU时，基于事件的方法的一些简单性就消失了。具体来说，为了利用多个CPU，事件服务器必须并行运行多个事件处理程序。发生这种情况时，就会出现常见的同步问题（例如临界区），并且必须采用通常的解决方案（例如锁定）。因此，在现代多核系统上，无锁的简单事件处理已不再可能。</p>
+<p>是否向客户端暴露通信的异步性质，从而实现一些性能优化。具体来说，典型的RPC是同步（synchronously）的，即当客户端发出过程调用时，它必须等待过程调用返回，然后再继续。因为这种等待可能很长，而且因为客户端可能正在执行其他工作，所以某些RPC包让你能够异步（asynchronously）地调用RPC。当发出异步RPC时，RPC包发送请求并立即返回。然后，客户端可以自由地执行其他工作，例如调用其他RPC，或进行其他有用的计算。客户端在某些时候会希望看到异步RPC的结果。因此它再次调用RPC层，告诉它等待未完成的RPC完成，此时可以访问返回的结果</p>
+<p>通常Java开发人员喜欢使用同步代码编写程序，因为这种请求（request）/响应（response）的方式比较简单，并且比较符合编程人员的思维习惯；这种做法很好，直到系统出现性能瓶颈。在使用同步编程方式时，由于每个线程同时只能发起一个请求并同步等待返回，所以为了提高系统性能，此时我们就需要引入更多的线程来实现并行化处理。但是多线程下对共享资源进行访问时，不可避免会引入资源争用和并发问题；另外，操作系统层面对线程的个数是有限制的，不可能通过无限增加线程数来提供系统性能；而且，使用同步阻塞的编程方式还会浪费资源，比如发起网络IO请求时，调用线程就会处于同步阻塞等待响应结果的状态，而这时候调用线程明明可以去做其他事情，等网络IO响应结果返回后再对结果进行处理。可见通过增加单机系统线程个数的并行编程方式并不是“灵丹妙药”。通过编写异步、非阻塞的代码，则可以使用相同的底层资源将执行切换到另一个活动任务，然后在异步处理完成后再返回到当前线程继续处理，从而提高系统性能。</p>
+<p>比如在移动应用程序中，在用户操作移动设备屏幕发起请求后，如果是同步等待后台服务器返回结果，则当后台服务操作非常耗时时，就会造成用户看到移动设备屏幕冻结（一直处于请求处理中），在结果返回前，用户不能操作移动设备的其他功能</p>
+<p>如图1-5所示，线程A同步获取服务B的结果后，再同步调用服务C获取结果，可见在同步调用情况下业务执行语义比较清晰，线程A顺序地对多个服务请求进行调用；但是同步调用意味着当前发起请求的调用线程在远端机器返回结果前必须阻塞等待，这明显很浪费资源。好的做法应该是在发起请求的调用线程发起请求后，注册一个回调函数，然后马上返回去执行其他操作，当远端把结果返回后再使用IO线程或框架线程池中的线程执行回调函数。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210623010146942.png" alt="image-20210623010146942"></p>
+<p>在执行RPC（远程过程调用）调用时，使用异步编程可以提高系统的性能。如图1-6所示，在异步调用情况下，当线程A调用服务B后，会马上返回一个异步的futureB对象，然后线程A可以在futureB上设置一个回调函数；接着线程A可以继续访问服务C，也会马上返回一个futureC对象，然后线程A可以在futureC上设置一个回调函数。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210623010300833.png" alt="image-20210623010300833"></p>
+<p>如图1-6可知，在异步调用情况下，线程A可以并发地调用服务B和服务C，而不再是顺序的。由于服务B和服务C是并发运行，所以相比同步调用，线程A获取到服务B和服务C结果的时间会缩短很多（同步调用情况下的耗时为服务B和服务C返回结果耗时的和，异步调用情况下耗时为max（服务B耗时，服务C耗时））。另外，这里可以借助CompletableFuture的能力等两次RPC调用都异步返回结果后再执行其他操作，这时候调用流程如图1-7所示。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210623010403994.png" alt="image-20210623010403994"></p>
+<h1 id="垃圾回收的算法与实现"><a href="#垃圾回收的算法与实现" class="headerlink" title="垃圾回收的算法与实现"></a>垃圾回收的算法与实现</h1><p>为什么需要1个字节来用作标记？mark_table[i]只能容纳4种常量，这么说来有2位就够了，为什么还要准备出1个字节（8位）呢？事实上这跟并行性有关系。最近的很多GC都是通过在多线程环境下运行来并行进行处理的。lmmixGC也不例外。虽然本书中并没有详细说明，但是为了在多线程环境下多个线程访问同一个内存空间，就需要同步处理。为了实现同步处理，CAS（Compare-And-Swap）命令是不可或缺的。CAS命令指的是将以下3项处理一并进行，即不被其他线程插队的命令。</p>
+<p>1．读出某个内存空间里的值</p>
+<p>2．以读出的值为基准进行计算</p>
+<p>3．以计算结果为基准，对步骤1所在的内存空间进行写入操作根据这个CAS命令，即使2个及2个以上的GC线程同时访问同一个内存空间，也不会出现数据不一致的问题，能得到正确的计算结果。然而在很多架构中，这个CAS命令不是以1位为单位，而是以1个字节为单位访问内存空间的。所以尽管冗长，也必须确保mark_table[i]和status域里各有1个字节的空间。</p>
+<h1 id="深入分布式缓存从原理到实践"><a href="#深入分布式缓存从原理到实践" class="headerlink" title="深入分布式缓存从原理到实践"></a>深入分布式缓存从原理到实践</h1><h1 id="复杂"><a href="#复杂" class="headerlink" title="复杂"></a>复杂</h1><p>科学家们普遍认为，同步——神经元群不断同时激发——是大脑中信息高效传播的主要机制，而小世界结构极大地促进了这种同步的产生。</p>
+<h1 id="Java并发原理"><a href="#Java并发原理" class="headerlink" title="Java并发原理"></a>Java并发原理</h1><p>对于人脑的认知来说，“代码一行行串行”当然最容易理解。但在多线程下，多个线程的代码交叉并行，要访问互斥资源，要互相通信。作为开发者，需要仔细设计线程之间的互斥与同步，稍不留心，就会写出非线程安全的代码。正因此，多线程编程一直是一个被广泛而深入讨论的领域。</p>
+<p>在JDK 1.5发布之前，Java只在语言级别上提供一些简单的线程互斥与同步机制，也就是synchronized关键字、wait与notify。如果遇到复杂的多线程编程场景，就需要开发者基于这些简单的机制解决复杂的线程同步问题。而从JDK 1.5开始，并发编程大师Doug Lea奉上了一个系统而全面的并发编程框架——JDK Concurrent包，里面包含了各种原子操作、线程安全的容器、线程池和异步编程等内容。</p>
+<p>（1）帮助使用者合理地选择解决方案。Concurrent包很庞大，有各式各样的线程互斥与同步机制。明白实现原理，使用者可以根据自己的业务场景，选择最适合自己的解决方案。避免重复造轮子，也避免因为使用不当而掉到“坑”里。</p>
+<p>（2）对源码的分析，将让使用者对内存屏障、CAS原子操作、锁、无锁等底层原理的认识，不再停留于一个“似是而非”的阶段，而是深刻地认识其本质。</p>
+<p>（3）吸收借鉴大师的思维。在Concurrent 包中，可以看到各种巧妙的并发处理策略。看了Concurrent包，才会发现在多线程中，不是只有简陋的互斥锁、通知机制和线程池。</p>
+<p>1.6.1 为什么会存在“内存可见性”问题要解释清楚这个问题，就涉及现代CPU的架构。图1-4所示为x86架构下CPU缓存的布局，即在一个CPU 4核下，L1、L2、L3三级缓存与主内存的布局。每个核上面有L1、L2缓存，L3缓存为所有核共用。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210623011448469.png" alt="image-20210623011448469"></p>
+<p>因为存在CPU缓存一致性协议，例如MESI，多个CPU之间的缓存不会出现不同步的问题，不会有“内存可见性”问题。</p>
+<p>.6.4 happen-before是什么</p>
+<p>为了明确定义在多线程场景下，什么时候可以重排序，什么时候不能重排序，Java引入了JMM（Java Memory Model），也就是Java内存模型（单线程场景不用说明，有as-if-serial语义保证）。</p>
+<p>这个模型就是一套规范，对上，是JVM和开发者之间的协定；对下，是JVM和编译器、CPU之间的协定。定义这套规范，其实是要在开发者写程序的方便性和系统运行的效率之间找到一个平衡点。一方面，要让编译器和CPU可以灵活地重排序；另一方面，要对开发者做一些承诺，明确告知开发者不需要感知什么样的重排序，需要感知什么样的重排序。然后，根据需要决定这种重排序对程序是否有影响。如果有影响，就需要开发者显示地通过volatile、synchronized等线程同步机制来禁止重排序。为了描述这个规范，JMM引入了happen-before，使用happen-before描述两个操作之间的内存可见性。</p>
+<p>那么，happen-before是什么呢？如果A happen-before B，意味着A的执行结果必须对B可见，也就是保证跨线程的内存可见性。A happen before B不代表A一定在B之前执行。因为，对于多线程程序而言，两个操作的执行顺序是不确定的。happen-before只确保如果A在B之前执行，则A的执行结果必须对B可见。定义了内存可见性的约束，也就定义了一系列重排序的约束</p>
+<h1 id="架构解密：从分布式到微服务"><a href="#架构解密：从分布式到微服务" class="headerlink" title="架构解密：从分布式到微服务"></a>架构解密：从分布式到微服务</h1><p>2.4 经典的CAP理论CAP理论在互联网界有着广泛的知名度，被称为“帽子理论”，它是由Eric Brewer教授在2000年举行的ACM研讨会上提出的一个著名猜想：一致性（Consistency）、可用性（Availability）、分区容错（Partition-tolerance）无法在分布式系统中被同时满足，并且最多只能满足其中两个！2003年，MIT的Gilbert和Lynch正式证明了这三者确实是不可兼得的。而后CAP被奉为分布式领域的重要理论，被很多人当作分布式系统设计的金律。Brewer教授当时想象的分布式场景是在一组Web Service后台运行着众多Server，对Service的读写反映给后台的Server集群，并对CAP给出了如下定义。● 一致性（C）：所有节点上的数据都时刻保持同步。● 可用性（A）：每个请求都能接收一个响应，无论响应成功或失败。● 分区容错（P）：系统应该能持续提供服务，即使系统内部（某个节点分区）有消息丢失。一致性与可用性属于分布式系统的固有属性。分区容错是网络相关的一个属性，常见的几种分区如下。● 交换机失败，导致网络被分成几个子网，形成脑裂。● 服务器发生网络延时或死机，导致某些Server与集群中的其他机器失去联系。</p>
+<p>现在我们明白了，分区是分布式系统固有的可靠性问题所导致的一个紊乱的集群状态。</p>
+<p>从这三个概念的本质来看，CAP理论的准确描述不应该是从3个特性中选择两个（2/3），因为分区本身就是分布式集群固有的特性，我们只能被迫适应，根本没有选择权！有人就此质疑并且提出CAP理论应该如下所示描述。在一个允许网络发生故障（P）的系统中，我们设计分布式系统时应该选择哪一个目标：保持数据一致性（C）还是系统可用性（A）？当集群中的机器数量持续增加时，一致性会加剧系统的响应延时，同时导致资源消耗加剧，使维护一致性的成本非常高，在这种情况下，我们基本上只剩下一种选择：<strong>在允许网络失败的系统中，更多地选择可用性而放弃一致性。而ZooKeeper、Hadoop之所以选择一致性，是因为这些系统多数是由少量节点所构成的分布式集群！</strong></p>
+<p>在CAP理论出来以后，各种质疑不断，有人提出：应该放弃分区容错，因为在局域网中分区很少发生；而在广域网中有各种备选方案，导致实际的分区也较少发生，并且很多人一致认为分区同时蕴涵着不可用，这两个概念之间存在重叠。还有一些重要的质疑包括CAP无法用于分布式数据库事务，比如应用因为更新一些错误的数据而导致失败，此时无论使用什么样的高可用方案都是徒劳的，因为数据发生了无法修正的错误！也有质疑者结合了数据分区导致不可用的一些案例，说明CAP理论并不能用于分布式数据库事务领域。面对铺天盖地的质疑，在CAP理论诞生12年后，CAP之父Brewer和Lynch纷纷出来澄清。首先是Brewer给出重要修订：“3个中的两个”这个表述是不准确的，这个说法过于简化了复杂场景和问题领域；在某些分区极少发生的情况下，三者能顺畅地配合。</p>
+<p>面对铺天盖地的质疑，在CAP理论诞生12年后，CAP之父Brewer和Lynch纷纷出来澄清。首先是Brewer给出重要修订：“3个中的两个”这个表述是不准确的，这个说法过于简化了复杂场景和问题领域；在某些分区极少发生的情况下，三者能顺畅地配合。Lynch也在2012年重写了之前的论文，该论文的重点如下。● 把CAP理论的证明局限在原子读写的场景中，并声明不支持数据库事务之类的场景。● 把分区容错归结为一个对网络环境的陈述，而非之前的一个独立条件。这实际上更加明确了概念。● 引入了活性（Liveness）和安全属性（Safety），在一个更抽象的概念下研究分布式系统，并认为CAP是在活性与安全属性之间权衡的一个特例。其中一致性属于活性，可用性属于安全性。● 把CAP的研究推到一个更广阔的空间：网络存在同步、部分同步；一致性的结果也从仅存在一个到存在N个（部分一致）；引入了通信周期Round，并引用了其他论文，给出了为了保证N个一致性结果，至少需要通信的Round数量。还介绍了其他人的一些成果，这些成果分别对CAP的某一方面做出了特殊贡献。</p>
+<p>我们不难发现，Lynch在论文中主要做了如下事情。● 承认分区容错是一个既定的环境约束，而非独立的选择或者条件。</p>
+<p>● 缩小CAP适用的定义，消除质疑的场景。</p>
+<p>● 建立更精确的理论模型。</p>
+<p>● 暗示CAP理论依旧正确。</p>
+<p>这里总结一下CAP理论：可以肯定的是，<strong>CAP并非一个放之四海而皆准的普适性原理和指导思想，它仅适用于原子读写的NoSQL场景中，并不适用于数据库系统</strong>；当今的分布式系统早已不是十年前的简单系统了，现在分布式系统有很多特性如扩展性、自动化等，架构师在进行系统设计和开发时，视野要更加开拓，而不仅仅局限在CAP问题上</p>
+<p>Redis的设计在很多方面看起来都是违背常理的。首先，它采用了单线程模型，这似乎是不可思议的做法，但是仔细想想的确有合理之处：缓存系统在绝大多数情况下的使用场景只是内存数据的简单读取操作，单线程避免了复杂的线程同步、上下文切换、锁等复杂逻辑，也使得原子性计算这种功能很容易被实现。</p>
+<p>另外，在这种网络I/O的场景下，CPU很难成为瓶颈，所以，Redis用单线程模型是一个经过深思熟虑的决定。那么，问题也出现了，单线程只能用一个Core（或者一个超线程），在多核CPU的情况下如何充分发挥CPU的功能呢？答案就是分片（Sharding）。启动多个Redis进程实例（如果每个进程都通过NUMA技术绑定到一个Core，则理论上性能更高），每个实例都承担一部分缓存，多个Redis实例组成一个集群。</p>
+<p>为什么Redis作者没有采用大家都推荐的高大上的一致性Hash算法作为集群分片规则，而是采用了固定Slot分片方式呢？主要原因是一致性Hash算法非常复杂，举个例子，90%的人认为一致性Hash算法在某个节点宕机的情况下无须迁移数据！而实际上，一致性Hash算法仅仅减少了节点数据的迁移量，要计算出哪些虚拟节点上的哪些数据被迁移到哪些虚拟节点上，这个逻辑并不好懂，而且很复杂。另外，如果集群要扩容和增加节点，则也涉及复杂的计算和数据迁移问题，因此从整体来看，一致性Hash算法的实用性并不是很强。</p>
+<p>如下图所示给出了一个SolrCloud参考部署方案，本方案中的索引数据（Collection）被分为两个分片，同时每个Shard分片的数据都有3份，其中一份所在的Core节点被称为Leader，其他两个Core节点被称为Replica。所有索引数据都分布在8个Core中，它们位于3台独立的服务器上，所以其中任何一台机器宕机，都不会影响到系统的可用性。如果某个服务器在运行中宕机，那么SolrCloud会自动触发Leader的重新选举行为，这是通过ZooKeeper提供的分布式锁功能来实现的。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210623012545156.png" alt="image-20210623012545156"></p>
+<p>之前说到，SolrCloud中的每个Shard分片都是由一个Leader与N个Replica组成的，而且客户端可以连接到任意一个Core节点上进行索引数据的操作，那么，此时索引数据是如何实现多副本同步的呢？下图给出了背后的答案</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210623012607635.png" alt="image-20210623012607635"></p>
+<p>●  如果客户端连接的Core不是Leader，则此节点会把请求转发给所在Shard分片的Leader节点。</p>
+<p>● Leader会把数据（Document）路由到所在Shard分片的每个Replica节点。</p>
+<p>● 如果文档分片路由规则计算出目标Shard分片是另外一个分片，则Leader会把数据转发给该分片对应的Leader节点去处理。</p>
+<p>接下来谈谈另外一个重要问题，这个问题就是SolrCloud采用了什么算法进行索引数据的分片Shard？为了选择合适的分片算法，SolrCloud提出了以下两个关键要求。</p>
+<p>（1）分片算法的计算速度必须快，因为在建立索引及访问索引的过程中都频繁用到分片算法。</p>
+<p>（2）分片算法必须保证索引数据能均匀地分布到每一个分片上，SolrCloud的查询是先分后总的过程，如果某个分片中的索引文档（Document）的数量远大于其他分片，那么在查询此分片时所花的时间就会明显多于其他分片，也就是说最慢分片的查询速度决定了整体的查询速度。</p>
+<p>基于以上两点，SolrCloud选择了一致性哈希算法来实现索引分片。</p>
+<p>本节最后说说SolrCloud所支持的“近实时搜索”这个高级特性。近实时搜索就是在较短的时间内使得新添加的Document可见可查，这主要基于Solr的SoftCommit机制。在8.1.2节中讲到，Lucene在创建索引时数据是在提交时被写入磁盘的，这就是Hard Commit，它确保了即便停电也不会丢失数据，但会增加延时。同时，对于之前已经打开的Searcher来说，新加入的Document也是不可见的。Solr为了提供更实时的检索能力，提供了Soft Commit的新模式，在这种模式下仅把数据提交到内存，此时并没有将其写入磁盘索引文件中，但索引Index可见，Solr会打开新的Searcher从而使新的Document可见。同时，Solr会进行预热缓存及查询以使得缓存的数据也是可见的。为了保证数据最终会被持久化保存到磁盘上，可以每1～10分钟自动触发Hard Commit而每秒钟自动触发Soft Commit。Soft Commit也是一把双刃剑，一方面Commit越频繁，查询的实时性越高，但同时增加了Solr的负荷，因为Commit越频繁，越会生成小且多的索引段（Segment），于是Solr Merge的操作会更加频繁。在实际项目中建议根据业务的需求和忍受度来确定Soft Commit的频率。</p>
+<h1 id="redis5-设计与源码分析"><a href="#redis5-设计与源码分析" class="headerlink" title="redis5 设计与源码分析"></a>redis5 设计与源码分析</h1><p>Redis是单进程线程的服务（实际上一个正在运行的Redis Server肯定不止一个线程，但只有一个线程来处理网络请求），避免了不必要的上下文切换，同时不存在加锁/释放锁等同步操作</p>
+<h1 id="面向对象分析与设计"><a href="#面向对象分析与设计" class="headerlink" title="面向对象分析与设计"></a>面向对象分析与设计</h1><p>考虑一个名为ActiveTemperatureSensor的传感器，它的行为要求定期测量当时的温度，然后通知客户与设定值相比，温度是否改变了一定的数值。我们不解释这个类是如何实现这种行为的。实际情况是实现的秘密，但很清楚，需要某种形式的并发。一般来说，在面向对象的设计中有三种并发方式。其一，并发是某种编程语言的内在特征，语言提供了并发和同步的机制。在这种情况下，可以创建一个主动对象，它与其他主动对象一起并发执行某些处理过程。</p>
+<p>其二，可以使用一个类库来实现某种形式的轻量级进程。自然，这种实现是高度平台相关的，虽然这个库的接口相对来说也许是可移植的。在这种方式中，并发不是语言的内在特征（因此不会在非并发系统上增加任何负担），但通过这些标准类，并发看起来似乎是内在的特征。</p>
+<p>第三，可以利用中断来实现并发的假象。当然，这要求我们具有某些底层硬件细节的知识。例如，在ActiveTemperatureSensor类的实现中，可能有一个硬件时钟，它定期中断应用。在中断发生的时候，所有这类传感器读取当时的温度，并根据需要调用回调函数。不论采用哪种方法实现并发，都必须注意这样一个事实：当在一个系统中引入并发时，必须考虑主动对象之间、主动对象与纯粹串行执行的对象之间，如何同步它们的活动。例如，如果两个主动对象试图给第三个对象发送消息，必须确保使用了某种互斥手段，这样，被调用对象的状态才不会因两个主动对象试图同时更新它而被破坏。这是同时使用封装、抽象和并发时必须注意的要点。在并发的情况下，仅定义对象的方法是不够的，还必须确保这些方法的语义在多个控制线程的情况下仍然有效。</p>
+<p><strong>2．同步</strong></p>
+<p>当一个对象通过链接向另一个对象发送一条消息时，这两个对象就称为同步了。在完全串行式的应用中，这种同步通常是通过简单的方法调用来完成的。但是，在存在多控制线程的情况下，对象需要更复杂的消息传递机制来处理并发系统中可能出现的互斥问题。前面曾提到，主动对象拥有自己的控制线程，所以我们期望它们的语义在其他对象存在时仍然得到保证。但是，当一个主动对象与一个被动对象之间有链接时，我们必须选择以下三种同步方式之一。</p>
+<p>■　顺序：只有在某一时刻只存在一个主动对象时，被动对象的语义才得到保证。</p>
+<p>■　守卫：在多个控制线程的程序下，被动对象的语义也能保证，但主动的客户之间必须协作，以实现互斥访问。■　并发：在多个控制线程的程序下，被动对象的语义也能保证，服务提供者保证互斥。</p>
+<p>2．时间和空间语义</p>
+<p>在确定存在某个操作，并定义了它的功能语言之后，必须决定它的时间语义和空间语义。这意味着我们必须决定它完成操作需要的时间以及存储空间。这样的决定通常是用最佳、平均和最差等术语来表达的，最差的情况规定了能够接受的上限。前面也曾提到，当一个对象通过一个链接向另一个对象传递消息时，这两个对象必须以某种方式同步。在多控制线程的情况下，这意味着消息的传递比子程序调用要更复杂。在使用的大多数语言中，对象之间的同步不成问题，因为我们的程序只包含一个控制线程，这意味着所有的对象都是被依次访问的。这种情况下的消息传递很简单，因为它的语义基本上与简单的子程序调用相同。但是，在支持并发的语言中，我们必须关注更为复杂的消息传递形式，以避免两个控制线程以无限制的方式访问同一个对象，从而引发问题。前面曾提到，在多个控制线程下仍能保持语义的对象要么是守卫的，要么是同步的。</p>
+<h1 id="同步：秩序如何从混沌中涌现"><a href="#同步：秩序如何从混沌中涌现" class="headerlink" title="同步：秩序如何从混沌中涌现"></a>同步：秩序如何从混沌中涌现</h1><p>长期以来，科学家一直对宇宙中自发秩序的存在感到困惑。热力学定律似乎指向了对立的方向：大自然会无情地向更无序的状态、更高的熵值退化。然而，在周围环境中，我们看到的宏伟结构，如星系、细胞群、生态系统、人类，都以某种方式自组织。这个谜题困扰着今天几乎所有的科学研究。只有在少数情况下，我们才能清楚地理解秩序是如何自发产生的。第一个例子是物理空间中的一种特殊秩序，其中涉及完全重复的结构，即当温度下降到低于冰点的时候，数万亿个水分子会自发凝结成刚性、对称的冰晶。然而，要解释时间上的秩序则存在更多的疑问，即使是最简单的可能性，即相同的事情同时发生，也被证明是非常微妙的，我们把这种秩序称为同步。</p>
+<h1 id="kafka-入门与实践"><a href="#kafka-入门与实践" class="headerlink" title="kafka 入门与实践"></a>kafka 入门与实践</h1><p>4.Leader副本和Follower副本由于Kafka副本的存在，就需要保证一个分区的多个副本之间数据的一致性，Kafka会选择该分区的一个副本作为Leader副本，而该分区其他副本即为Follower副本，只有Leader副本才负责处理客户端读/写请求，Follower副本从Leader副本同步数据。如果没有Leader副本，那就需要所有的副本都同时负责读/写请求处理，同时还得保证这些副本之间数据的一致性，假设有n个副本则需要有n×n条通路来同步数据，这样数据的一致性和有序性就很难保证。</p>
+<p>引入Leader副本后客户端只需与Leader副本进行交互，这样数据一致性及顺序性就有了保证。Follower副本从Leader副本同步消息，对于n个副本只需n-1条通路即可，这样就使得系统更加简单而高效。副本Follower与Leader的角色并不是固定不变的，如果Leader失效，通过相应的选举算法将从其他Follower副本中选出新的Leader副本</p>
+<h2 id="3-1-1-DelayedOperation"><a href="#3-1-1-DelayedOperation" class="headerlink" title="3.1.1 DelayedOperation"></a>3.1.1 DelayedOperation</h2><p>Kafka将一些不立即执行而要等待满足一定条件之后才触发完成的操作称为延迟操作，并将这类操作定义为一个抽象类DelayedOperation, DelayedOperation是一个基于事件启动有失效时间的TimerTask。TimerTask实现了Runnable接口，维护了一个TimerTaskEntry对象，TimerTaskEntry绑定了一个TimerTask,TimerTaskEntry被添加到TimerTaskList中，TimerTaskList是一个环形双向链表，按失效时间排序。DelayedOperation是一个抽象类，具体的延迟操作类继承于该抽象类，分别用来协助相应组件对不同的请求完成延迟处理操作，类图如图3-1所示。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210623014258981.png" alt="image-20210623014258981"></p>
+<p>DelayedOperation只有一个AtomicBoolean类型的completed属性，用来控制某个延迟操作。在延迟时间（delayMs）内，onComplete()方法只被调用一次。DelayedOperation主要方法如下。</p>
+<p>● tryComplete()方法：一个抽象方法，由子类来实现，负责检测执行条件是否满足。若满足执行条件，则调用forceComplete()方法完成延迟操作。</p>
+<p>● forceCompete()方法：该方法在条件满足时，检测延迟任务是否未被执行。若未被执行，则先调用TimerTask.cancel()方法解除该延迟操作与TimerTaskEntry的绑定，将该延迟操作从TimerTaskList链表中移除，然后调用onComplete()方法让延迟操作执行完成。通过completed的CAS原子操作（completed.compareAndSet），可以保证并发操作时只有第一个调用该方法的线程能够顺利调用onComplete()完成延迟操作，其他线程获取的completed属性为false，即不会调用onComplete()方法，这就保证了onComplete()只会被调用一次。</p>
+<p>● onComplete()方法：是一个抽象方法，由子类来实现，执行延迟操作满足执行条件后需要执行的实际业务逻辑。例如，DelayedProduce和DelayedFetch都是在该方法内调用responseCallback向客户端做出响应。</p>
+<p>● safeTryComplete()方法：以synchronized同步锁调用onComplete()方法，供外部调用</p>
+<p>● onExpiration()方法：也是一个抽象方法，由子类来实现当延迟操作已达失效时间的相应逻辑处理。Kafka通过SystemTimer来定期检测请求是否超时。SystemTimer是Kafka实现的底层基于层级时间轮和DelayQueue定时器，维护了一个newFixedThreadPool线程池，用于提交相应的线程执行。例如，当检测到延迟操作已失效时则将延迟操作提交到该线程池，即执行线程的run()方法的逻辑。DelayedOperation覆盖了TimerTask的run()方法，在该方法中先调用forceCompete()方法，当该方法返回true后再调用onExpiration()方法。对于SystemTimer的实现细节，本书不进行阐述，有兴趣的读者可以查阅Kafka源码。</p>
+<p>Kafka当前的设计onComplete()方法是向客户端做出响应的唯一出口，当延迟操作达到失效时间时也是先执行forceCompete()方法，让onComplete()方法执行之后再调用onExpiration()方法，在onExpiration()方法中仅是进行相应的过期信息收集之类的操作。DelayedOperation各方法在一个延迟周期内的调用关系如图3-2所示。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210623014403573.png" alt="image-20210623014403573"></p>
+<h2 id="3-5-1-Kafka日志结构"><a href="#3-5-1-Kafka日志结构" class="headerlink" title="3.5.1 Kafka日志结构"></a>3.5.1 Kafka日志结构</h2><p>Kafka消息是以主题为基本单位进行组织的，各个主题之间相互独立。每个主题在逻辑结构上又由一个或多个分区构成，分区数可以在创建主题时指定，也可以在主题创建后再修改。可以通过Kafka自带的用于主题管理操作的脚本kafka-topics.sh来修改某个主题的分区数，但只能增加一个主题的分区数而不能减少其分区数。每个分区可以有一个或多个副本，从副本中会选出一个副本作为Leader, Leader负责与客户端进行读写操作，其他副本作为Follower。生产者将消息发送到Leader副本的代理节点，而Follower副本从Leader副本同步数据。在存储结构上分区的每个副本在逻辑上对应一个Log对象，每个Log又划分为多个LogSegment，每个LogSegment包括一个日志文件和两个索引文件，其中两个索引文件分别为偏移量索引文件和时间戳索引文件。Log负责对LogSegment的管理，在Log对象中维护了一个ConcurrentSkipListMap，其底层是一个跳跃表，保存该主题所有分区对应的所有LogSegment。Kafka将日志文件封装为一个FileMessageSet对象，将两个索引文件封装为OffsetIndex和TimeIndex对象。Log和LogSegment都是逻辑上的概念，Log是对副本在代理上存储文件的逻辑抽象，LogSegmnent是对副本存储文件下每个日志片段的抽象，日志文件和索引文件才与磁盘上的物理存储相对应。假设有一个名为“log-format”的主题，该主题有3个分区，每个分区对应一个副本每个分区对应一个副本，则在存储结构中各对象映射关系如图3-19所示。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210623014714884.png" alt="image-20210623014714884"></p>
+<p>如图3-19所示，在存储结构上每个分区副本对应一个目录，每个分区副本由一个或多个日志段（LogSegment）组成。每个日志段在物理结构上对应一个以“.index”为文件名后缀的偏移量索引文件、一个以“.timeindex”为文件名后缀的时间戳索引文件以及一个以“.log”为文件名后缀的消息集文件（FileMessageSet），消息集文件即日志文件或数据文件。需要说明的是，时间戳索引文件是在0.10.1.1版本新增加的索引文件，在这之前的版本只有偏移量索引文件。数据文件的大小由配置项log.segment.bytes指定，默认为1 GB（1073741824字节），同时Kafka提供了根据时间来切分日志段的机制，即若数据文件大小没有达到log.segment.bytes设置的阈值，但达到了log.roll.ms或是log.roll.hours设置的阈值，同样会创建新的日志段，在磁盘上创建一个数据文件和两个索引文件。接收消息追加（append）操作的日志段也称为活跃段（activeSegment）</p>
+<h2 id="3-6-副本管理器"><a href="#3-6-副本管理器" class="headerlink" title="3.6 副本管理器"></a>3.6 副本管理器</h2><p>在Kafka 0.8版本中引入了副本机制，引入副本机制使得Kafka能够在整个集群中只要保证至少有一个代理存活就不会影响整个集群的工作，从而大大提高了Kafka集群的可靠性和稳定性。这里提到代理存活的概念，同其他分布式系统一样，Kafka对代理是否存活（alive）也有明确的定义，Kafka存活要满足两个条件。（1）一个存活的节点必须与ZooKeeper保持连接，维护与ZooKeeper的Session（这是通过ZooKeeper的心跳机制来实现的）。（2）如果一个节点作为Follower副本，该节点必须能及时与分区的Leader副本保持消息同步，不能落后太久。准确来讲，满足以上两个条件的节点应该是同步中的（in sync）节点，Leader副本会追踪所有同步中的节点，一旦一个节点宕机、卡住或是延迟太久，Leader就会将该节点从同步副本（in sync replicas）集合列表中移除。至于代理何时被认为是已卡住或者数据同步落后Leader太久是由配置项${replica.lag.time.max.ms}决定的，默认情况下该配置项设置为10秒。在Kafka 0.9之前的版本，还通过配置项${replica.lag.max.messages}配置Follower落后Leader的消息条数来定义某个代理是否已落后太多，然而在0.9之后的版本中已移除该配置项，因为该配置项并不能真实反映出一个代理是否已落后太多，例如，当某一时刻生产者发送来的消息数大于${replica.lag.max.messages}时在这一时刻所有的副本均视为落后太多，会被Leader从同步列表中移除，显然不合理。</p>
+<p>我们可以在代理启动时加载的配置文件server.properties中通过配置项default.replication.factor=n来配置副本数量（这里n为副本数），默认情况下，Kafka的副本数为1，该配置项配置了主题默认所拥有的副本数，如我们通过生产者向一个不存在的主题发送消息，当配置项auto.create. topics.enable=true时，Kafka会自动创建生产者指定的主题，该主题拥有${default.replication.factor}个副本。我们也可以在创建主题时通过设置–replication-factor n为每个主题分别指定副本数，创建主题时指定的副本数会覆盖default.replication.factor配置的值。这样一个副本为n的集群就允许n-1个节点失败而不会影响整个集群的工作</p>
+<p>在所有的副本节点中，有一个节点作为Leader负责接收客户端的读写操作，其他副本节点作为Follower从Leader节点复制数据进行数据同步。这里的复制机制既不是同步复制，也不是单纯的异步复制。因为同步复制要求“活着的”Follower都从Leader复制完消息，这条消息才被认为是已提交（commit）。对生产者而言，生产者可以通过offsets.commit.required.acks参数来设置选择等待消息被提交的方式，而只有被提交的消息才能被消费者消费。同步方式极大地影响了吞吐率。而异步复制方式下，Follower异步地从Leader复制数据，消息只要被Leader写入数据文件中就被认为已经提交，这种情况下如果Follower都落后于Leader，而Leader突然宕机，则会丢失数据。Kafka采用维护一种同步列表的方式很好地均衡了确保数据不丢失以及吞吐率的问题</p>
+<p>副本管理器（ReplicaManager）负责对副本管理，主要包括对控制器发送的LeaderAndIsrRequest指令、StopReplicaRequest指令以及UpdateMetadataRequest指令进行处理，维护副本ISR变化，以及Follower与Leader数据同步的管理。在介绍副本管理器基本功能之前，首先简要介绍分区和副本的相关知识。因为从底层实现来看，副本管理器对副本的管理体现在对分区的管理，副本管理器提供了创建或获取分区相关方法，如getOrCreatePartition()方法，而分区又封装了对副本的管理，因为副本是相对分区而言的，即副本是特定分区的副本，副本管理器对副本的管理调用也是分区操作副本的方法，如获取分区副本的getReplica()、获取或创建副本的getOrCreateReplica()等。</p>
+<h1 id="Java-核心技术卷1"><a href="#Java-核心技术卷1" class="headerlink" title="Java 核心技术卷1"></a>Java 核心技术卷1</h1><h3 id="9-4-4-同步视图"><a href="#9-4-4-同步视图" class="headerlink" title="9.4.4 同步视图"></a>9.4.4 同步视图</h3><p>如果由多个线程访问集合，就必须确保集不会被意外地破坏。例如，如果一个线程试图将元素添加到散列表中，同时另一个线程正在对散列表进行再散列，其结果将是灾难性的。类库的设计者使用视图机制来确保常规集合的线程安全，而不是实现线程安全的集合类。例如，Collections类的静态synchronizedMap方法可以将任何一个映射表转换成具有同步访问方法的Map：</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210624173022863.png" alt="image-20210624173022863"></p>
+<p>现在，就可以由多线程访问map对象了。像get和put这类方法都是同步操作的，即在另一个线程调用另一个方法之前，刚才的方法调用必须彻底完成。第14章将会详细地讨论数据结构的同步访问</p>
+<h3 id="9-6-1-Hashtable类"><a href="#9-6-1-Hashtable类" class="headerlink" title="9.6.1 Hashtable类"></a>9.6.1 Hashtable类</h3><p>Hashtable类与HashMap类的作用一样，实际上，它们拥有相同的接口。与Vector类的方法一样。Hashtable的方法也是同步的。如果对同步性或与遗留代码的兼容性没有任何要求，就应该使用HashMap。如果需要并发访问，则要使用ConcurrentHashMap，参见第14章。</p>
+<h3 id="14-5-3-锁对象"><a href="#14-5-3-锁对象" class="headerlink" title="14.5.3 锁对象"></a>14.5.3 锁对象</h3><p>有两种机制防止代码块受并发访问的干扰。Java语言提供一个synchronized关键字达到这一目的，并且Java SE 5.0引入了ReentrantLock类。synchronized关键字自动提供一个锁以及相关的“条件”，对于大多数需要显式锁的情况，这是很便利的。但是，我们相信在读者分别阅读了锁和条件的内容之后，理解synchronized关键字是很轻松的事情。</p>
+<h3 id="14-5-5-synchronized关键字"><a href="#14-5-5-synchronized关键字" class="headerlink" title="14.5.5 synchronized关键字"></a>14.5.5 synchronized关键字</h3><p>在前面一节中，介绍了如何使用Lock和Condition对象。在进一步深入之前，总结一下有关锁和条件的关键之处：● 锁用来保护代码片段，任何时刻只能有一个线程执行被保护的代码。</p>
+<p>● 锁可以管理试图进入被保护代码段的线程。</p>
+<p>● 锁可以拥有一个或多个相关的条件对象。</p>
+<p>● 每个条件对象管理那些已经进入被保护的代码段但还不能运行的线程。</p>
+<p>Lock和Condition接口为程序设计人员提供了高度的锁定控制。然而，大多数情况下，并不需要那样的控制，并且可以使用一种嵌入到Java语言内部的机制。从1.0版开始，Java中的每一个对象都有一个内部锁。如果一个方法用synchronized关键字声明，那么对象的锁将保护整个方法。也就是说，要调用该方法，线程必须获得内部的对象锁。</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210624174750740.png" alt="image-20210624174750740"></p>
+<p>例如，可以简单地声明Bank类的transfer方法为synchronized，而不是使用一个显式的锁。内部对象锁只有一个相关条件。wait方法添加一个线程到等待集中，notifyAll/notify方法解除等待线程的阻塞状态。换句话说，调用wait或notifyAll等价于</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210624174917018.png" alt="image-20210624174917018"></p>
+<p><strong>可以看到，使用synchronized关键字来编写代码要简洁得多。当然，要理解这一代码，你必须了解每一个对象有一个内部锁，并且该锁有一个内部条件。由锁来管理那些试图进入synchronized方法的线程，由条件来管理那些调用wait的线程。</strong></p>
+<p>将静态方法声明为synchronized也是合法的。如果调用这种方法，该方法获得相关的类对象的内部锁。例如，如果Bank类有一个静态同步的方法，那么当该方法被调用时，Bank.class对象的锁被锁住。因此，没有其他线程可以调用同一个类的这个或任何其他的同步静态方法。</p>
+<p>内部锁和条件存在一些局限。包括：</p>
+<p>● 不能中断一个正在试图获得锁的线程。</p>
+<p>● 试图获得锁时不能设定超时。</p>
+<p>● 每个锁仅有单一的条件，可能是不够的。</p>
+<p><strong>在代码中应该使用哪一种？Lock和Condition对象还是同步方法？下面是一些建议：</strong></p>
+<p>● 最好既不使用Lock/Condition也不使用synchronized关键字。在许多情况下你可以使用java.util.concurrent包中的一种机制，它会为你处理所有的加锁。例如，在14.6节，你会看到如何使用阻塞队列来同步完成一个共同任务的线程。还应当研究一下并行流，有关内容参见卷Ⅱ第1章。</p>
+<p>● 如果synchronized关键字适合你的程序，那么请尽量使用它，这样可以减少编写的代码数量，减少出错的几率。程序清单14-8给出了用同步方法实现的银行实例。</p>
+<p>● 如果特别需要Lock/Condition结构提供的独有特性时，才使用Lock/Condition。</p>
+<h3 id="14-5-6-同步阻塞"><a href="#14-5-6-同步阻塞" class="headerlink" title="14.5.6 同步阻塞"></a>14.5.6 同步阻塞</h3><p>锁的粒度是对象？</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/23/notebook/20210623-%E5%90%8C%E6%AD%A5%E5%BC%82%E6%AD%A5/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/20210618-31-Java容器化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/18/notebook/20210618-31-Java%E5%AE%B9%E5%99%A8%E5%8C%96/">notebook/20210618-31-Java容器化</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/18/notebook/20210618-31-Java%E5%AE%B9%E5%99%A8%E5%8C%96/" class="archive-article-date">
+  	<time datetime="2021-06-18T12:04:35.824Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-18</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/18/notebook/20210618-31-Java%E5%AE%B9%E5%99%A8%E5%8C%96/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/JUC/线程同步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/16/notebook/JUC/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/">notebook/JUC/线程同步</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/16/notebook/JUC/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/" class="archive-article-date">
+  	<time datetime="2021-06-16T12:46:21.240Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>scqa</p>
+<p>背景</p>
+<p>进程自身是串行的，进程只有一个执行序列。</p>
+<p>冲突</p>
+<p>问题</p>
+<p>答案</p>
+<p>线程</p>
+<p>线程同步</p>
+<p>在进程内部实现并发就是线程出现的动机。</p>
+<p>进程之间的协作与线程之间的协作</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/16/notebook/JUC/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/2021-06-10_记忆" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/16/notebook/2021-06-10_%E8%AE%B0%E5%BF%86/">notebook/2021-06-10_记忆</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/16/notebook/2021-06-10_%E8%AE%B0%E5%BF%86/" class="archive-article-date">
+  	<time datetime="2021-06-16T04:40:00.477Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-16</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>如何记忆抽象的名词？<br>实景桩（就是我们亲身到过的地方）是我们应用最广泛也是最方便的一种桩。它在我们大脑中的印象和空间感好，方便我们快速地回忆整个桩子。我们自己的家、亲戚朋友的家、办公室、办公楼、小区、街道、公园，我们去过的任何一个地方都能找出很多有标志性的点当作桩子使用。只要日积月累，我们大脑中的桩子就会越来越多。<br>2．谐音转图和潜意识转图是塞进来的一段知识。其实在前面穿越黄河的时候我们已经用过，这里再系统地讲一下，便于大家下一节在训练记忆古汉语的时候好理解和掌握。</p>
+<p>一般情况下，我们一是能用谐音的尽可能用谐音法；二是在进行潜意识出图的时候，如果遇上类似的情况，我们尽可能把图像的一些细节和属性进行一些变化，以区别开来。”<br>“属性？”<br>“对。比如‘工资’可以想象成钱包里的几张人民币。而‘富裕’我们可以想象成满屋子都是百元大钞。而‘资金’可以想象成一个小型的手提箱里的那几沓百元大钞。这样一来，同样是百元大钞的图像，其实已经有了明显的区别，当我们在大脑中进行强化以后，实际上就变成了另外的三个图：钱包、大房子、手提箱。”“哦，我明白了</p>
+<p>四座大山<br>天蒙蒙亮的时候，恩终于走出城市，到达了山区边缘。恩又认真看了看地图。按照地图的指示，附近有四座山。恩很奇怪自己在这个城市生活了十几年，从来没听说过这么奇怪的四座山。<br>排斥山、怀疑山、尝试山、本能山。<br>恩专门注意到，记忆宫殿坐落在尝试山。<br>让我们先来看看这四座山的风土人情。</p>
+<p>排斥山 这座山上的人共同的特点是：无意识无能，就是对任何超强能力的事他们都不相信。就像恩在梦中见到的那些一分钟记100位数字这样的事，他们觉得要么是谣言，要么是传说，要么是生来就有的特异功能，凡夫俗子永远不可能做得到。他们不相信任何他们自己做不到的能力，他们觉得世界上的所有人都像他们一样。他们也不会去听别人的解释和讲解，他们根本不相信，也不愿意花时间和精力去考证和研究这些东西。<br>怀疑山 这座山上就是一个大舞台，要求到达山顶的人达到的一种心理境界是：有意识无能。在这座山上，住着拥有各种绝技绝活的人。经常会有人强行把排斥山的人带到这里来，让他们当面见识一下这些神奇的能力。让他们知道这根本不是谣言传说，而是实实在在的能力，从排斥山来的人会亲眼看到、亲身经历那些奇才怪才的表演，向他们证明一分钟记忆100位数字不是神话，而是后天训练出来的一种才能。20秒记一副扑克也不是传说，而是一步步的练习和重复之后达到的一种效果。直到排斥山过来的人相信或者半信半疑地认为，这些能力确实是人类能够达到的。但是他们仍然会坚定地认为：虽然有些人能够通过练习达到这种境界，但是他们自己累死也达不到。<br>尝试山 这座山就是一个大训练场，记忆宫殿就坐落在这座山上。除了记忆宫殿，还有很多其他的训练机构。他们就是把被怀疑山改变了态度的那些人或者自己想进一步了解这些功能的训练方法的人带进这个山头，然后进行不同的训练，直到这些人真正理解其中的原理，直到普通人都可以通过训练达到这个水平。而且自己也会亲身体验、学习、练习，以至于慢慢地相信自己也能通过训练达到那种让人瞠目结舌的境界。这座山能够让人达到的心理境界和思想状态是：有意识有能。<br>本能山 这座山上住满了世界记忆大师，没有世界记忆大师的身份就没有资格住进这座山林。他们个个身怀绝技，记圆周率、记扑克牌、背个《百家姓》《三字经》对他们来说已经像抬脚走路、张口吃饭一样简单。在他们的生活中，已经没有奇迹、没有绝活。因为人人都有绝活，人人都觉得这根本不是什么绝活，这才是正常的生活状态。我们管这种境界叫：无意识有能。<br>奇怪的是，在从尝试山到本能山之间，根本没有路。<br>￼</p>
+<p>注：这个游戏建议读者去尝试，特别是对儿童或者幼儿效果很好。<br>方法也很简单，就是在家里随便划定一块区域，比如客厅、孩子的卧室等。然后找一些不同类型的玩具，让孩子先回避，把玩具摆放在房间的不同位置。刚开始的时候或者孩子很小的话，可以摆放5个左右，然后可以逐渐增加到10个或者更多。摆放完成后，然后让孩子过来，记忆每个东西的摆放位置。刚开始可以不计时，以后可以限时一分钟、30秒，甚至10秒（一秒钟一个元素）或者更短。趁孩子记忆的时间，家长可以拍照，以免打乱后家长和孩子的答案有争议。初级难度：记忆完成后，家长可以把摆放的玩具全部收集在一个地方，让孩子凭借记忆一件件地重新摆放到原来的位置上。中级难度：在记忆完成后，可以随意地调换或者挪动几个玩具，让孩子找出与记忆中不一样的地方。高级难度：给孩子一些照片，照片的内容也是一个房间或者一个场景，里面有很多的物品元素。在完成记忆后可以用提问的方式来检查记忆的情况。挑战级难度：这时候已经没有可以看得见的记忆内容，而是家长提前告之一个彼此都熟悉的场景，然后用口述的方式把一件件东西摆放到这个场景中。要求这个场景不能是正在待着的书房或者客厅，而是存在于彼此脑海中的一个场景。这就要求孩子必须靠自己的想象把一件件的物品摆放到脑海中那个场景的相应位置。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/16/notebook/2021-06-10_%E8%AE%B0%E5%BF%86/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/工具/window c 盘清理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/15/notebook/%E5%B7%A5%E5%85%B7/window%20c%20%E7%9B%98%E6%B8%85%E7%90%86/">notebook/工具/window c 盘清理</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/15/notebook/%E5%B7%A5%E5%85%B7/window%20c%20%E7%9B%98%E6%B8%85%E7%90%86/" class="archive-article-date">
+  	<time datetime="2021-06-15T05:36:30.671Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-15</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><a href="https://www.zhihu.com/question/27608145" target="_blank" rel="noopener">https://www.zhihu.com/question/27608145</a></p>
+<p><a href="https://www.icoa.cn/a/780.html" target="_blank" rel="noopener">Windows 10 下C盘空间清理全攻略( Win10 C盘清理 )</a></p>
+<h2 id="系统环境变量修改"><a href="#系统环境变量修改" class="headerlink" title="系统环境变量修改"></a>系统环境变量修改</h2><table>
 <thead>
 <tr>
-<th>实现机制</th>
-<th>系统调用</th>
-<th>通信形式</th>
+<th>变量名</th>
+<th>变量原始值</th>
+<th>修改后的值</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>消息机制</td>
-<td>msg get</td>
-<td>消息队列</td>
+<td>TEMP</td>
+<td>%SystemRoot%\TEMP</td>
+<td>D:\Windows\TEMP</td>
 </tr>
 <tr>
-<td>共享存储器机制</td>
-<td>shm get</td>
-<td>共享存储区</td>
+<td>TMP</td>
+<td>%SystemRoot%\TEMP</td>
+<td>D:\Windows\TEMP</td>
 </tr>
 <tr>
-<td>信号量机制</td>
-<td></td>
-<td>信号量集</td>
+<td>TEMP（用户）</td>
+<td>%USERPROFILE%\AppData\Local\Temp</td>
+<td>D:\coy\AppData\Local\Temp</td>
+</tr>
+<tr>
+<td>TMP（用户）</td>
+<td>%USERPROFILE%\AppData\Local\Temp</td>
+<td>D:\coy\AppData\Local\Temp</td>
 </tr>
 </tbody></table>
-<p>从实现机制，系统调用，通信形式来回答</p>
-<p>我了解这个有啥用？</p>
-<p>应付面试？</p>
-<p>如何理解机制？</p>
+<h2 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h2><p>c盘剩余空间23g–&gt;43g</p>
 
       
 
@@ -1229,7 +1108,166 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/06/05/notebook/JUC/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E9%87%8D%E8%A6%81%E5%86%85%E5%AE%B9/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/06/15/notebook/%E5%B7%A5%E5%85%B7/window%20c%20%E7%9B%98%E6%B8%85%E7%90%86/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/20210612-30" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/12/notebook/20210612-30/">notebook/20210612-30</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/12/notebook/20210612-30/" class="archive-article-date">
+  	<time datetime="2021-06-12T11:16:42.712Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><img src="https://gitee.com/dengyuhui/images/raw/master/image-20210612200010684.png" alt="image-20210612200010684"></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/12/notebook/20210612-30/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-notebook/数据结构与算法/bit map" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/06/12/notebook/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/bit%20map/">notebook/数据结构与算法/bit map</a>
+    </h1>
+  
+
+        
+        <a href="/2021/06/12/notebook/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/bit%20map/" class="archive-article-date">
+  	<time datetime="2021-06-12T06:03:44.736Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="bitMap-原理"><a href="#bitMap-原理" class="headerlink" title="bitMap 原理"></a>bitMap 原理</h2><p>数字的表示？</p>
+<ul>
+<li>二进制 </li>
+<li>位图</li>
+</ul>
+<p>int 型需要4个字节 32位</p>
+<p>前者使用4个字节，仅能表示一个数字。 后者使用4个字节能表示32个数字。</p>
+<p>前者的计算逻辑为加权计算：</p>
+<p>后者的计算逻辑为使用位运算</p>
+<p>使用char数组，一个char是8个字节，第一个char字节能表示0-7 第二个char字节能表示8-15</p>
+<p><img src="https://gitee.com/dengyuhui/images/raw/master/aHR0cDovL2ltZy5ibG9nLmNzZG4ubmV0LzIwMTcwNjE0MTg1MzU5NjE0" alt="这里写图片描述"></p>
+<p>行为</p>
+<ul>
+<li>将数字存储到char数组中</li>
+<li>从char数组中获取我们存储的数字<ul>
+<li>第多少个字节*char字符字节数（8）+字节第j位</li>
+</ul>
+</li>
+</ul>
+<p>例如将1存储到char数组中，</p>
+<ol>
+<li>确定是存储在哪个字节 1/8 向下取整为0 存储到第0个字节</li>
+<li>确定存储在字节的哪一位 1%8=1 求余为1 存储到第0位， 将该字节的第0位置为1</li>
+</ol>
+<p>使用一个新的字节 其为1，余数为几则向左移位多少 ，再与原字节进行或运算</p>
+<p>0x01—–00000001</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="comment">//最大值1012，则只需要1024个比特位即可：1024/8=128Byte</span></span><br><span class="line"><span class="comment">//亦即1012/8+1，或者是：((1012%8) ? (1012/8+1) : (1012/8));</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAXBIT 128</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> NUM 20</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LEN 8</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> arr[NUM] = &#123;<span class="number">709</span>,<span class="number">1000</span>,<span class="number">670</span>,<span class="number">778</span>,<span class="number">30</span>,<span class="number">1012</span>,<span class="number">70</span>,<span class="number">506</span>,<span class="number">175</span>,<span class="number">8</span>,<span class="number">911</span>,<span class="number">43</span>,<span class="number">910</span>,<span class="number">178</span>,<span class="number">1011</span>,<span class="number">137</span>,<span class="number">1</span>,<span class="number">103</span>,<span class="number">120</span>,<span class="number">374</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span> bitMap[MAXBIT] = &#123;<span class="number">0</span>&#125;;<span class="comment">//定义并初始化建立bitMap的数组</span></span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>, k = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> val = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//第一步：将数组中无序的元素读进内存中的对应bit位</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;NUM; i++)&#123;</span><br><span class="line">        val = arr[i];</span><br><span class="line">        bitMap[val/LEN] |= <span class="number">0X01</span>&lt;&lt;(val%LEN);<span class="comment">//给对应bit位置为1</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//第二步：将读取进内存的值从小到大判断，并依次输出到数组中</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>,k=<span class="number">0</span>;i&lt;MAXBIT;i++)&#123;<span class="comment">//读取每一个字节</span></span><br><span class="line">        <span class="keyword">for</span>(j=<span class="number">0</span>; j&lt;LEN; j++)&#123;<span class="comment">//读取一个字节的每一位</span></span><br><span class="line">            <span class="comment">//如果当前位为1，则该为对应的数字存在，计算后输出</span></span><br><span class="line">            <span class="keyword">if</span>((bitMap[i]&gt;&gt;j) &amp; <span class="number">0X01</span>)&#123;  <span class="comment">//要对bitMap中的每个位进行判断是否为1</span></span><br><span class="line">                <span class="comment">//printf("%d\t",i*LEN+j);</span></span><br><span class="line">                arr[k++] = i*LEN+j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//遍历一遍，检验排序正确性</span></span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;NUM; i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\t"</span>,arr[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="位操作"><a href="#位操作" class="headerlink" title="位操作"></a>位操作</h3><p>有哪些位操作呢？</p>
+<h4 id="与"><a href="#与" class="headerlink" title="与"></a>与</h4><p>都为1则为1，否则为0。如：1&amp;1=1； 1&amp;0=0； 0&amp;1=0； 0&amp;0=0</p>
+<h3 id="或"><a href="#或" class="headerlink" title="或"></a>或</h3><p>有1则为1，否则为0。如：1|1=1； 1|0=1； 0|1=1； 0|0=0</p>
+<h2 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h2><p><a href="https://blog.csdn.net/Apollon_krj/article/details/73250956" target="_blank" rel="noopener">《编程珠玑》– 开篇：BitMap算法用于磁盘文件排序的原理与实现_Apollon_krj的博客-CSDN博客</a></p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/06/12/notebook/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/bit%20map/">展开全文 >></a>
         </p>
       
 
@@ -1261,7 +1299,7 @@
   
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
     </nav>
   
 
